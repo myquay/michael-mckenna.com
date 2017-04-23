@@ -1,0 +1,48 @@
+baseURL = "https://michael-mckenna.com/"
+languageCode = "en-us"
+title = "Michael McKenna"
+themesDir = "themes"
+theme = "hugo-cactus-theme"
+googleAnalytics = ""
+
+[params]
+	name = "Michael McKenna"
+	description = "Software and Startups"
+	bio = "Software and Startups"
+	# Enter optionally your twitter account
+	twitter = "myquay"
+	enableRSS = true
+
+	# Add custom assets with their paths relative to the static folder
+	customCSS = []
+	customJS  = []
+
+	# The variables below are optionally too and can be used to
+	# translate or customize each string of the theme.
+
+	# Navigation links
+	home = ""
+	about = ""
+	subscribe = ""
+	# Pagination links
+	olderPosts = ""
+	newerPosts = ""
+	readMore = ""
+	copyright = ""
+	# Sharing options and author information in posts
+	aboutAuthor = "Software and Startups"
+	tweet = ""
+	share = ""
+	# 404 page
+	# title404 = ""
+	# subtitle404 = ""
+
+	# Choose a font for the social icons in the footer. Either "mono-social" or "font-awesome"
+	iconFont = "mono-social"
+    # The social icons can be styled differently if you use mono as font - circle, rounded, or empty
+    socialIconStyle = "circle"
+
+# Add additional social link entries underneath
+[social]
+    twitter  = "https://www.twitter.com/myquay"
+    github   = "https://www.github.com/myquay"
