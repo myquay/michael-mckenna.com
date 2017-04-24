@@ -2,6 +2,7 @@
 date = "2013-02-17T20:31:32+12:00"
 description = "If you don't bother with correct pluralisation your users will be less likely to appreciate the care you put into the rest of your application."
 title = "Simple pluralisation in ASP.NET MVC"
+url = "/simple-pluralisation-in-asp-net-mvc"
 
 +++
 

@@ -1,7 +1,8 @@
 +++
-date = "2013-02-11T21:41:32+12:00"
-description = "ACS may not directly support single sign out but you can easily log the user out of their identity provider as well as your website using this technique."
-title = "Single sign out with Azure ACS"
+date = "2013-02-25T21:41:32+12:00"
+description = "By enabling sliding expiration if the user has just requested a form then they are guaranteed to have enough time to fill it out before the token expires on them."
+title = "The problem with absolute token expiration in Windows Identity Foundation (WIF)"
+url = "/the-problem-with-absolute-token-expiration-in-windows-identity-foundation-wif"
 
 +++
 

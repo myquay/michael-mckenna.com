@@ -2,7 +2,7 @@
 date = "2013-02-14T22:30:32+12:00"
 description = "If you’re not embarrassed when you ship your first version you waited too long."
 title = "Keep calm and ship"
-
+url = "/keep-calm-and-ship"
 +++
 
 Developers take pride in their work. We want to ship beautiful software using the latest frameworks, with a full suite of unit tests, that performs well and is über scalable.
