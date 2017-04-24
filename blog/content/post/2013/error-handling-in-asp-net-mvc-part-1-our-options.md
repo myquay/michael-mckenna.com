@@ -72,4 +72,4 @@ Our custom exception filter and Application_Error implementation will log except
 
 ### Next: The implementation
 
-This is the first post in a two part series, [next we will look at our implementation of this error handling strategy](/error-handling-in-asp-dot-net-mvc-part-2-our-implementation "Michael McKenna's Blog - Error handling in ASP.NET MVC Part 2: Our implementation").
+This is the first post in a two part series, [next we will look at our implementation of this error handling strategy](/error-handling-in-asp-net-mvc-part-2-our-implementation "Michael McKenna's Blog - Error handling in ASP.NET MVC Part 2: Our implementation").
