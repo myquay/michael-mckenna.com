@@ -1,4 +1,4 @@
-baseURL = "https://michael-mckenna.com/"
+baseURL = "/"
 languageCode = "en-us"
 title = "Michael McKenna"
 themesDir = "themes"
@@ -7,6 +7,7 @@ googleAnalytics = "UA-27845504-8"
 
 [params]
 	name = "Michael McKenna"
+	cdnUrl = "https://cdn.michael-mckenna.com/"
 	description = "Software and Startups"
 	bio = "Software and Startups"
 	# Enter optionally your twitter account
