@@ -3,7 +3,7 @@ languageCode = "en-us"
 title = "Michael McKenna"
 themesDir = "themes"
 theme = "hugo-cactus-theme"
-googleAnalytics = ""
+googleAnalytics = "UA-27845504-8"
 
 [params]
 	name = "Michael McKenna"
