@@ -51,7 +51,7 @@ README.md
 
 You can go ahead and upload this to Azure Functions - if you sync from a repo at this point you should see something like this.
 
-![Upload sample](/images/edigenerator.png)
+![Upload sample]({{< cdnUrl >}}images/edigenerator.png)
 
 If you make a HTTP request to `https://{function app name}.azurewebsites.net/api/{function name}` you should get the message "Azure works :)"
 

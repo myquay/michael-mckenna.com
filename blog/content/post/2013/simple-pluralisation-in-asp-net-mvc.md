@@ -12,7 +12,7 @@ If you don't bother with correct pluralisation your users will be less likely to
 
 For something that can be achieved pretty easily (in English at least) it's surprisingly common to see this pattern
 
-!["Missing pluralisation example in Visual Studio"](/images/visual-studio-git-message.png)
+!["Missing pluralisation example in Visual Studio"]({{< cdnUrl >}}images/visual-studio-git-message.png)
 
 where the "s" is surrounded in parentheses to indicate that it is optional. Not only does this look a little untidy but the sentence still doesn't make sense, "these" should also be changed to "this".
 

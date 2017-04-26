@@ -125,19 +125,19 @@ Finally if it's some other general ASP.NET error like if the page doesn't exist 
 
 If we hit an exception in the ASP.NET MVC pipeline such as a error in our razor view we’ll now get the following result
 
-![Sample error page](/images/unexpected-error.png)
+![Sample error page]({{< cdnUrl >}}images/unexpected-error.png)
 
 Not only do we have a nice view but we also return the correct HTTP status code
 
-![HTTP Status code of the sample error page](/images/error-status-code.png)
+![HTTP Status code of the sample error page]({{< cdnUrl >}}images/error-status-code.png)
 
 If it's a ASP.NET error like a page that doesn't exist we’ll get the following result
 
-![Sample page not found page](/images/page-not-found-error.png)
+![Sample page not found page]({{< cdnUrl >}}images/page-not-found-error.png)
 
 And it also gives us a nice HTTP status code
 
-![HTTP Status code of the sample page not found page](/images/page-not-found-status-code.png)
+![HTTP Status code of the sample page not found page]({{< cdnUrl >}}images/page-not-found-status-code.png)
 
 ### Conclusion
 

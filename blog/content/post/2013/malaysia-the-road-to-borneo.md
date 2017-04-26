@@ -15,13 +15,13 @@ It’s easily accessible but you can only reach the park by boat. From Kuching y
 
 Lots of people only do a day trip out to the park but I recommend staying overnight, the accommodation is basic but you have a great chance of seeing some nocturnal animals. We went on a night tour with one of the local guides for 10 RM and saw everything from snakes and flying lemurs to the elusive mouse deer. 
 
-![Proboscis Monkeys](/images/bako-monkey-hq.jpg)
+![Proboscis Monkeys]({{< cdnUrl >}}images/bako-monkey-hq.jpg)
 
 We only had time to do a couple of trails. First we did the trail to Kecil beach. It’s about 2.5 hours each way and climbs through the jungle before crossing scrubland and descending to the beach. You can even see the sea stacks, the symbol of the park, off in the distance. The biggest draw is passing through the starkly different landscapes and flora.
  
 We went in September and we found the weather to be very, very changeable. On the way out to Kecil beach the weather was absolutely beautiful, not a cloud in the sky and I even got a bit sun burnt. While at the beach in the space of about 10 minutes there was a marked drop in temperature and it absolutely poured down. Thunder, lightning, the works, which turned the path into a small river. It made for an interesting trek back!
 
-![Monkeys being curious](/images/bako-monkey-sea.jpg)
+![Monkeys being curious]({{< cdnUrl >}}images/bako-monkey-sea.jpg)
 
 The next day we did the T.Paku trail, it’s a short easy walk to a nearby beach and if you go in the morning or afternoon you’re likely to see Silver Langures and Proboscis Monkeys. We went in the morning and passed a troop of Proboscis Monkeys on the way out as well as a bunch of Silver Languers on the way back that happened to include a bright orange baby. 
 
@@ -57,4 +57,4 @@ Deer cave has the 2nd largest cave passage in the world making for an awe-inspir
 
 From the huge array of plants and animals at Bako to the Karst formations and extensive cave networks at Mulu, there’s a bit of everything for everyone. And what Borneo experience would be complete without being attacked by leeches! 
 
-![Leech!](/images/mulu-leech.jpg)
+![Leech!]({{< cdnUrl >}}images/mulu-leech.jpg)

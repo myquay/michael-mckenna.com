@@ -7,7 +7,7 @@ url = "/generating-an-apple-push-notification-certificate-on-windows"
 
 Following [most instructions](https://wiki.scn.sap.com/wiki/display/SAPMOB/How+to+generate+an+APNS+certificate+used+for+sending+push+messages+to+the+custom+Afaria+Client+application) [on the](https://tomasmcguinness.com/2012/06/28/generating-an-apple-ios-certificate-using-windows/) [web make](https://help.landesk.com/Help/kor/mobl/9.0/Content/Mobility/Install/mobl_install_mdm_t_windows.htm) it sound as easy as generating a CSR using IIS. However I ran into a few difficulties - namely Apple seemed to think my brand new CSR was invalid. Probably has something to do with my local setup (IIS 10 on Windows 10) but that shouldn't be a road block.
 
-![Invalid CSR](/images/apple-invalid-csr.png)
+![Invalid CSR]({{< cdnUrl >}}images/apple-invalid-csr.png)
 
 Why? w-w-w-w-why? [Be more constructive with feedback](https://www.youtube.com/watch?v=29M_VElHoFI).
 

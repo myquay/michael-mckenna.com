@@ -7,7 +7,7 @@ url = "/openid-and-oauth-whats-the-difference"
 
 I'm currently in the middle of upgrading [ConceptHQ Accounts](https://accounts.concepthq.net "ConceptHq | Accounts") to accept a small subset of third party identity providers. Microsoft Account (previously Windows Live ID), Google, Facebook, and Twitter. 
 
-![New ConceptHQ Accounts layout](/images/accounts-upgrade.png)
+![New ConceptHQ Accounts layout]({{< cdnUrl >}}images/accounts-upgrade.png)
 
 However they all have a slightly different ways of allowing you to authenticate users with them.
 

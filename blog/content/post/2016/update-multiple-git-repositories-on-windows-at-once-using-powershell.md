@@ -57,6 +57,6 @@ PowerShell -NoProfile -ExecutionPolicy RemoteSigned -Command "& './sync-all-git-
 
 When you run the script using the `sync.bat` you should see something like this.
 
-![](/images/git-cmd.png)
+![]({{< cdnUrl >}}images/git-cmd.png)
 
 Thanks GitHub Desktop. Too easy :) 
