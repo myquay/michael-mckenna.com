@@ -86,6 +86,8 @@ Finally add the `Azure File Blob Copy` task and copy the files we generated in t
 
 ![](/images/azure-static-site-vsts-step-five.png)
 
+_Note: Make sure you use the `2.* (preview)` version as that uses AzCopy which supports the special `$web` container: [see this issue](https://github.com/Microsoft/azure-pipelines-tasks/issues/7611)_
+
 ## All done!!
 
 Whenever you check in a new blog post or new styles a build will kick off and deploy an update to your site.
