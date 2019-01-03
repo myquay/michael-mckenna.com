@@ -3,6 +3,7 @@ date = "2013-12-05T03:51:32+12:00"
 description = "Without sounding overly dramatic – this is a life changing event, and comes highly recommended from me."
 title = "Nepal: The trek to Everest Base Camp"
 url = "/nepal-the-trek-to-everest-base-camp"
+tags = ["travel"]
 +++
 
 I've hiked to Everest Base Camp and I'm not going to lie; it's easier than everyone makes it out to be. Don't get me wrong, it's not a walk in the park either but you're rewarded with some of the most spectacular scenery on the planet.
@@ -33,7 +34,7 @@ Everything, and I mean everything is ported up to all the tea houses that you vi
 
 If the tea house has a refrigerator, someone has carried it up. Our guide told us the maximum weight that a mountain porter can carry is 120kg down “low” or 80kg up high. Even though the tourist industry has limits on what the trekking porters can carry (35kg) the locals have no such qualms about using mountain porters who are paid by the kg. As you get up higher just remember that every board, nail, and furnishing of the lodges that you stay in have been carried up by someone. Appreciate that, especially as you're struggling for oxygen as you get higher up. 
 
-![Kala Patthar]({{< cdnUrl >}}images/nepal-to-ebc-summit-web.jpg)
+![Kala Patthar](/images/nepal-to-ebc-summit-web.jpg)
 
 ### 4) Everyone has mobile phones
 

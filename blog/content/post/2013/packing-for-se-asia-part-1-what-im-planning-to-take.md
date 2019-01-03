@@ -3,6 +3,7 @@ date = "2013-06-18T01:51:32+12:00"
 description = "There are literally a million packing lists on the internet for SE Asia, but only a few of them follow up with the realities of living out of a 38L carry-on sized bag."
 title = "Packing for SE Asia Part 1: What I'm planning to take"
 url = "/packing-for-se-asia-part-1-what-im-planning-to-take"
+tags = ["travel"]
 +++
 
 There are literally a million packing lists on the internet for SE Asia, but only a few of them follow up with the realities of living out of a 38L carry-on sized bag.

@@ -3,6 +3,7 @@ date = "2016-06-07T22:40:32+12:00"
 description = "Getting it all to 'transpile' correctly."
 title = "Creating custom Knockout bindings in TypeScript"
 url = "/creating-custom-knockout-bindings-in-typescript"
+tags = ["typescript", "knockout"]
 +++
 
 In Javascript you create a custom knockout.js binding like this

@@ -3,6 +3,7 @@ date = "2016-11-28T20:52:32+12:00"
 description = "Once you've found the reference - delete it. Problem solved."
 title = "Could not load file or assembly 'Microsoft.VisualStudio.Web.PageInspector.Loader..."
 url = "/could-not-load-file-or-assembly-microsoft-visualstudio-web-pageinspector-loader"
+tags = ["visual studio"]
 +++
 
 [VS 2017 RC is out](https://www.visualstudio.com/vs/visual-studio-2017-rc/), no better time to go remove any old versions of Visual Studio I have lying around. However, when I uninstalled an old version of VS 2012 Express - boom, all my local sites stopped working with the following missing assembly error.

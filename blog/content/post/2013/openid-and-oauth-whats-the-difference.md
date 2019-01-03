@@ -3,11 +3,12 @@ date = "2013-04-08T22:30:32+12:00"
 description = "Authentication using OAuth is like the valet obtaining your identity by checking the glove box and finding your drivers license in there."
 title = "OpenID and OAuth: What's the difference?"
 url = "/openid-and-oauth-whats-the-difference"
+tags = ["security"]
 +++
 
 I'm currently in the middle of upgrading [ConceptHQ Accounts](https://accounts.concepthq.net "ConceptHq | Accounts") to accept a small subset of third party identity providers. Microsoft Account (previously Windows Live ID), Google, Facebook, and Twitter. 
 
-![New ConceptHQ Accounts layout]({{< cdnUrl >}}images/accounts-upgrade.png)
+![New ConceptHQ Accounts layout](/images/accounts-upgrade.png)
 
 However they all have a slightly different ways of allowing you to authenticate users with them.
 

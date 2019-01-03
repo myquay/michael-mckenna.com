@@ -3,6 +3,7 @@ date = "2016-04-19T11:58:32+12:00"
 description = "I asked myself some questions and ended up learning a lot about the humble GUID - they really are quite cool."
 title = "GUIDs part 1: What the GUID?"
 url = "/what-the-guid"
+tags = ["guide", "guid"]
 +++
 
 Most developers have seen a GUID or two. A GUID *(Globally Unique Identifier)* is used extensively in computing to uniquely identify all sorts of things. You might also see them referred to as UUIDs - don't worry they're the same thing.

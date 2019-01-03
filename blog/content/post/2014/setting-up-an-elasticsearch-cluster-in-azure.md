@@ -3,6 +3,7 @@ date = "2014-07-07T15:56:32+12:00"
 description = "In this blog post we'll investigate how to set up an elasticsearch cluster on Windows Azure."
 title = "Setting up an elasticsearch cluster in azure"
 url = "/setting-up-an-elasticsearch-cluster-in-azure"
+tags = ["azure", "guide"]
 +++
 
 One of the best things about Azure is that you can set up most of your favourite software on it regardless of its roots. In this blog post we'll investigate how to set up an elasticsearch cluster on Windows Azure.
@@ -17,7 +18,7 @@ In our configuration we will have a public facing web application that is using 
 
 We will use Azure's new [internal load balancing feature](http://azure.microsoft.com/blog/2014/05/20/internal-load-balancing/) to enable us to run a highly available service which isn't publicly exposed. This means the web application can reference the ILB instead of an individual machine in the cluster.
 
-![Our elasticsearch server diagram]({{< cdnUrl >}}images/elastic-search-diagram.png)
+![Our elasticsearch server diagram](/images/elastic-search-diagram.png)
 
 Initially I wanted to use [worker-roles](http://blogg.bouvet.no/2014/05/26/ut-no-a-techical-brief-on-elasticsearch-in-the-cloud/) to host elasticsearch however you cannot use the ILB on PaaS services _yet_. Support is coming soon but until then we will do this whole thing in VMs.
 
@@ -52,11 +53,11 @@ Once the VM is provisioned install java and elasticsearch, [the process is super
 
 1. Install Java
 2. I'm on windows so I need to set JAVA_HOME in the environment variables so programs like elasticsearch know where to find it.
-![Setting java home]({{< cdnUrl >}}images/setting-java-home.png)
+![Setting java home](/images/setting-java-home.png)
 3. Unzip elasticsearch to somewhere on your permanent hard drive (not temporary storage) as you don't want anything silly to happen like losing all your data.
 4. We're going to be installing this as a service so open up the CMD and run "service install"
 5. Go into the services panel and set the start up type as "automatic" so that it starts up automatically as we spin up VMs.  
-![Set as automatic]({{< cdnUrl >}}images/startup-automatic.png)
+![Set as automatic](/images/startup-automatic.png)
 6. Great - it's set up, open up IE and hit `http://localhost:9200` to check it's all working as expected.   
 
 You be prompted to download a json file that looks something like this:

@@ -3,6 +3,7 @@ date = "2013-06-02T01:51:32+12:00"
 description = "What is the wording you should use when referring to items that belong to your user."
 title = "Is it mine or yours?"
 url = "/is-it-mine-or-yours"
+tags = ["article", "UX"]
 +++
 
 When designing the interface for your application the exact wording often comes later in the process, once you have some wire frames complete and a basic app up and running. 

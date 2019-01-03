@@ -3,6 +3,7 @@ date = "2013-03-04T09:13:32+12:00"
 description = "This is the first post in a two part series, in this part we will look at the options available to us in ASP.NET MVC for Error Handling."
 title = "Error handling in ASP.NET MVC Part 1: Our options"
 url = "/error-handling-in-asp-net-mvc-part-1-our-options"
+tags = ["asp dot net mvc"]
 +++
 
 This blog and most of the web applications we build over at [solve.solutions](http://solve.solutions/ "solve.solutions") are based on Microsoft's ASP.NET MVC framework. We wanted a standardised way to approach error handling across our web applications. 

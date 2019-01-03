@@ -3,6 +3,7 @@ date = "2013-11-26T03:51:32+12:00"
 description = "Myanmar is an emerging tourist destination nestled between India, China and Thailand."
 title = "Fast times in Myanmar"
 url = "/fast-times-in-myanmar"
+tags = ["travel"]
 +++
 
 Myanmar is an emerging tourist destination nestled between India, China and Thailand. Being a union of many different ethnic regions the country comes with a diverse range of traditions and customs. It is a country defined by its difficult past and promising future; you can’t help but notice the burgeoning optimism of the Myanmar people. Come with an open mind and sense of adventure and you won’t leave disappointed. 

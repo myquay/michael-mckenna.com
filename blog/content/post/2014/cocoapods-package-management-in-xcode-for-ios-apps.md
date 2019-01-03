@@ -3,6 +3,7 @@ date = "2014-12-13T15:56:32+12:00"
 description = "Wouldn't it be amazing if we could have dependency management in xcode also?"
 title = "Cocoapods: package management in xcode for iOS apps"
 url = "/cocoapods-package-management-in-xcode-for-ios-apps"
+tags = ["ios"]
 +++
 
 I've just started building my first iPhone app and one of the biggest things I missed from .NET land was package management. Visual studio has amazing support for NuGet - even Microsoft distribute some of their core libraries on the platform. 

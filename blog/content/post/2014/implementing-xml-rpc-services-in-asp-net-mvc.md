@@ -3,6 +3,7 @@ date = "2014-05-28T13:51:32+12:00"
 description = "In this post we'll look at how we implemented XML-RPC services in ASP.NET MVC by creating a custom model binder."
 title = "Implementing XML-RPC services in ASP.NET MVC"
 url = "/implementing-xml-rpc-services-in-asp-net-mvc"
+tags = ["asp dot net mvc"]
 +++
 
 Earlier this month I moved my blog to a brand new design to improve the readability of the posts.

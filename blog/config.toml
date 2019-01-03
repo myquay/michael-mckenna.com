@@ -2,48 +2,71 @@ baseURL = "/"
 languageCode = "en-us"
 title = "Michael McKenna"
 themesDir = "themes"
-theme = "hugo-cactus-theme"
+theme = "beautifulhugo"
 googleAnalytics = "UA-27845504-8"
+pygmentsStyle = "trac"
+pygmentsUseClasses = true
+pygmentsCodeFences = true
+pygmentsCodefencesGuessSyntax = true
 
-[params]
-	name = "Michael McKenna"
-	cdnUrl = "https://cdn.michael-mckenna.com/"
-	description = "Software and Startups"
-	bio = "Software and Startups"
-	# Enter optionally your twitter account
-	twitter = "myquay"
-	enableRSS = true
-
-	# Add custom assets with their paths relative to the static folder
-	customCSS = []
-	customJS  = []
-
-	# The variables below are optionally too and can be used to
-	# translate or customize each string of the theme.
-
-	# Navigation links
-	home = ""
-	about = ""
-	subscribe = ""
-	# Pagination links
-	olderPosts = ""
-	newerPosts = ""
-	readMore = ""
-	copyright = ""
-	# Sharing options and author information in posts
-	aboutAuthor = "Software and Startups"
-	tweet = ""
-	share = ""
-	# 404 page
-	# title404 = ""
-	# subtitle404 = ""
-
-	# Choose a font for the social icons in the footer. Either "mono-social" or "font-awesome"
-	iconFont = "mono-social"
-    # The social icons can be styled differently if you use mono as font - circle, rounded, or empty
-    socialIconStyle = "circle"
+[Params]
+  homeTitle = "Hi, I'm Michael"
+  subtitle = "Software and Startups"
+  logo = "images/michael.jpg"
+  favicon = "img/favicon.ico"
+  dateFormat = "January 2, 2006"
+  commit = false
+  rss = true
+  comments = false
+  readingTime = false
+  wordCount = false
+  useHLJS = true
+  socialShare = false
+  delayDisqus = false
+  showRelatedPosts = true
 
 # Add additional social link entries underneath
 [social]
     twitter  = "https://www.twitter.com/myquay"
     github   = "https://www.github.com/myquay"
+
+[[menu.main]]
+    name = "Blog"
+    url = ""
+    weight = 1
+
+[[menu.main]]
+    name = "Tags"
+    url = "tags"
+    weight = 3
+	
+#[[menu.main]]
+#    name = "About"
+#   url = "page/about/"
+#    weight = 3
+
+[Author]
+	name = "Michael McKenna"
+	website = "https://michael-mckenna.com"
+#	email = "youremail@domain.com"
+#	facebook = "username"
+#	googleplus = "+username" # or xxxxxxxxxxxxxxxxxxxxx
+#	github = "username"
+#	gitlab = "username"
+#	bitbucket = "username"
+#	twitter = "username"
+#	reddit = "username"
+#	linkedin = "username"
+#	xing = "username"
+#	stackoverflow = "users/XXXXXXX/username"
+#	snapchat = "username"
+#	instagram = "username"
+#	youtube = "user/username" # or channel/channelname
+#	soundcloud = "username"
+#	spotify = "username"
+#	bandcamp = "username"
+#	itchio = "username"
+#	vk = "username"
+#	paypal = "username"
+#	telegram = "username"
+#	500px = "username"

@@ -3,6 +3,7 @@ date = "2015-03-22T08:45:32+12:00"
 description = "People won't give you money if you treat them poorly."
 title = "Improving conversion rates in KickSmoking"
 url = "/improving-conversion-rates-in-kicksmoking"
+tags = ["article", "product", "kicksmoking"]
 +++
 
 > [In part 1 of this series](http://michael-mckenna.com/blog/monetising-kicksmoking) we looked at the current state of the application KickSmoking. In this series we'll take a look at some of the ways we're going improve conversion rates.

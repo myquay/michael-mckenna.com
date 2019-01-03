@@ -3,7 +3,7 @@ date = "2013-02-25T21:41:32+12:00"
 description = "By enabling sliding expiration if the user has just requested a form then they are guaranteed to have enough time to fill it out before the token expires on them."
 title = "The problem with absolute token expiration in Windows Identity Foundation (WIF)"
 url = "/the-problem-with-absolute-token-expiration-in-windows-identity-foundation-wif"
-
+tags = ["asp dot net mvc", "security"]
 +++
 
 ### The problem

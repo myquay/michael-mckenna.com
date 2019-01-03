@@ -3,6 +3,7 @@ date = "2014-07-24T15:56:32+12:00"
 description = "We’re going to create a formatter that understands JSON Patch."
 title = "How to add JSON Patch support to ASP.NET Web API"
 url = "/how-to-add-json-patch-support-to-asp-net-web-api"
+tags = ["asp dot net mvc", "json patch"]
 +++
 
 In this post we'll look at how to introduce support for the [JSON Patch content type (RFC 6902)](http://tools.ietf.org/html/rfc6902) to ASP.NET Web API.

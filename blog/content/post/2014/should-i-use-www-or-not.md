@@ -3,6 +3,7 @@ date = "2014-07-14T15:56:32+12:00"
 description = "Is it still required? Or can we just use the naked domain?"
 title = "Should I use www or not?"
 url = "/should-i-use-www-or-not"
+tags = ["article"]
 +++
 
 It's common convention to prefix the letter double-u three times on the front of every domain to represent the web host. It's pretty funny that we managed to pick the most awkward, visually dominating letter for this job. 
@@ -21,15 +22,19 @@ Since we should always accept both www and non-www requests does it even matter 
 
 ### Why use www?
 
-[yes-www.org has a few technical reasons ](http://www.yes-www.org/why-use-www/) why you should default to www but they mainly affect sites with high traffic requirements and even then they're not much of an obstacle. 
+[yes-www.org has a few technical reasons ](http://www.yes-www.org/why-use-www/) why you should default to www but they mainly affect sites with high traffic requirements and performance around DNS resolution. 
 
 > You should use www because today you have a small web site, and tomorrow you want a big web site. Really big.
+
+Normally you'd never argue along that line, but here we're chooing between two choices that don't really impact timelines so is not "gold plating" or anything like that. If your site could be huge, make sure you're okay with the technical trade off required to drop the prefix.
 
 #### CNAMEs
 
 [A few sites](http://www.less-broken.com/blog/2012/05/no-www-considered-harmful.html) [bring up the issue](http://www.yes-www.org/why-use-www/) that you can't use CNAME  records on a naked domain which makes them hard to use with cloud services where the public IP address might change. For example in Azure you'd usually reference {whatever}.cloudapp.net instead of the cloud service's public IP. 
 
-In this case, you can use an [ALIAS record](http://support.dnsimple.com/articles/alias-record/) instead of a CNAME record. Sure, not all hosts support it, just go with one that does.
+In this case, you can use an [ALIAS record](http://support.dnsimple.com/articles/alias-record/) instead of a CNAME record. Sure, not all hosts support it, just go with one that does and just keep in mind the [performance implications of the method](https://www.netlify.com/blog/2017/02/28/to-www-or-not-www/)
+
+> The precision of the geographic lookups that Netlify does might suffer We now do our lookup based on the IP of the DNS server rather than the IP of the end user, which can lead to inaccuracies based on the lack of granularity of those servers. 
 
 #### Cookies
 
@@ -49,6 +54,6 @@ The www is a hindrance to this communication. Let's face it, removing the www no
 
 ### So should I remove www?
 
-For [my blog](http://michael-mckenna.com/Blog) I default to the naked domain because I think it looks far better and the technical issues are not problem for me in this situation. 
+For [my blog](http://michael-mckenna.com/Blog) I default to the naked domain because I think it looks better and it's already long enough. Since it's a small site which will probably always be tiny the technical issues are not problem for me in this situation.
 
-But like most things in computer science and life, it really depends on your individual circumstances, I can't tell you whether one option is unequivocally better for all situations. Instead I urge you to go look at both sides of the story and decide which is best for you. 
+But like most things in computer science and life, it really depends on your individual circumstances, I can't tell you whether one option is unequivocally better for all situations. Instead I urge you to go look at both sides of the story and decide which is best for your new web app.

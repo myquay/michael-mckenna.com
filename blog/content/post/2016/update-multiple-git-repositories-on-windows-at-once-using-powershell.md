@@ -3,6 +3,7 @@ date = "2016-11-17T20:52:32+12:00"
 description = "Let's write the script - it's super simple. It's designed to be placed in the parent folder of your Git repositories."
 title = "Update multiple Git repositories on Windows at once using Powershell"
 url = "/update-multiple-git-repositories-on-windows-at-once-using-powershell"
+tags = ["guide", "git", "powershell"]
 +++
 
 If you've got a bit of time there's plenty of guides on how to set up Git and Powershell but to make things simple we're just going to go ahead and download [GitHub Desktop](https://desktop.github.com/). Phil Haack did a pretty good job at convincing me that even though GitHub Desktop is a GUI app - [it's a great way to get the Git command line set up and kept up to date also](http://haacked.com/archive/2015/10/29/git-shell/). In-fact that single blog post made the whole process ridiculously straight forward.
@@ -57,6 +58,6 @@ PowerShell -NoProfile -ExecutionPolicy RemoteSigned -Command "& './sync-all-git-
 
 When you run the script using the `sync.bat` you should see something like this.
 
-![]({{< cdnUrl >}}images/git-cmd.png)
+![](/images/git-cmd.png)
 
 Thanks GitHub Desktop. Too easy :) 

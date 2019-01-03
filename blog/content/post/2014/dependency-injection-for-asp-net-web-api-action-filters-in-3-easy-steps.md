@@ -3,6 +3,7 @@ date = "2014-06-12T20:51:32+12:00"
 description = "This post looks at performing dependency injection on a WebAPI ActionFilter using Unity."
 title = "Dependency injection for ASP.NET Web API action filters in 3 easy steps"
 url = "/dependency-injection-for-asp-net-web-api-action-filters-in-3-easy-steps"
+tags = ["asp dot net mvc"]
 +++
 
 This post looks at performing dependency injection on a WebAPI ActionFilter using Unity. Since we're looking at WebAPI we'll be looking at classes which implement the ActionFilterAttribute base class under the System.Web.Http.Filters namespace. 

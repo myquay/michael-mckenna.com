@@ -3,6 +3,7 @@ date = "2013-04-24T11:40:32+12:00"
 description = "If the user navigated away then used the back button they would be shown the original page with the original data. They'd then think the fancy JavaScript was completely broken."
 title = "The back button and browser caching"
 url = "/the-back-button-and-browser-caching"
+tags = ["client side"]
 +++
 
 I [recently found out](http://blog.55minutes.com/2011/10/how-to-defeat-the-browser-back-button-cache/ "How to Defeat the Browser Back Button Cache • 55 Minutes Blog") that browsers absolutely love serving up cached pages when the user uses the back button.

@@ -3,6 +3,7 @@ date = "2016-11-03T20:52:32+12:00"
 description = "I just needed to quickly run a few Python methods... in Azure"
 title = "How to import Python extension modules in Azure Functions"
 url = "/how-to-import-python-extension-modules-in-azure-functions"
+tags = ["azure", "python", "guide"]
 +++
 
 An awesome feature of Azure Functions is its ability to run a wide range of languages,  [C#, F#, Node.js, Python, PHP, batch, bash, Java, or any executable](https://azure.microsoft.com/en-us/documentation/articles/functions-overview/). So when I wanted to do a bit of work with the Google Eddystone beacon format it was a natural fit as I just needed to quickly run a few Python methods - [given the example code Google provides is in Python](https://github.com/google/eddystone/tree/master/eddystone-eid).
@@ -51,7 +52,7 @@ README.md
 
 You can go ahead and upload this to Azure Functions - if you sync from a repo at this point you should see something like this.
 
-![Upload sample]({{< cdnUrl >}}images/edigenerator.png)
+![Upload sample](/images/edigenerator.png)
 
 If you make a HTTP request to `https://{function app name}.azurewebsites.net/api/{function name}` you should get the message "Azure works :)"
 

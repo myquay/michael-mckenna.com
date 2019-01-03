@@ -3,7 +3,7 @@ date = "2013-02-11T21:41:32+12:00"
 description = "ACS may not directly support single sign out but you can easily log the user out of their identity provider as well as your website using this technique."
 title = "Single sign out with Azure ACS"
 url = "/single-sign-out-with-azure-acs"
-
+tags = ["asp dot net mvc", "security", "azure"]
 +++
 
 ### The problem

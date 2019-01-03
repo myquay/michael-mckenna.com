@@ -3,6 +3,7 @@ date = "2016-04-28T09:56:32+12:00"
 description = "How are GUIDs unique with out a central watch dog?"
 title = "GUIDs part 2: GUID as gold"
 url = "/guid-as-gold"
+tags = ["guid", "guide"]
 +++
 
 How are GUIDs unique with out a central watch dog? They do it through the algorithm that generates them. The specification lists 5 different ways you can end up with a unique identifier, if and only if you follow the instructions. The specification can't prevent someone from choosing the same GUID as you on purpose *(a watchdog might be able to)* but it does prevent them accidentally generating the same GUID as you if they're following it.

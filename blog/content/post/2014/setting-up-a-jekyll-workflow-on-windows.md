@@ -3,6 +3,7 @@ date = "2014-08-22T15:56:32+12:00"
 description = "For sites that are read heavy but get updated quite infrequently (like a blog, or marketing site) a static site is ideal."
 title = "Setting up a Jekyll workflow on windows"
 url = "/setting-up-a-jekyll-workflow-on-windows"
+tags = ["static site generator", "jekyll", "guide"]
 +++
 
 Static site generators are in at the moment, and for good reason. They remove a whole bunch of complexity from deploying and maintaining a site by creating a static representation of it, which you just upload to a web server.

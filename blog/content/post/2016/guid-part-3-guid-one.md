@@ -3,6 +3,7 @@ date = "2016-05-24T09:56:32+12:00"
 description = "Then to make it all stick I implemented the spec"
 title = "GUIDs Part 3: GUID one"
 url = "/guid-part-3-guid-one"
+tags = ["guid", "guide"]
 +++
 
 The ultimate test to be sure you understand a concept is to try and teach it to someone. The way to understand a concept enough to teach it to someone is to implement it. 

@@ -3,6 +3,7 @@ date = "2016-07-01T10:33:32+12:00"
 description = "I'm giving this Go-lang thing a whirl, turns out it's dead easy to set up on Windows."
 title = "Getting started with Go on Windows"
 url = "/getting-started-with-go-on-windows"
+tags = ["go", "guide"]
 +++
 
 I'm giving this Go-lang thing a whirl, turns out it's dead easy to set up on Windows.
@@ -17,9 +18,9 @@ I'm giving this Go-lang thing a whirl, turns out it's dead easy to set up on Win
 
 But we're not quite done yet - Go developers normally keep all their [Go code in a single _workspace_](https://golang.org/doc/code.html). The `GOPATH` environment variable specifies the location of this workspace. The workspace should contain 3 folders `bin`, `pkg` and `src`.
 
-4. Set up your workspace, I created my workspace at `C:\Development\Go` ![Go Workspace]({{< cdnUrl >}}images/go.png)
+4. Set up your workspace, I created my workspace at `C:\Development\Go` ![Go Workspace](/images/go.png)
 
-5. Create the `GOPATH` variable in your Environment settings: _System, Advanced system settings, Environment Variables, New..._. Then add the variable `GOPATH` with the value of your workspace path. ![]({{< cdnUrl >}}images/go-sys-variable.png)
+5. Create the `GOPATH` variable in your Environment settings: _System, Advanced system settings, Environment Variables, New..._. Then add the variable `GOPATH` with the value of your workspace path. ![](/images/go-sys-variable.png)
 
 Now you've installed Go and have your workspace set up - you're practically good to go.
 

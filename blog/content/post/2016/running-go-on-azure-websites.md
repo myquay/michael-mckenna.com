@@ -3,6 +3,7 @@ date = "2016-07-03T20:52:32+12:00"
 description = "It turns out Azure App Services have added native Go support."
 title = "Running Go on Azure App Services"
 url = "/running-go-on-azure-websites"
+tags = ["go", "guide", "azure"]
 +++
 
 At first I thought I was going to have to go something tricky - [Wade Wegner has a great write up of one method here](http://www.wadewegner.com/2014/12/4-simple-steps-to-run-go-language-in-azure-websites/), but it turns [Azure App Services have now added native Go support](https://azure.microsoft.com/en-gb/blog/running-go-applications-on-azure-app-service/) so we don't need to set up Go on the server any more.
@@ -17,11 +18,11 @@ First we need to create and set up an Azure App Service to serve our new Go app 
 
 **2.** We're going to deploy our website from a local Git repo so configure "Local Git Repository" as your deployment source.
 
-![Set up local Git Repository]({{< cdnUrl >}}images/go-azure-01.png)
+![Set up local Git Repository](/images/go-azure-01.png)
 
 **3.** Then set up some credentials so your Git client can authenticate when deploying to your Azure App Service.
 
-![Set credentials]({{< cdnUrl >}}images/go-azure-02.png)
+![Set credentials](/images/go-azure-02.png)
 
 **4.** Now grab your Git repository URL that you will push the code to. It's located under _Settings > Properties > GIT URL_, it will be in the format `https://{username}@{app-service-name}.scm.azurewebsites.net:443/{app-service-name}.git`
 
@@ -64,8 +65,8 @@ func main() {
 
 **3.** Push the changes to your Azure App Service `git push azure master`, and you'll see your deployment show up in the Deployments blade on the Azure Portal.
 
-![]({{< cdnUrl >}}images/go-azure-03.png)
+![](/images/go-azure-03.png)
 
 That's it!! Your Go website is live on Azure Websites, you can navigate to your website to check it out. Actually too easy. You can view the Go website we just built and deployed here: [https://go-lang.azurewebsites.net/](https://go-lang.azurewebsites.net/)
 
-![]({{< cdnUrl >}}images/go-azure-04.png)
+![](/images/go-azure-04.png)

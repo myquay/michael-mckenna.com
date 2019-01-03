@@ -3,6 +3,7 @@ date = "2014-06-20T20:51:32+12:00"
 description = "It's designed to allow an API to support partial updates."
 title = "The great confusion about HTTP Patch"
 url = "/the-great-confusion-about-http-patch"
+tags = ["article"]
 +++
 
 PATCH is a relatively new addition to the set of HTTP verbs. Proposed about 4 years ago in [RFC 5789](http://tools.ietf.org/html/rfc5789) it's designed to allow an API to support partial updates.
@@ -22,7 +23,7 @@ PATCH is a relatively new addition to the set of HTTP verbs. Proposed about 4 ye
      
 Now we can just check the verb to see if we want to null out missing entities, if it was a PUT we'd replace the entire object, and if it's a PATCH we'd just update the properties specified right? ...right? Wrong!
 
-[Turns out I was using PATCH like an idiot.](http://williamdurand.fr/2014/02/14/please-do-not-patch-like-an-idiot/)
+[Turns out there's a few downsides](http://williamdurand.fr/2014/02/14/please-do-not-patch-like-an-idiot/)
 
 ## What was wrong with that? So what is PATCH then?
 

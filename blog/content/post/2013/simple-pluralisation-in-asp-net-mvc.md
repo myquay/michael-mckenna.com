@@ -3,7 +3,7 @@ date = "2013-02-17T20:31:32+12:00"
 description = "If you don't bother with correct pluralisation your users will be less likely to appreciate the care you put into the rest of your application."
 title = "Simple pluralisation in ASP.NET MVC"
 url = "/simple-pluralisation-in-asp-net-mvc"
-
+tags = ["asp dot net mvc"]
 +++
 
 Your software application is like an iceberg. Your users only see a small fraction of the application, the parts that they interact with. Your application can be a mess under the covers but as long as you have a beautiful, quick interface that's super usable, your uses will think your app is designed really well.
@@ -12,7 +12,7 @@ If you don't bother with correct pluralisation your users will be less likely to
 
 For something that can be achieved pretty easily (in English at least) it's surprisingly common to see this pattern
 
-!["Missing pluralisation example in Visual Studio"]({{< cdnUrl >}}images/visual-studio-git-message.png)
+!["Missing pluralisation example in Visual Studio"](/images/visual-studio-git-message.png)
 
 where the "s" is surrounded in parentheses to indicate that it is optional. Not only does this look a little untidy but the sentence still doesn't make sense, "these" should also be changed to "this".
 

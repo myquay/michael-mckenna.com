@@ -3,7 +3,7 @@ date = "2013-03-17T22:14:32+12:00"
 description = "By default TempData is stored in session state, which means if the redirected request didn't hit the same instance then it would look like TempData was simply not set."
 title = "ASP.NET MVC and TempData"
 url = "/asp-net-mvc-and-tempdata"
-
+tags = ["asp dot net mvc"]
 +++
 
 TempData initially seemed [kind of magical](http://msdn.microsoft.com/en-us/library/system.web.mvc.tempdatadictionary.aspx) and uber useful!

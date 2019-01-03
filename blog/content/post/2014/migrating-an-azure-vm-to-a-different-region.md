@@ -3,6 +3,7 @@ date = "2014-12-04T15:56:32+12:00"
 description = "Even though you can't do it from the online interface it, it's actually pretty simple."
 title = "Migrating an Azure VM to a different region"
 url = "/migrating-an-azure-vm-to-a-different-region"
+tags = ["azure", "guide"]
 +++
 
 Microsoft just launched Azure cloud services in Australia, given the proximity to New Zealand where the majority of our customers are based it made sense to migrate Solve's various azure hosted services there.
