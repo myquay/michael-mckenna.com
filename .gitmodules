@@ -1,0 +1,4 @@
+[submodule "blog/blog/themes/beautifulhugo"]
+	path = blog/blog/themes/beautifulhugo
+	url = https://github.com/halogenica/beautifulhugo
+	branch = master
