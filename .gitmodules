@@ -2,3 +2,7 @@
 	path = blog/blog/themes/beautifulhugo
 	url = https://github.com/halogenica/beautifulhugo
 	branch = master
+[submodule "blog/themes/beautifulhugo"]
+	path = blog/themes/beautifulhugo
+	url = https://github.com/halogenica/beautifulhugo
+	branch = master
