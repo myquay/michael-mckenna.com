@@ -9,9 +9,7 @@ tags = ["guide", "azure", "dot net core", "multitenant"]
 
 ## Introduction
 
-This series of blog posts is an exploration of how to achieve multi-tenancy in an ASP.NET Core web application.  There's a lot of code snippets so you can follow along with your own sample ASP.NET Core web application, there's no NuGet package you can plug and play at the end of this but it is a great learning exercise. It touches a few "core" _(sorry, not sorry)_ parts of the framework 😉
-
-This first part covers how to resolve a request to a tenant and how to access information about that tenant.
+This series of blog posts is an exploration of how to achieve multi-tenancy in an ASP.NET Core web application.  There's a lot of code snippets so you can follow along with your own sample app. There's no NuGet package you can plug and play at the end of this but it is a great learning exercise. It touches a few "core" _(sorry, not sorry)_ parts of the framework 😉
 
 ### Parts in the series
 
@@ -20,35 +18,37 @@ This first part covers how to resolve a request to a tenant and how to access in
 * Part 3: Options configuration per tenant _(Upcoming)_
 * Part 4: Authentication per tenant _(Upcoming)_
 
-## What is a multi-tenant app exactly?
+In the first part of the series we resolve a request to a tenant and introduce the ability to access information about that tenant.
+
+### What is a multi-tenant app exactly?
 
 It's a single codebase that responds differently depending on which "tenant" is accessing it, there's a few different patterns you can use like
 
-* **Application level isolation**: Spin up a new website and associated dependencies for each tenant)
+* **Application level isolation**: Spin up a new website and associated dependencies for each tenant
 * **Multi-tenant app each with their own database**: Tenants use the same website, but have their own database
 * **Multi-tenant app each with multi-tenant database**: Tenants use the same website, and the same database (need to be careful about not exposing data to the wrong tenant!!)
 
-Here's a great [in-depth guide about each pattern](https://docs.microsoft.com/en-us/azure/sql-database/saas-tenancy-app-design-patterns)
+Here's a great [in-depth guide about each pattern](https://docs.microsoft.com/en-us/azure/sql-database/saas-tenancy-app-design-patterns). In this series we are exploring the multi-tenant app option.
 
-## What's required in a multi-tenat app?
+### What's required in a multi-tenat app?
 
 There's a few core requirements a multi-teant app will need to meet.
 
 #### Tenant resolution
 
-From the HTTP Request we will need to be able to decide which tenant context to run the request under.
+From the HTTP Request we will need to be able to decide which tenant context to run the request under, this impacts things like which database to access, or what configuration to use.
 
 #### Per-tenant app configuration
 
-The application might be configured differently depending on which tenant context is loaded.
+The application might be configured differently depending on which tenant context is loaded, e.g. Authentication keys for OAuth providers, connection strings etc.
 
 #### Per-tenant data isolation
 
-A tenant will need to be able to access thier data, and their data alone. It should be difficult to expose data in cross tenant scenarios to avoid coding errors. 
+A tenant will need to be able to access thier data, and their data alone. It should be difficult to expose data in cross tenant scenarios to avoid coding errors. This could be achieved by partitioning data within a single datastore or by using a datastore per-tenant.
 
 ## Tenant resolution
 
-The first step we nee to do is be able to identify which tenant a request is running under, to do this let's first decide what data we need to hold about a tenant, we really just need one piece of information currently, the tenant identifier.
+First we want to be able to identify which tenant a request is running under, but before we get too excited we need to decide what data we need to hold about a tenant, we really just need one piece of information currently, the tenant identifier.
 
 ```csharp
 /// <summary>
@@ -65,12 +65,23 @@ public class Tenant
     /// The tenant identifier
     /// </summary>
     public string Identifier { get; set; }
+
+    /// <summary>
+    /// Tenant items
+    /// </summary>
+    public Dictionary<string, object> Items { get; private set; } = new Dictionary<string, object>();
 }
 ```
 
-We will use the tenant identifier to match a tenant based on our resolution strategy, e.g. if host then the identifier should be the host.
+We will use the `Id` as a durable reference to the tenant _(the Identifier may change e.g. the host domain changes)_.
 
-We will use a resolution strategy to match a request to a tenant, the strategy should not rely on any external data to make it nice and fast, some common ones are.
+We will use the `Identifier` to match a tenant based on our resolution strategy.
+
+The property `Items` is just there to let develops add other things to the tenant during the request pipeline, they could also extend the class if they want specific properties or methods.
+
+### Common tenant resolution strategies
+
+We will use a resolution strategy to match a request to a tenant, the strategy should not rely on any external data to make it nice and fast.
 
 #### Host header
 
@@ -97,7 +108,7 @@ public interface ITenantResolutionStrategy
 }
 ```
 
-We will just implement one kind of strategy, that is to resolve the tenant from the host
+In this post, we will implement a strategy which resolves the tenant from the host.
 
 ```csharp
 /// <summary>
@@ -126,7 +137,7 @@ public class HostResolutionStrategy : ITenantResolutionStrategy
 
 ## Tenant storage
 
-Now we know which tenant to load, where to we fetch it from? That will need to be some kind of tenant store - since you will probably want to store things like connection strings against a tenant  it will need to be somewhere secure. All those details are beyond this little blog post so we will define an `ITenantStore` which can be extended with something proper for anything serious.
+Now we know which tenant to load, where do we fetch it from? That will need to be some kind of tenant store. We will need to implement a `ITenantStore` which accepts the tenant identifier and returns the `Tenant` information.
 
 ```csharp
 public interface ITenantStore<T> where T : Tenant
@@ -135,9 +146,9 @@ public interface ITenantStore<T> where T : Tenant
 }
 ```
 
-Why'd I make the store generic? Just incase we wanted more application specific tenant info in the project that uses our library - we can just extend tenant to have any other properties that we need at the application level and configure the store appropriately 👍
+> Why'd I make the store generic? Just incase we wanted more application specific tenant info in the project that uses our library - we can just extend tenant to have any other properties that we need at the application level and configure the store appropriately 👍
 
-For this post I'm just going to do an in-memory implentation for the base object.
+If you want to store things like connection strings against a tenant it will need to be somewhere secure. In this post we are going to just do an in-memory implentation.
 
 ```csharp
  /// <summary>
@@ -168,9 +179,9 @@ There are two main components, registering your services so they can be resolved
 
 ### Registering the services
 
-Now we have a strategy in place for getting a tenant, and a location to retreive the tenant from, we need to register these services with the application container. By convention this looks something like `services.Add{thing}().{fluent-options}`. We will achieve this syntax with a simple builder pattern.
+Now we have a strategy in place for getting a tenant, and a location to retreive the tenant from, we need to register these services with the application container. By convention this looks something like `services.Add{thing}().{fluent-options}`. We will achieve this syntax with a builder pattern.
 
-First we have a little extension to support the nice `.AddMultiTenancy()` pattern.
+First we have a little extension to support the nice `.AddMultiTenancy()` syntax.
 
 ```csharp
 /// <summary>
@@ -247,9 +258,9 @@ services.AddMultiTenancy()
     .WithStore<InMemoryTenantStore>();
 ```
 
-Above is a bit basic but for a proper library you'd want to support passing through options e.g. maybe a pattern to extract the tenantId from the host if not using the entire domain etc, but it gets the job done for now and illustrates the pattern okay.
+This API is great for getting going, but down the line you'd want to support passing through options e.g. maybe a pattern to extract the tenantId from the host if not using the entire domain etc, but it gets the job done for now.
 
-At this point you will be able to inject the store or resolution strategy into a controller, but that's all a bit low level, let's next create a service to allow us to access the current tenant object.
+At this point you will be able to inject the store or resolution strategy into a controller, but that's all a bit low level. You don't want to have to perform these resolution steps everywhere you want to access the Tenant. Let's next create a service to allow us to access the current tenant object.
 
 ```csharp
 /// <summary>
@@ -289,7 +300,7 @@ public TenantBuilder(IServiceCollection services)
 }
 ```
 
-Cool cool, now you can access the current tenant by injecting the service into your controller like so
+Cool cool, now you can access the current tenant by injecting the service into your controller
 
 ```csharp
 /// <summary>
@@ -332,9 +343,9 @@ Great, all is looking good, next we can add some middleware to inject the curret
 
 ### Registering the middleware
 
-Middleware in ASP.NET Core allows you to place some logic into the [request processing pipeline](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-2.2). In our case we should have our middleware registered just before the MVC so the tenant context is available to the controllers processing the request.
+Middleware in ASP.NET Core allows you to place some logic into the [request processing pipeline](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-2.2). In our case we should have our middleware registered before anything that needs to access `Tenant` information, like the MVC middleware. That will likely need the tenant context in the controllers processing the request.
 
-First let's create our Middleware class, this will process the request and inject the Tenant into the current `HttpContext` - super simple.
+First let's create our middleware class, this will process the request and inject the `Tenant` into the current `HttpContext` - super simple.
 
 ```csharp
 internal class TenantMiddleware<T> where T : Tenant
@@ -390,14 +401,14 @@ public static class IApplicationBuilderExtensions
 }
 ```
 
-Finally we can register our middleware, the best place to do this is just before any terminal middleware such as `MVC` which may require access to the `Tenant` information.
+Finally we can register our middleware, the best place to do this is before middleware such as `MVC` which may require access to the `Tenant` information.
 
 ```csharp
 app.UseMultiTenancy();
 app.UseMvc()
 ```
 
-Our tenant will be in the items collection but we don't really want to force the developer to find out where we've stored it so we'll create a nice extension method to pull out the current tenant information.
+Now the `Tenant` will be in the items collection but we don't really want to force the developer to find out where we've stored it, remember the type, need to cast it etc. So we'll create a nice extension method to pull out the current tenant information.
 
 ```csharp
 /// <summary>
@@ -461,7 +472,7 @@ Woohoo, our application is **tenant aware**. That's a big milestone.
 
 ## Bonus, the tenant context accessor
 
-In ASP.NET Core, to access the `HttpContext` in services [you use the `IHttpContextAccessor` service](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-context?view=aspnetcore-2.2), to provide a familiar access pattern to the Tenant information for a developer working on our application we can create a `ITenantAccessor` service which will feel familiar to developers used to the existing pattern.
+In ASP.NET Core, to access the `HttpContext` in services [you use the `IHttpContextAccessor` service](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-context?view=aspnetcore-2.2), to provide a familiar access pattern to the Tenant information for a developer working on our application we can create a `ITenantAccessor` service. This will make the library feel familiar to developers used to the existing pattern.
 
 First the interface
 
@@ -489,6 +500,8 @@ public class TenantAccessor<T> : ITenantAccessor<T> where T : Tenant
 ```
 
 Now if a downstream developer wants to add a service to your app which needs to access the current tenant context they can just inject `ITenantAccessor<T>` in the exact same way as using `IHttpContextAccessor` ⚡⚡
+
+Just go back an mark the `TenantAccessService<T>` class as internal so it's not used outside our assembly by mistake.
 
 ## Wrapping up
 
