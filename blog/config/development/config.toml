@@ -12,8 +12,7 @@ pygmentsCodefencesGuessSyntax = true
 [Params]
   homeTitle = "Hi, I'm Michael"
   subtitle = "Software and Startups"
-  logo = "images/michael.jpg"
-  favicon = "img/favicon.ico"
+  favicon = "favicon.png"
   dateFormat = "January 2, 2006"
   commit = false
   rss = true
