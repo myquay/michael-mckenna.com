@@ -4,6 +4,9 @@ description = "A simple exception handling strategy that enables detailed loggin
 title = "Error handling in ASP.NET MVC Part 2: Our implementation"
 url = "/error-handling-in-asp-net-mvc-part-2-our-implementation"
 tags = ["asp dot net mvc"]
+aliases = [
+    "/error-handling-in-asp-net-mvc-part-2-our-options/"
+]
 +++
 
 [In part 1 of this series](/error-handling-in-asp-net-mvc-part-1-our-options "Michael McKenna's Blog - Error handling in ASP.NET MVC Part 1: Our options") we looked at the options available to us to handle errors in ASP.NET MVC. In this part of the series we will look at our implementation.
