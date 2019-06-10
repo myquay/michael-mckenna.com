@@ -2,23 +2,27 @@
 date = "2019-05-25T20:13:11+12:00"
 description = "Overview of implementing multi-tenancy in .NET core"
 title = "Creating a multi-tenant .NET Core Application - Tenant resolution"
-subtitle = "Series, part 1 of 4"
+subtitle = "Tenant resolution, part 1 of 5"
 url = "/multi-tenant-asp-dot-net-core-application-tenant-resolution"
 tags = ["guide", "azure", "dot net core", "multitenant"]
+summary = "This series of blog posts is an exploration of how to achieve multi-tenancy in an ASP.NET Core web application. In this part of the series we resolve a request to a tenant and introduce the ability to access information about that tenant."
 +++
 
 ## Introduction
 
 This series of blog posts is an exploration of how to achieve multi-tenancy in an ASP.NET Core web application.  There's a lot of code snippets so you can follow along with your own sample app. There's no NuGet package you can plug and play at the end of this but it is a great learning exercise. It touches a few "core" _(sorry, not sorry)_ parts of the framework 😉
 
+In this part of the series we resolve a request to a tenant and introduce the ability to access information about that tenant.
+
 ### Parts in the series
 
 * Part 1: Tenant resolution _(this post)_
-* Part 2: Data isolation per tenant _(Upcoming)_
-* Part 3: Options configuration per tenant _(Upcoming)_
-* Part 4: Authentication per tenant _(Upcoming)_
+* Part 2: [Tenant containers](/multi-tenant-asp-dot-net-core-application-tenant-containers)
+* Part 3: Data isolation per tenant _(Upcoming)_
+* Part 4: Options configuration per tenant _(Upcoming)_
+* Part 5: Authentication per tenant _(Upcoming)_
 
-In the first part of the series we resolve a request to a tenant and introduce the ability to access information about that tenant.
+
 
 ### What is a multi-tenant app exactly?
 
@@ -506,4 +510,6 @@ Just go back an mark the `TenantAccessService<T>` class as internal so it's not 
 ## Wrapping up
 
 In this post we looked at how we can map a request to a tenant. We configured the application container to be able to resolve our tenancy services and even created an `ITenantAccessor` service to allow the tenant to be accessible inside other services just like `IHttpContextAccessor`. We also wrote custom middleware to inject the current tenant information into the `HttpContext` so it's easily accessable to downstream middleware and created a nice extension method so you can grab the current `Tenant` as easy as `HttpContext.GetTenant()`. In the next post _(upcoming)_ we will look at isolating data acess on a per tenant basis.
+
+Next up in the series we look at how to [configure services on a per-tenant basis](/multi-tenant-asp-dot-net-core-application-tenant-containers) so that we can resolve a different implementation based on which tenant is active.
 
