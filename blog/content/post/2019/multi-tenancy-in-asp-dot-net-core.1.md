@@ -10,15 +10,15 @@ summary = "This time we are looking at how we can configure services on a per-te
 
 ## Introduction
 
-Tis post looks at how to configure services on a per-tenant basis. This allows us to resolve a different service or instance based on which tenant is active.
+This post looks at how to configure services on a per-tenant basis. This allows us to resolve a different service or instance based on which tenant is active.
 
 ### Parts in the series
 
 * Part 1: [Tenant resolution](/multi-tenant-asp-dot-net-core-application-tenant-resolution)
-* Part 2: Tenant containers _(this post)_
-* Part 3: Data isolation per tenant _(Upcoming)_
-* Part 4: Options configuration per tenant _(Upcoming)_
-* Part 5: Authentication per tenant _(Upcoming)_
+* *Part 2: Tenant containers _(this post)_*
+* Part 3: [Options configuration per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options)
+* Part 4: Authentication per tenant _(Upcoming)_
+* Part 5: Data isolation per tenant _(Upcoming)_
 
 ### Why have tenant specific containers?
 
