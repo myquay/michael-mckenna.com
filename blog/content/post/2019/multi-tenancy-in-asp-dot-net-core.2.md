@@ -176,7 +176,8 @@ internal class TenantOptionsFactory<TOptions, T> : IOptionsFactory<TOptions>
         }
 
         //Apply tenant specifc configuration (to both named and non-named)
-        _tenantConfig(options, _tenantAccessor.Tenant);
+        if(_tenantAccessor.Tenant != null)
+            _tenantConfig(options, _tenantAccessor.Tenant);
 
         //Apply post configuration
         foreach (var postConfig in _postConfigures)
