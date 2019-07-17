@@ -1,5 +1,5 @@
 +++
-date = "2019-07-15T13:11:12+12:00"
+date = "2019-07-01T13:11:12+12:00"
 description = "Overview of implementing multi-tenancy in .NET core"
 title = "Creating a multi-tenant .NET Core Application - Tenant specific options"
 subtitle = "Tenant specific configuration options, part 3 of 5"
@@ -17,7 +17,7 @@ Today we will extend our multi-tenant solution to work nicely with the [ASP.NET 
 * Part 1: [Tenant resolution](/multi-tenant-asp-dot-net-core-application-tenant-resolution)
 * Part 2: [Tenant containers](/multi-tenant-asp-dot-net-core-application-tenant-containers)
 * *Part 3: Options configuration per tenant _(this post)_*
-* Part 4: Authentication per tenant _(Upcoming)_
+* Part 4: [Authentication per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication)
 * Part 5: Data isolation per tenant _(Upcoming)_
 
 ### Why have tenant specific options?

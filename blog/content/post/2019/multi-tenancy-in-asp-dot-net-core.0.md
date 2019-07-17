@@ -19,7 +19,7 @@ In this part of the series we resolve a request to a tenant and introduce the ab
 * *Part 1: Tenant resolution _(this post)_*
 * Part 2: [Tenant containers](/multi-tenant-asp-dot-net-core-application-tenant-containers)
 * Part 3: [Options configuration per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options)
-* Part 4: Authentication per tenant _(Upcoming)_
+* Part 4: [Authentication per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication)
 * Part 5: Data isolation per tenant _(Upcoming)_
 
 ### What is a multi-tenant app exactly?

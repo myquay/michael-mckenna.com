@@ -17,7 +17,7 @@ This post looks at how to configure services on a per-tenant basis. This allows 
 * Part 1: [Tenant resolution](/multi-tenant-asp-dot-net-core-application-tenant-resolution)
 * *Part 2: Tenant containers _(this post)_*
 * Part 3: [Options configuration per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options)
-* Part 4: Authentication per tenant _(Upcoming)_
+* Part 4: [Authentication per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication)
 * Part 5: Data isolation per tenant _(Upcoming)_
 
 ### Why have tenant specific containers?
