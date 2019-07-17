@@ -10,7 +10,7 @@ summary = "This time we are looking at how we can configure options on a per-ten
 
 ## Introduction
 
-Today we will extend our multi-tenant solution to work nicely with the [ASP.NET Core Options Pattern](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-2.2). This will allow us to configure components using tenant specific configuration options. This is useful in situations such as authentication where different tenants might have different settings regarding identity providers for example.
+Today we will extend our multi-tenant solution to work nicely with the [ASP.NET Core Options Pattern](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-2.2). This will allow us to configure components using tenant specific configuration options. This is useful in situations where different tenants might have different settings, e.g. connection strings, cookie policies etc.
 
 ### Parts in the series
 
@@ -43,7 +43,7 @@ We are going to allow a user to modify options on a per-tenant basis after the o
 
 ASP.NET Core caches options for performance, however we don't want to let `Tenant 1` access `Tenant 2`'s cached options so we will be implementing our own tenant aware options cache.
 
-We will achieve this by implementing the `IOptionsMonitorCache` interface which maintains dedicated options cache per tenant.
+We will achieve this by implementing the `IOptionsMonitorCache` interface to maintain a dedicated options cache per tenant.
 
 ```csharp
 
@@ -175,7 +175,7 @@ internal class TenantOptionsFactory<TOptions, T> : IOptionsFactory<TOptions>
             }
         }
 
-        //Apply tenant specifc configuration (to both named and non-named)
+        //Apply tenant specifc configuration (to both named and non-named options)
         if(_tenantAccessor.Tenant != null)
             _tenantConfig(options, _tenantAccessor.Tenant);
 
@@ -259,16 +259,17 @@ Now any services which support the options pattern can be configured on a per-te
 
 ## Example
 
-Here's an example where we configure the authentication cookie form the identity framework to have a different name based on the tenant.
+Here's an example where we configure the cookie consent requirements based on which tenant is accessed.
 
 ```csharp
 
 //Add multi-tenant services
 services.AddMultiTenancy<KibbleTenant>()
     .WithHostStrategy()
-    .WithPerTenantOptions<CookieAuthenticationOptions>((options, tenant) =>
+    .WithPerTenantOptions<CookiePolicyOptions>((options, tenant) =>
     {
-        options.Cookie.Name = tenant.Id + "-cookie";
+        options.ConsentCookie.Name = tenant.Id + "-consent";
+        options.CheckConsentNeeded = context => tenant.IsBoundByGDPR,
     });
 
 ```
@@ -276,6 +277,3 @@ services.AddMultiTenancy<KibbleTenant>()
 ## Wrapping up
 
 In this post we looked at how we can upgrade ASP.NET Core options pattern to support multi-tenancy. This allows us to apply tenant specific configuration changes to any service which uses the pattern. 
-
-In the next installment we will look at how we can leverage this to support tenant specific authention options.
-

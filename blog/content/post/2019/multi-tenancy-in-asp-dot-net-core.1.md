@@ -161,9 +161,11 @@ The middeware is super simple. It gets the current application container, sets t
 public async Task Invoke(HttpContext context, 
     Func<MultiTenantContainer<T>> multiTenantContainerAccessor)
 {
-    //Set to current tenant container
+    //Set to current tenant container.
+    //Begin new scope for request as ASP.NET Core standard scope is per-request
     context.RequestServices = 
-        new AutofacServiceProvider(multiTenantContainerAccessor().GetCurrentTenantScope());
+        new AutofacServiceProvider(multiTenantContainerAccessor()
+                .GetCurrentTenantScope().BeginLifetimeScope());
     await next.Invoke(context);
 }
 ```
@@ -312,3 +314,5 @@ In the screenshot below the current tenant is in the `URL`, either `t01` or `t02
 ## Wrapping up
 
 In this post we looked at how we can upgrade ASP.NET Core to support the concept of a **TenantSingleton** using syntax which is very similar to how services are registered in ASP.NET core by default. It also supports any application level serivces that have already been registered which makes it suitable to add to an existing project without needing to rewrite all the existing service registration logic. ⚡🎉
+
+Next up in the series we look at how to [configure options on a per-tenant basis](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options) so that different tenants can run with different configurations.

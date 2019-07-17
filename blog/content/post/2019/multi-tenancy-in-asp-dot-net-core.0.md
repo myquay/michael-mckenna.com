@@ -510,4 +510,3 @@ Just go back an mark the `TenantAccessService<T>` class as internal so it's not 
 In this post we looked at how we can map a request to a tenant. We configured the application container to be able to resolve our tenancy services and even created an `ITenantAccessor` service to allow the tenant to be accessible inside other services just like `IHttpContextAccessor`. We also wrote custom middleware to inject the current tenant information into the `HttpContext` so it's easily accessable to downstream middleware and created a nice extension method so you can grab the current `Tenant` as easy as `HttpContext.GetTenant()`. In the next post _(upcoming)_ we will look at isolating data acess on a per tenant basis.
 
 Next up in the series we look at how to [configure services on a per-tenant basis](/multi-tenant-asp-dot-net-core-application-tenant-containers) so that we can resolve a different implementation based on which tenant is active.
-
