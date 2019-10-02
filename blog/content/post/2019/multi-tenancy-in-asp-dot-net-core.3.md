@@ -2,11 +2,13 @@
 date = "2019-07-15T13:11:12+12:00"
 description = "Overview of implementing multi-tenancy in .NET core"
 title = "Creating a multi-tenant .NET Core Application - Tenant specific authentication"
-subtitle = "Tenant specific authentication, part 4 of 5"
+subtitle = "Tenant specific authentication, part 4 of 4"
 url = "/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication"
 tags = ["guide", "azure", "dot net core", "multitenant"]
 summary = "This time we are looking at how we can configure authentication on a per-tenant basis."
 +++
+
+> 🚨 **This is not compatible with .NET Core 3.0** 🚨 
 
 ## Introduction
 
@@ -20,7 +22,6 @@ This is important to allow consent screens on third party services reflect the b
 * Part 2: [Tenant containers](/multi-tenant-asp-dot-net-core-application-tenant-containers)
 * Part 3: [Options configuration per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options)
 * *Part 4: Authentication per tenant _(this post)_*
-* Part 5: Data isolation per tenant _(Upcoming)_
 
 ### Why have tenant specific authentication?
 

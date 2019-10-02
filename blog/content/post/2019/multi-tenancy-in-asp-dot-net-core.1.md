@@ -2,11 +2,13 @@
 date = "2019-06-06T20:13:11+12:00"
 description = "Overview of implementing multi-tenancy in .NET core"
 title = "Creating a multi-tenant .NET Core Application - Tenant containers"
-subtitle = "Tenant containers, part 2 of 5"
+subtitle = "Tenant containers, part 2 of 4"
 url = "/multi-tenant-asp-dot-net-core-application-tenant-containers"
 tags = ["guide", "azure", "dot net core", "multitenant"]
 summary = "This time we are looking at how we can configure services on a per-tenant basis which allows us to resolve a different service based on which tenant is active. An application isn't truly multi-tenant unless you can have a different services container for each tenant."
 +++
+
+> 🚨 **This is not compatible with .NET Core 3.0** 🚨 
 
 ## Introduction
 
@@ -18,7 +20,6 @@ This post looks at how to configure services on a per-tenant basis. This allows 
 * *Part 2: Tenant containers _(this post)_*
 * Part 3: [Options configuration per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options)
 * Part 4: [Authentication per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication)
-* Part 5: Data isolation per tenant _(Upcoming)_
 
 ### Why have tenant specific containers?
 

@@ -2,7 +2,7 @@
 date = "2019-05-25T20:13:11+12:00"
 description = "Overview of implementing multi-tenancy in .NET core"
 title = "Creating a multi-tenant .NET Core Application - Tenant resolution"
-subtitle = "Tenant resolution, part 1 of 5"
+subtitle = "Tenant resolution, part 1 of 4"
 url = "/multi-tenant-asp-dot-net-core-application-tenant-resolution"
 tags = ["guide", "azure", "dot net core", "multitenant"]
 summary = "This series of blog posts is an exploration of how to achieve multi-tenancy in an ASP.NET Core web application. In this part of the series we resolve a request to a tenant and introduce the ability to access information about that tenant."
