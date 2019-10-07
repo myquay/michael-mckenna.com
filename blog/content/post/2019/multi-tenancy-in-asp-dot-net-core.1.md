@@ -8,7 +8,8 @@ tags = ["guide", "azure", "dot net core", "multitenant"]
 summary = "This time we are looking at how we can configure services on a per-tenant basis which allows us to resolve a different service based on which tenant is active. An application isn't truly multi-tenant unless you can have a different services container for each tenant."
 +++
 
-> 🚨 **This is not compatible with .NET Core 3.0** 🚨 
+> 🚨 **This is not compatible with .NET Core 3.0** 🚨 <br />
+> We cover ths changes we need to make in [this post here](/multi-tenancy-compatibility-dot-net-core-three)
 
 ## Introduction
 

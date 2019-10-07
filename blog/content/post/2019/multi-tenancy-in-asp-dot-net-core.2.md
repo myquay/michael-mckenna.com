@@ -8,7 +8,8 @@ tags = ["guide", "azure", "dot net core", "multitenant"]
 summary = "This time we are looking at how we can configure options on a per-tenant basis any third party service that supports the Options Pattern."
 +++
 
-> 🚨 **This is not compatible with .NET Core 3.0** 🚨 
+> 🚨 **This is not compatible with .NET Core 3.0** 🚨  <br />
+> We cover ths changes we need to make in [this post here](/multi-tenancy-compatibility-dot-net-core-three)
 
 ## Introduction
 
