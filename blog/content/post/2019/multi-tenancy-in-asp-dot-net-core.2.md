@@ -8,12 +8,14 @@ tags = ["guide", "azure", "dot net core", "multitenant"]
 summary = "This time we are looking at how we can configure options on a per-tenant basis any third party service that supports the Options Pattern."
 +++
 
-> 🚨 **This is not compatible with .NET Core 3.0** 🚨  <br />
-> We cover ths changes we need to make in [this post here](/multi-tenancy-compatibility-dot-net-core-three)
-
 ## Introduction
 
-Today we will extend our multi-tenant solution to work nicely with the [ASP.NET Core Options Pattern](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-2.2). This will allow us to configure components using tenant specific configuration options. This is useful in situations where different tenants might have different settings, e.g. connection strings, cookie policies etc.
+Today we will extend our multi-tenant solution to work nicely with the [ASP.NET Core Options Pattern](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-2.2). This will allow us to configure components using tenant specific configuration options. 
+
+> **This post is compatible with .NET Core 2.2 only** <br />
+> We make this compatible with [**.NET Core 3.1** (LTS release) in this post here](/multi-tenancy-compatibility-dot-net-core-three)
+
+This is useful in situations where different tenants might have different settings _(connection strings, cookie policies etc)_, but the services we are configuring are unaware of the whole multi-tenant situation.
 
 ### Parts in the series
 
@@ -21,6 +23,7 @@ Today we will extend our multi-tenant solution to work nicely with the [ASP.NET 
 * Part 2: [Tenant containers](/multi-tenant-asp-dot-net-core-application-tenant-containers)
 * *Part 3: Options configuration per tenant _(this post)_*
 * Part 4: [Authentication per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication)
+* Extra: [Upgrading to .NET Core 3.1 (LTS)](/multi-tenancy-compatibility-dot-net-core-three)
 
 ### Why have tenant specific options?
 
