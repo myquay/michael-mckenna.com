@@ -22,6 +22,7 @@ In this part of the series we resolve a request to a tenant and introduce the ab
 * Part 2: [Tenant containers](/multi-tenant-asp-dot-net-core-application-tenant-containers)
 * Part 3: [Options configuration per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options)
 * Part 4: [Authentication per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication)
+* Extra: [Upgrading to .NET Core 3.1 (LTS)](/multi-tenancy-compatibility-dot-net-core-three)
 
 ### What is a multi-tenant app exactly?
 

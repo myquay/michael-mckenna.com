@@ -8,12 +8,15 @@ tags = ["guide", "azure", "dot net core", "multitenant"]
 summary = "This time we are looking at how we can configure services on a per-tenant basis which allows us to resolve a different service based on which tenant is active. An application isn't truly multi-tenant unless you can have a different services container for each tenant."
 +++
 
-> 🚨 **This is not compatible with .NET Core 3.0** 🚨 <br />
-> We cover ths changes we need to make in [this post here](/multi-tenancy-compatibility-dot-net-core-three)
+
+
 
 ## Introduction
 
 This post looks at how to configure services on a per-tenant basis. This allows us to resolve a different service or instance based on which tenant is active.
+
+> **This post is compatible with .NET Core 2.2 only** <br />
+> We make this compatible with [**.NET Core 3.1** (LTS release) in this post here](/multi-tenancy-compatibility-dot-net-core-three)
 
 ### Parts in the series
 
@@ -21,16 +24,17 @@ This post looks at how to configure services on a per-tenant basis. This allows 
 * *Part 2: Tenant containers _(this post)_*
 * Part 3: [Options configuration per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options)
 * Part 4: [Authentication per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication)
+* Extra: [Upgrading to .NET Core 3.1 (LTS)](/multi-tenancy-compatibility-dot-net-core-three)
 
 ### Why have tenant specific containers?
 
 There are three standard scopes supported by the default ASP.NET Core dependency injection provider
 
 * **Transient** - new instance each time one is requested
-* **Scoped** - new instance for each client request
+* **Scoped** - new instance for each HTTP request
 * **Singleton** - new instance the first time it is requested
 
-This covers most scenarios you'll need in a standard web app, however when operating in a multi-tenant environment we really need to support a _different singleton scoped instance_ per tenant
+This covers most scenarios you'll need in a standard web app, however when operating in a multi-tenant environment we really need to support a _different_ singleton scoped instance per tenant
 
 * **TenantSingleton** - new instance the first time it is requested for each tenant
 
@@ -50,11 +54,11 @@ We are going achieve the new scope by implementing a custom lifetime management 
 
 ### Architecture
 
-> Before I get started here, I just want to call our the fantasitc work that's been done in the [Autofac.Multitenant](https://github.com/autofac/Autofac.Multitenant) library. Have a read thorough the source code to get a good understanding of the approach I've gone with.
+> Before I get started here, I just want to call our the fantasitc work that's been done in the [Autofac.Multitenant](https://github.com/autofac/Autofac.Multitenant) library. Have a read through the source code to get a good understanding of the approach I've gone with.
 
 There are 5 main steps to our solution
 
-1. **Create a custom `IContainer`**: We need to detect the current tenant and resolve services from that tenant's configured scope _(Same idea behind the [Autofac.Multitenant solution](https://github.com/autofac/Autofac.Multitenant))_
+1. **Create a custom `IContainer`**: We need to detect the current tenant and resolve services from that tenant's configured scope
 2. **Create middleware to set the request `IServiceProvider`**: This is so we set the service container to correct scope for the current tenant on each request _(We get the current tenant at request time, not startup)_
 3. **Create an `IServiceCollection` extension method**: This is to support a nice developer experience for configuring tenant specific services
 4. **Create an `IApplicationBuilder` extension method**: This is to support a nice developer experience for configuring the tenant container middleware
@@ -149,7 +153,7 @@ internal class MultiTenantContainer<T> : IContainer where T : Tenant
 }
 ```
 
-With all the other methods required by the `IContainer` interface surface them from the `TenantLifetimeScope` e.g. Follow this pattern.
+The `IContainer` interface requires a bunch more methods than what's implmented above, but we're done with our customisation so just surface them from the `TenantLifetimeScope` like below
 
 ```csharp
 public object Tag => GetCurrentTenantScope().Tag;
