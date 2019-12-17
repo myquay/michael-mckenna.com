@@ -14,7 +14,7 @@ This series of blog posts is an exploration of how to achieve multi-tenancy in a
 
 In this part of the series we resolve a request to a tenant and introduce the ability to access information about that tenant.
 
-> **2019-12-03: This post is compatible with .NET Core 3.1 with is a LTS release**
+> **2019-12-03: This post is compatible with .NET Core 3.1 which is a LTS release**
 
 ### Parts in the series
 
