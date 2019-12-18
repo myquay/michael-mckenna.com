@@ -28,5 +28,6 @@ GUIDs don't have this problem, uniqueness is baked into the standard. There is n
 
 Amazing right? Am I right? Over the next few installments in this series we'll take a look at how GUIDs ensure uniqueness without a central repository.
 
-<alert><span>Note:</span>This is a [3 part series](https://michael-mckenna.com/tag/guid/) about my personal exploration of GUIDs. You can follow along to learn all about GUIDs, [check out my open source C# implementation](https://github.com/myquay/GuidOne) of the specification, and [visit a fun GUID generator I built called <b>guid.one</b>](http://guid.one).
-</alert>
+<hr />
+
+This is a [3 part series](/tags/guid/) about my personal exploration of GUIDs. You can follow along to learn all about GUIDs, [check out my open source C# implementation](https://github.com/myquay/GuidOne) of the specification, and [visit a fun GUID generator I built called <b>guid.one</b>](http://guid.one).
