@@ -1,14 +1,22 @@
 +++
 date = "2019-10-02T13:11:12+12:00"
-description = "Upgrading multi-tenancy to .NET Core 3.0"
-title = "Migrating multi-tenancy to .NET Core 3.0"
-subtitle = "How to make the multi-tenant solution compatible with .NET Core 3.0"
+description = "Upgrading multi-tenancy to .NET Core 3.1"
+title = "Migrating multi-tenancy to .NET Core 3.1 (LTS)"
+subtitle = "How to make the multi-tenant solution compatible with .NET Core 3.1"
 url = "/multi-tenancy-compatibility-dot-net-core-three"
 tags = ["guide", "azure", "dot net core", "multitenant"]
-summary = ".NET Core 3.0 is out and our 4 part multi-tenancy series is already out of date! Here we'll cover off the breaking changes and the updates we need to make."
+summary = ".NET Core 3.1 is out and it's a LTS release. Our 4 part multi-tenancy series is already out of date! Here we'll cover off the breaking changes and the updates we need to make."
 +++
 
+> **2019-12-03: Updated blog post from .NET 3.0 to .NET Core 3.1 which is a LTS release**
+
 ## Introduction
+
+Since writing our [multi-tenancy mini-series](/multi-tenant-asp-dot-net-core-application-tenant-resolution) based on .NET Core 2.2, [.NET Core 3.1](https://devblogs.microsoft.com/dotnet/announcing-net-core-3-1/) has come along and [is a long term supported (LTS) release](https://dotnet.microsoft.com/platform/support/policy/dotnet-core). This post covers off all the changes you need to complete to make our mini-series compatible with your shiny new .NET Core 3.1 web application.
+
+## Fix for custom service provider
+
+The custom service provider is used to support tenant specific containers as descripted [in Part 2 of the mini-series](/multi-tenant-asp-dot-net-core-application-tenant-containers).
 
 ASP.NET Core 3 has removed the ability to return a service provider from the `ConfigureServices` method, if you upgrade a project to ASP.NET Core 3 then our solution will give you a nice not supported exception on start up
 
@@ -33,7 +41,7 @@ _There's a good reason the default service container doesn't support it - the va
 
 ### The new integration point
 
-In ASP.NET Core 3+ (and [Generic hosts](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-3.0)) there is a new method called `UseServiceProviderFactory` which you use to register your custom service provider factory during host configuration.
+In ASP.NET Core 3+ _(and [Generic hosts](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-3.0))_ there is a new method called `UseServiceProviderFactory` which you use to register your custom service provider factory during host configuration.
 
 ```csharp
 public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -62,7 +70,10 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
 
 ## The implementation
 
-Our implementation has two parts, our service provider factory to inject our multi-tenant container and the configuration callback which registers the tenant specific serivices.
+Our implementation has two parts
+
+1. Our service provider factory to inject our multi-tenant container
+2. The configuration callback which registers the tenant specific serivices.
 
 ### MultiTenantServiceProviderFactory
 
@@ -123,7 +134,7 @@ public class MultiTenantServiceProviderFactory<T> : IServiceProviderFactory<Cont
 
 ### Startup.ConfigureMultiTenatServices
 
-We still need to provide our tenant specifc service registrations, we will do this via. a callback as we don't want to set these up in the host configuration file. For our callback we've followed the framework's `ConfigureServices` idiom and placed the tenanted version in the Startup file with a very similar name `ConfigureMultiTenantServices`. This provides a nice intuative developer experience, global services go in `ConfigureServices`, and tenant specifc services of in `ConfigureMultiTenantServices`.
+We still need to provide our tenant specifc service registrations, we will do this with a callback as we don't want to set these up in the host file. For our callback we've followed the framework's `ConfigureServices` idiom and placed the tenanted version in the Startup file with a very similar name `ConfigureMultiTenantServices`. This provides a nice intuitive developer experience. Global services go in `ConfigureServices` and tenant specifc services of in `ConfigureMultiTenantServices`.
 
 
 ```csharp
@@ -137,9 +148,13 @@ public static void ConfigureMultiTenantServices(Tenant t, ContainerBuilder c)
 
 Since we no longer register or service provider in the `ConfigureServices` method, we can remove our old extension method `UseMultiTenantServiceProvider` and delete it from the `ConfigureSerivces` method.
 
-### Tenant specific options
+## Fix for Tenant specific options
 
-I couldn't track down why, but it seems the framework now seems to agressively resolves any `IOptions`, sometimes even before the `HttpContext` is available. Depending on our tenant resolution strategy we potentially need it which was causing issues with our [Tenant Specific Options](multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options) implementation. To resolve this we just shunted our registration down to the tenant container where we know our tenants are resolving correctly.
+I couldn't track down exactly why, but it seems the framework now seems to agressively resolves any `IOptions`, sometimes even before the `HttpContext` is available. We potentially need the `HttpContext` depending on our tenant resolution strategy which was causing issues with our [Tenant Specific Options](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options) implementation. 
+
+To resolve this we just shunted our registration down to the tenant container where we know our tenants are resolving correctly.
+
+### Implementation
 
 To do this we will create a new Extension method to register our `IOptions` implementation against the container builder
 
@@ -186,6 +201,8 @@ c.RegisterTenantOptions<CookiePolicyOptions, Tenant>((options, tenant) =>
              })
 ```
 
+It makes sense to register tenant specific options in the per-tenant configuration section.
+
 ## Wrapping up
 
-I'm very excited about all the new features in .NET Core 3, especially C# 8.0 and the introduction of [Nullable Reference Types](https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references), I'm glad to see the [migration path from .NET Core 2.2 to 3.0](https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30?view=aspnetcore-3.0&tabs=visual-studio) for quite a complicated bit of middleware was fairly straight forward in this case.
+I'm very excited about all the new features in .NET Core 3, especially C# 8.0 and the introduction of [Nullable Reference Types](https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references), I'm glad to see the [migration path from .NET Core 2.2 to 3.0](https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30?view=aspnetcore-3.0&tabs=visual-studio) for quite a complicated bit of middleware was fairly straight forward here. Frameworks naturally evolve and it's nice to have a smooth upgrade experience in this case.
