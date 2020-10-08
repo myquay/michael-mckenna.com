@@ -16,7 +16,7 @@ The only way I could find to introduce HTTP Patch support was through adding a d
 
 > A PATCH or MERGE indicates a differential update. The service MUST replace exactly those property values that are specified in the request body. Missing properties, including dynamic properties, MUST NOT be altered.
 
-[I'm not that much of a fan](http://michael-mckenna.com/Blog/the-great-confusion-about-http-patch) of representing a set of changes as a partial entity, I don't want to introduce a dependency on the entire OData library just for their Patch support, and I want to use the JSON Patch standard. 
+[I'm not that much of a fan](http://michael-mckenna.com/the-great-confusion-about-http-patch) of representing a set of changes as a partial entity, I don't want to introduce a dependency on the entire OData library just for their Patch support, and I want to use the JSON Patch standard. 
 
 So we're going to build it ourselves™
 
