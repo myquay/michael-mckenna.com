@@ -1,5 +1,5 @@
 +++
-date = "2020-10-08T13:11:12+12:00"
+date = "2020-10-07T13:11:12+12:00"
 description = "Generate the correct request schema for Patch operations in ASP.NET Core 3.1 which use JsonPatchDocument"
 title = "JSON Patch Support with Swagger and ASP.NET Core 3.1"
 subtitle = "Getting Swagger and JsonPatchDocument to play nice"
