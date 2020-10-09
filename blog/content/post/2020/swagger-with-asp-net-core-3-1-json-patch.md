@@ -5,7 +5,7 @@ title = "JSON Patch Support with Swagger and ASP.NET Core 3.1"
 subtitle = "Getting Swagger and JsonPatchDocument to play nice"
 url = "/swagger-with-asp-net-core-3-1-json-patch"
 tags = ["swagger","dot net core", "json-patch"]
-summary = "By default the schema generated is that of JsonPatchDocument and not an array of operations"
+summary = "By default the schema generated is that of JsonPatchDocument and not an array of operations. This is how I generated an accurate Swagger speficiation for my .NET Core API Project."
 +++
 
 ## Introduction
