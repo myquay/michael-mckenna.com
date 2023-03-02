@@ -14,7 +14,7 @@ steps:
 
 - task: AzureFileCopy@5
   inputs:
-    SourcePath: '$(Build.ArtifactStagingDirectory)\blog'
+    SourcePath: '$(Build.ArtifactStagingDirectory)\blog\*'
     azureSubscription: 'Solve Solutions (e9cd9f74-e762-4755-a2db-7f02bf990173)'
     Destination: 'AzureBlob'
     storage: 'mckproductionblog'
