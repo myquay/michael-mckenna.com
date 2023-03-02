@@ -10,6 +10,9 @@ pool:
   vmImage: windows-latest
 
 steps:
+- checkout: self
+  submodules: true
+
 - script: '$(Build.SourcesDirectory)\bin\hugo.exe -s $(Build.SourcesDirectory)\blog -d $(Build.ArtifactStagingDirectory) --log -v'
 
 - task: PublishPipelineArtifact@1
