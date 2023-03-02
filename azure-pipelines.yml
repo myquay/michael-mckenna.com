@@ -10,11 +10,17 @@ pool:
   vmImage: windows-latest
 
 steps:
-- script: '$(Build.SourcesDirectory)\bin\hugo.exe -s $(Build.SourcesDirectory)\blog -d $(Build.ArtifactStagingDirectory)\blog --log -v'
+- script: '$(Build.SourcesDirectory)\bin\hugo.exe -s $(Build.SourcesDirectory)\blog -d $(Build.ArtifactStagingDirectory) --log -v'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: 'blog'
+    publishLocation: 'pipeline' 
 
 - task: AzureFileCopy@5
   inputs:
-    SourcePath: '$(Build.ArtifactStagingDirectory)\blog\*'
+    SourcePath: '$(Build.ArtifactStagingDirectory)\*'
     azureSubscription: 'Solve Solutions (e9cd9f74-e762-4755-a2db-7f02bf990173)'
     Destination: 'AzureBlob'
     storage: 'mckproductionblog'
