@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 
 steps:
 - script: '$(Build.SourcesDirectory)\bin\hugo.exe -s $(Build.SourcesDirectory)\blog -d $(Build.ArtifactStagingDirectory) --log -v'
