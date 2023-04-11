@@ -47,5 +47,5 @@ jobs:
             
     - name: ♻️ Purge Cloudflare Cache
       run: |
-        curl -sS "https://api.cloudflare.com/client/v4/zones/${{vars.CLOUDFLARE_ZONE}}/purge_cache" -H "Content-Type: application/json" -H "Authorization: Bearer ${secrets.CLOUDFLARE_TOKEN}" --data "{\"purge_everything\":true}"
+        curl -sS "https://api.cloudflare.com/client/v4/zones/${{vars.CLOUDFLARE_ZONE}}/purge_cache" -H "Content-Type: application/json" -H "Authorization: Bearer ${{secrets.CLOUDFLARE_TOKEN}}" --data "{\"purge_everything\":true}"
         
