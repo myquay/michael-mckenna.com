@@ -8,8 +8,7 @@ tags = ["asp dot net mvc", "security", "azure"]
 
 ### The problem
 
-While developing [CronHQ][cronhq] we initially had problems with our Facebook integration. 
-Rule #6 of the Facebook guidelines require us to provide an explicit logout link.
+While an application recently I had problems with our Facebook integration, namely rule 6. This rule require us to provide an explicit logout link.
 
 > 6\. Your website must offer an explicit "Log Out" option that also logs the user out of Facebook
 
@@ -21,7 +20,7 @@ Signing out of the identity provider as well as your website helps prevent unaut
 
 ### The solution
 
-There are a couple of solutions out there using an intermediary page with either [an image tag][haishibai] or [an iFrame][overcode] to call the identity provider’s logout URL during the logout process.
+There are a couple of solutions out there using an intermediary page with either [an image tag][haishibai] or an iFrame to call the identity provider’s logout URL during the logout process.
 
 They both follow the same concept where the user’s browser is asked to call the logout URL of the identity provider that they used to sign in with. This can’t be a back channel process as we need the user’s browser to pass on the cookies for the identity provider so that the identity provider knows who to log out.
 
@@ -86,7 +85,6 @@ The Facebook sign out URL is the only one with a special format
 
 ACS may not directly support single sign out but you can easily log the user out of their identity provider as well as your website using this technique. 
 
-[cronhq]: http://www.cronhq.net/  "CronHQ - Cron service for managing online scheduled tasks"
-[azuresso]: http://social.msdn.microsoft.com/Forums/pl-PL/windowsazuresecurity/thread/cea8aeec-e710-4ab3-812d-5e04e4627809/  "Single Sign Out with AppFabric ACS"
-[haishibai]: http://haishibai.blogspot.co.nz/2012/08/sign-out-from-identity-providers-when.html  "Sign out cleanly from Identity Providers when using ACS"
-[overcode]: http://www.overcode.hk/?cat=10  "Azure | OverCode"
+[azuresso]: https://social.msdn.microsoft.com/Forums/pl-PL/windowsazuresecurity/thread/cea8aeec-e710-4ab3-812d-5e04e4627809/  "Single Sign Out with AppFabric ACS"
+[haishibai]: https://haishibai.blogspot.co.nz/2012/08/sign-out-from-identity-providers-when.html  "Sign out cleanly from Identity Providers when using ACS"
+[overcode]: https://www.overcode.hk/?cat=10  "Azure | OverCode"

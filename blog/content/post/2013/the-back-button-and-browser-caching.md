@@ -6,17 +6,15 @@ url = "/the-back-button-and-browser-caching"
 tags = ["client side"]
 +++
 
-I [recently found out](http://blog.55minutes.com/2011/10/how-to-defeat-the-browser-back-button-cache/ "How to Defeat the Browser Back Button Cache • 55 Minutes Blog") that browsers absolutely love serving up cached pages when the user uses the back button.
+I [recently found out](https://stackoverflow.com/questions/49547/how-do-we-control-web-page-caching-across-all-browsers/ "How do we control web page caching, across all browsers?") that browsers absolutely love serving up cached pages when the user uses the back button.
 
 ### How was this a problem?
 
-We had an issue where we'd update a page in place and save the changes using JavaScript. If the user navigated away then used the back button they would be shown the original page with the original data. They'd then think the fancy JavaScript was completely broken.
-
-That makes a developer sad face. Especially when they put a whole bunch of effort in to creating such a seamless editing experience.
+We had an issue where we'd update a page in place and save the changes using JavaScript. If the user navigated away then used the back button they would be shown the original page with the original data. They'd then think the changes weren't saved. There's also a few other areas such as security applications which might not want to redisplay content for reasons.
 
 ### How do we change this behaviour?
 
-As mentioned [in that article on 55 minutes](http://blog.55minutes.com/2011/10/how-to-defeat-the-browser-back-button-cache/ "How to Defeat the Browser Back Button Cache • 55 Minutes Blog") you can simply configure the cache-control header correctly.
+The history list is not actually a cache so is not subject to freshness directives, although in practice cache control headers tend to influence the back button behaviour. So setting some cache-control headers seems to be your best bet - the key directives browers respect are `no-store` and `must-revalidate`.
 
 ### How do we do that in ASP.NET MVC?
 
@@ -42,5 +40,3 @@ Now on any action that I don't want to be cached (even by the browser back butto
 If you inspect the HTTP Response you should see the following header
 
     Cache-Control:no-cache, must-revalidate, no-store
-
-\#tooeasy
