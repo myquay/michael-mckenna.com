@@ -15,7 +15,7 @@ jobs:
       with:
         submodules: true
         
-    - uses: azure/login@v1
+    - uses: azure/login@v1.4.6
       name: Log into Azure
       with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
