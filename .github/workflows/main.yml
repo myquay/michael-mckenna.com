@@ -1,0 +1,32 @@
+name: Blob storage website CI
+
+on:
+    push:
+        branches: [ main ]
+
+jobs:
+  build:
+    name: Build Website
+    runs-on: windows-latest
+    steps:
+    
+    - uses: actions/checkout@v3
+      name: Checkout
+      with:
+        submodules: true
+        
+    - uses: azure/login@v1
+      name: Log into Azure
+      with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - uses: actions/github-script@v6.4.1
+      with:
+        script: '.\bin\hugo.exe -s .\blog -d .\dist --log -v'
+        
+    
+    - uses: azure/CLI@v1
+      name: Upload to blob storage
+      with:
+        inlineScript: |
+            az storage blob upload-batch --account-name mck-production-blog  --auth-mode key -d '$web' -s .\dist
