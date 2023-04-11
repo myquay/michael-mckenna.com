@@ -12,25 +12,17 @@ For sites that are read heavy but get updated quite infrequently (like a blog, o
 
 Personally I love [GitHub pages](https://pages.github.com/), it provides first class support for Jekyll which builds all your markdown content, templates, and other site assets into a static website.
 
-The only problem is that Jekyll isn't officially supported on Windows; I was using it for a a start up running the .NET stack [called Slipspace](http://slipspace.co/). The good news is that it's super simple to get up an running.
+The only problem is that Jekyll isn't officially supported on Windows. The good news is that it's super simple to get up an running.
 
-In this post we'll look at how we integrated [Jekyll](http://jekyllrb.com/) into our work flow using [Grunt](http://gruntjs.com/) to glue all the moving pieces together.
+In this post we'll look at how we integrated [Jekyll](https://jekyllrb.com/) into our work flow using [Grunt](https://gruntjs.com/) to glue all the moving pieces together.
 
 ### First you need to install Jekyll
 
-This post isn't about setting up your first Jekyll site, there's already [great resources](http://jekyllbootstrap.com/lessons/jekyll-introduction.html) out there to help with that. I'm going to assume you're familiar with the basics and have Jekyll installed. If you don't have Jekyll yet, [follow this guide here](http://jekyll-windows.juthilo.com/). It's the one I used, and I had no problems.
-
-We'll look at how we develop the [Slipspace public site](http://slipspace.co/) on Windows. 
+This post isn't about setting up your first Jekyll site, there's already [great resources](http://jekyllbootstrap.com/lessons/jekyll-introduction.html) out there to help with that. I'm going to assume you're familiar with the basics and have Jekyll installed. If you don't have Jekyll yet, [follow this guide here](https://jekyll-windows.juthilo.com/). It's the one I used, and I had no problems.
 
 ### The set up
 
-If you want to checkout the source of the website that we're talking about, you can grab it here: [https://github.com/slipspace/slipspace.github.io](https://github.com/slipspace/slipspace.github.io).
-
-#### Visual Studio
-
 First we point a Visual Studio website at our Jekyll project, this allows us to edit the files with all that intellisense goodness.
-
-![Visual studio solution](https://dl.dropboxusercontent.com/u/88845372/slipspace.github.io-solution.PNG)
 
 You'll notice from the file layout that this is just a standard Jekyll site. 
 
@@ -39,8 +31,6 @@ You'll notice from the file layout that this is just a standard Jekyll site.
 #### Grunt
 
 We don't want to have to manually run _jekyll build_ every time we change a file. I like to use Grunt to watch files for changes and kick off a jekyll build on change. In addition you can minify all your JavaScript and CSS.
-
-Check out the [Slipspace site source](https://github.com/slipspace/slipspace.github.io) to see the full Gruntfile.js definition but here are the important bits.
 
 The task **shell** will kick off a Jekyll build
 

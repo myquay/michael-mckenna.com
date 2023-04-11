@@ -52,7 +52,7 @@ As an added bonus the code is short and sweet, all we do is check to see if the 
         }
     }
 
-To use it you just replace Html.LabelFor with Html.ChqLabelFor. Notice it's under the namespace "System.Web.Mvc.Html". This is so it will pop up in our razor views without adding anything additional to the view-level web.config.
+To use it you just replace Html.LabelFor with Html.ChqLabelFor. I put it under the namespace "System.Web.Mvc.Html" so it will pop up in our razor views without adding anything additional to the view-level web.config.
 
 ### Result
 

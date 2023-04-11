@@ -6,9 +6,9 @@ url = "/dependency-injection-for-asp-net-web-api-action-filters-in-3-easy-steps"
 tags = ["asp dot net mvc"]
 +++
 
-This post looks at performing dependency injection on a WebAPI ActionFilter using Unity. Since we're looking at WebAPI we'll be looking at classes which implement the ActionFilterAttribute base class under the System.Web.Http.Filters namespace. 
+This post looks at performing dependency injection on a WebAPI ActionFilter using Unity. Since we're looking at WebAPI we'll be looking at classes which implement the `ActionFilterAttribute` base class under the `System.Web.Http.Filters` namespace. 
 
-We will be using the [Unity Application Block (Unity)](https://unity.codeplex.com/) to do most of the heavy lifting. It's a lightweight dependency injection container created by the Microsoft Patterns and Practices team.
+We will be using the [Unity Application Block (Unity)](https://github.com/unitycontainer/unity) to do most of the heavy lifting. It's a lightweight dependency injection container.
 
 ### 1) The ActionFilter
 
@@ -27,13 +27,13 @@ First you need to implement your shiny new ActionFilter that requires a dependen
         }
     }
 
-But now there's a problem, Web API no longer knows how to instantiate the ActionFilter as Web API knows nothing about ISomeRepository. We will fix this by modifying the default ActionDescriptorFilterProvider.
+But now there's a problem, Web API no longer knows how to instantiate the ActionFilter as Web API knows nothing about ISomeRepository. We will fix this by modifying the default `ActionDescriptorFilterProvider`.
 
 ### 2) A unity aware ActionDescriptorFilterProvider
 
 The IFilterProvider is where the magic happens, it provides an interface for finding filters.
 
-We could implement IFilterProvider from scratch but we're not going to. In our implementation we're just going to create a new instance of the default filter provider (ActionDescriptorFilterProvider) and use its 'GetFilters' method to do most of the work. We just need to step in at the last moment and inject the dependencies.
+We could implement IFilterProvider from scratch but we're not going to. In our implementation we're just going to create a new instance of the default filter provider (`ActionDescriptorFilterProvider`) and use its 'GetFilters' method to do most of the work. We just need to step in at the last moment and inject the dependencies.
 
     public class UnityFilterProvider : IFilterProvider
     {
@@ -57,13 +57,13 @@ We could implement IFilterProvider from scratch but we're not going to. In our i
         }
     }
 
-We use the ActionDescriptorFilterProvider's GetFilters to get all of the filters that would normally be returned, then we iterate over the collection and inject all of the dependencies. Lastly we return all of the newly injected filters.
+We use the `ActionDescriptorFilterProvider`'s GetFilters to get all of the filters that would normally be returned, then we iterate over the collection and inject all of the dependencies. Lastly we return all of the newly injected filters.
 
 There's only one piece left in the puzzle, telling Web API to use out new filter provider.
 
 ### 3) Configuring Web API to use the new filter provider
 
-I like to register the filter provider at the same time I register Unity because it makes use of the container. I create a static class called UnityConfig and place it in the App_Start folder along with the other configuration classes.
+I like to register the filter provider at the same time I register Unity because it makes use of the container. I create a static class called `UnityConfig` and place it in the `App_Start` folder along with the other configuration classes.
 
     public static class UnityConfig
     {

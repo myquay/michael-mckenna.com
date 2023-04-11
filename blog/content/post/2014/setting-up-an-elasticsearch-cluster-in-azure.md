@@ -8,7 +8,7 @@ tags = ["azure", "guide"]
 
 One of the best things about Azure is that you can set up most of your favourite software on it regardless of its roots. In this blog post we'll investigate how to set up an elasticsearch cluster on Windows Azure.
 
-[Elasticsearch is a powerful open source search engine that makes data easy to explore](http://www.elasticsearch.org/). To be honest, it's unfortunate it has search in its name because it's capable of so much more.
+[Elasticsearch is a powerful open source search engine that makes data easy to explore](https://www.elasticsearch.org/). To be honest, it's unfortunate it has search in its name because it's capable of so much more.
 
 ### The set up
 
@@ -16,11 +16,11 @@ We'll set up our cluster so that it can be used in a stock-standard multi-tier w
 
 In our configuration we will have a public facing web application that is using the elasticsearch cluster. 
 
-We will use Azure's new [internal load balancing feature](http://azure.microsoft.com/blog/2014/05/20/internal-load-balancing/) to enable us to run a highly available service which isn't publicly exposed. This means the web application can reference the ILB instead of an individual machine in the cluster.
+We will use Azure's new [internal load balancing feature](https://azure.microsoft.com/blog/2014/05/20/internal-load-balancing/) to enable us to run a highly available service which isn't publicly exposed. This means the web application can reference the ILB instead of an individual machine in the cluster.
 
 ![Our elasticsearch server diagram](/images/elastic-search-diagram.png)
 
-Initially I wanted to use [worker-roles](http://blogg.bouvet.no/2014/05/26/ut-no-a-techical-brief-on-elasticsearch-in-the-cloud/) to host elasticsearch however you cannot use the ILB on PaaS services _yet_. Support is coming soon but until then we will do this whole thing in VMs.
+Initially I wanted to use worker-roles to host elasticsearch however you cannot use the ILB on PaaS services _yet_. Support is coming soon but until then we will do this whole thing in VMs.
 
 The Azure services that we will make use of are
 
@@ -43,13 +43,13 @@ Create a cloud service for your elasticsearch VMs. A cloud service is a logical 
 
 ### Creating the reference image
 
-Our first real task is to create a reference image with elasticsearch installed. I will be using [elasticsearch 1.2.1](http://www.elasticsearch.org/download/) and [Java 1.7u55](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html). The version of Java is important [as discussed in this blog post](http://www.elasticsearch.org/blog/java-1-7u55-safe-use-elasticsearch-lucene/).
+Our first real task is to create a reference image with elasticsearch installed. I will be using [elasticsearch 1.2.1](https://www.elasticsearch.org/download/) and [Java 1.7u55](https://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html).
 
 #### Creating the reference VM
 
 I'm going to install elasticsearch on Windows Server 2012 R2 but you can choose whatever server takes your fancy. It doesn't matter too much where you create this VM as it's going to get deleted when you capture it. However the image will be saved to whatever storage account you choose, I like to have a dedicated storage account where I keep all my images.
 
-Once the VM is provisioned install java and elasticsearch, [the process is super simple](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-service-win.html).
+Once the VM is provisioned install java and elasticsearch, [the process is super simple](https://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-service-win.html).
 
 1. Install Java
 2. I'm on windows so I need to set JAVA_HOME in the environment variables so programs like elasticsearch know where to find it.
@@ -92,8 +92,6 @@ Enable unicast by uncommeting this line and specifying the names of your future 
 
  Now we just need to run sysprep to get our VM ready for capture and we're done with the reference machine.
  
- ![Run sysprep](https://dl.dropboxusercontent.com/u/88845372/sysprep.png "Run sysprep")
- 
  Then go back to the portal and "capture" the VM. The VM will be deleted, don't worry about that, you'll be able to create heaps more soon.
  
 ### Creating the elasticsearch cluster
@@ -104,16 +102,12 @@ Now we can configure the cluster.
 
 Since the elasticsearch service will start when the OS starts we don't need to remote in to configure anything, it should all just work™ 
 
- ![Create the VM](https://dl.dropboxusercontent.com/u/88845372/create-elasticsearch-vm.png "Create the VM")
- 
  Just make sure that the cloud service, VNET, and availability set are all the same for each VM that you spin up, for the first VM you'll need to create the availability set. By placing VMs in the same availability set Azure guarantees us that they will be on different racks, subject to rolling updates, and gives us a 99.95% uptime SLA and all that jazz - basically it means our cluster is going to be highly available.
  
  You can actually use PowerShell to script out the process. I'd recommend that you codify the steps into a script once you're comfortable with them.
  
  Once everything is added you should be left with something like this.
  
-  ![Create the VM](https://dl.dropboxusercontent.com/u/88845372/vm-cloudservice-list.PNG "Create the VM")
-  
 If you want to see the cluster working for yourself, just remote into one of the VMs and check. You will be able to use the browser to issue commands to either node using the VM's hostname. e.g. `http://es-01:9200/` will give you the status of the node on es-01 even if you have remoted into es-02. Hit `http://localhost:9200/_nodes?pretty=true` to check what nodes have been joined to the cluster.
     
 At this point our cluster is running but we can only connect to it by referencing an individual VM. This is not ideal as if that VM goes down we lose connectivity with the cluster. To solve this we'll set up an ILB to act as an intermediary between the VMs and our dependent services.

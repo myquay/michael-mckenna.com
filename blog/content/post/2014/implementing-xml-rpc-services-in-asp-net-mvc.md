@@ -8,15 +8,13 @@ tags = ["asp dot net mvc"]
 
 Earlier this month I moved my blog to a brand new design to improve the readability of the posts.
 
-The admin section was also in desperate need of an upgrade but it would have taken a lot of development effort to create something decent. I ended up just nuking it in favour of using a desktop blogging client. To support various 3rd party blogging clients we just need to implement the [MetaWeblog API](http://xmlrpc.scripting.com/metaWeblogApi.html).
+The admin section was also in desperate need of an upgrade but it would have taken a lot of development effort to create something decent. I ended up just nuking it in favour of using a desktop blogging client. To support various 3rd party blogging clients we just need to implement the [MetaWeblog API](https://codex.wordpress.org/XML-RPC_MetaWeblog_API).
 
 In this post we'll look at how we implemented XML-RPC services in ASP.NET MVC by creating a custom model binder.
 
 ### XML-RPC recap
 
-Before everyone starts freaking out, XML-RPC isn't SOAP, it predates it ;)
-
-It's just a way to make remote method calls over HTTP using XML. Super lightweight. Here's an example payload pulled from here [http://www.xml.com/2003/10/15/examples/metaweblog-example-request.txt](http://www.xml.com/2003/10/15/examples/metaweblog-example-request.txt). 
+It's a way to make remote method calls over HTTP using XML. Super lightweight. 
 
     <?xml version='1.0'?> 
     <methodCall> 
@@ -31,11 +29,11 @@ Doesn't look too bad, one problem is that this format isn't key-value based so i
 
 ### Existing options
 
-There wasn't much in the way of MVC integration. The best library out there which I could find is [XML-RPC.NET](http://xml-rpc.net/) developed by [Charles Cook](http://www.cookcomputing.com/blog). Scott Hanselman has a [great write up on the topic](http://www.hanselman.com/blog/TheWeeklySourceCode55NotABlogALocalXMLRPCMetaWebLogEndpointThatLiesToWindowsLiveWriter.aspx) and he even mentions support with ASP.NET MVC 1.
+There wasn't much in the way of MVC integration. The best library out there which I could find is [XML-RPC.NET](https://github.com/marcosbozzani/xmlrpcnet) developed by [Charles Cook](https://github.com/charlescook). Scott Hanselman has a [great write up on the topic](https://www.hanselman.com/blog/TheWeeklySourceCode55NotABlogALocalXMLRPCMetaWebLogEndpointThatLiesToWindowsLiveWriter.aspx) and he even mentions support with ASP.NET MVC 1.
 
 > (Actually, as a curiosity back in the ASP.NET MVC 1.0 timeframe both Phil and I write XmlRpcRoutes and supporting samples just to see if it was possible. It is.)
 
-However this follow up post on Charles' website indicates that we just [hard code a route to the service](http://cookcomputing.com/blog/archives/Implementing%20an%20xml-rpc-service-with-asp-net-mvc). 
+However this follow up post *(Blog post no longer available)* on Charles' website indicates that we just hard code a route to the service. 
 
     using System.Web;
     using System.Web.Routing;
@@ -50,7 +48,7 @@ However this follow up post on Charles' website indicates that we just [hard cod
 
 This works perfectly but isn't really the MVC Way™. I want to route to a controller based on the 'methodCall' parameter.
 
-Jono gets a lot closer with his blog post '[Implementing XML-RPC services with ASP.NET MVC](http://tech-journals.com/jonow/2012/01/25/implementing-xml-rpc-services-with-asp-net-mvc)' and gets routing implemented but then deserialises the data by using a filter. 
+Jono gets a lot closer with his blog post 'Implementing XML-RPC services with ASP.NET MVC' *(Blog post no longer available)* and gets routing implemented but then deserialises the data by using a filter. 
 
 I don't think there's much wrong with using filter but I wanted to use a model binder. It shouldn't actually matter what format the request is in, we should be able to route and bind it. So for example, if I wanted to move from XML-RPC to json then I'd just support an alternative model binder.
 
@@ -221,4 +219,4 @@ Create a controller that matches the methodCall parameter on the XML-RPC Request
 
 Check out the [source on Github here](https://github.com/myquay/Chq.XmlRpc.Mvc). 
 
-I haven't exactly "battle tested" the code and I have my doubts regarding performance and stability so use it at your own risk. Please help me fix any bugs you come across and feel free to use it in your own works as it's released under the [MIT License](http://opensource.org/licenses/mit-license.html) just like the awesome [XML-RPC.NET library](http://xml-rpc.net/).
+I haven't exactly "battle tested" the code and I have my doubts regarding performance and stability so use it at your own risk. Please help me fix any bugs you come across and feel free to use it in your own works as it's released under the [MIT License](http://opensource.org/licenses/mit-license.html) just like the awesome [XML-RPC.NET library](https://github.com/marcosbozzani/xmlrpcnet).

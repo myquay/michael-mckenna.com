@@ -23,7 +23,7 @@ PATCH is a relatively new addition to the set of HTTP verbs. Proposed about 4 ye
      
 Now we can just check the verb to see if we want to null out missing entities, if it was a PUT we'd replace the entire object, and if it's a PATCH we'd just update the properties specified right? ...right? Wrong!
 
-[Turns out there's a few downsides](http://williamdurand.fr/2014/02/14/please-do-not-patch-like-an-idiot/)
+[Turns out there's a few downsides](https://williamdurand.fr/2014/02/14/please-do-not-patch-like-an-idiot/)
 
 ## What was wrong with that? So what is PATCH then?
 
@@ -62,7 +62,7 @@ Here's an example:
      PATCH /cars/1
      Content-Type: application/json-patch
      
-     {"replace": "/colour", "value": "red"}
+     [{"replace": "/colour", "value": "red"}]
      
 It's super obvious that we're updating the colour property of the car resource to red. Fantastic.
 

@@ -6,17 +6,17 @@ url = "/how-to-add-json-patch-support-to-asp-net-web-api"
 tags = ["asp dot net mvc", "json patch"]
 +++
 
-In this post we'll look at how to introduce support for the [JSON Patch content type (RFC 6902)](http://tools.ietf.org/html/rfc6902) to ASP.NET Web API.
+In this post we'll look at how to introduce support for the [JSON Patch content type (RFC 6902)](https://tools.ietf.org/html/rfc6902) to ASP.NET Web API.
 
 There's an unlimited number of ways to introduce HTTP Patch support into your API as there's no single specification on how to represent the set of changes to make to a resource.
 
 > The PATCH method requests that a set of changes described in the request entity be applied to the resource identified by the Request- URI. The set of changes is represented in a format called a "patch document" identified by a media type.
 
-The only way I could find to introduce HTTP Patch support was through adding a dependency on the Microsoft ODATA library. Unfortunately OData library does updates using a partial entity, [rather than a change document](http://www.odata.org/documentation/odata-version-3-0/odata-version-3-0-core-protocol#differentialupdate).
+The only way I could find to introduce HTTP Patch support was through adding a dependency on the Microsoft ODATA library. Unfortunately OData library does updates using a partial entity, [rather than a change document](https://www.odata.org/documentation/odata-version-3-0/odata-version-3-0-core-protocol#differentialupdate).
 
 > A PATCH or MERGE indicates a differential update. The service MUST replace exactly those property values that are specified in the request body. Missing properties, including dynamic properties, MUST NOT be altered.
 
-[I'm not that much of a fan](http://michael-mckenna.com/the-great-confusion-about-http-patch) of representing a set of changes as a partial entity, I don't want to introduce a dependency on the entire OData library just for their Patch support, and I want to use the JSON Patch standard. 
+[I'm not that much of a fan](http://michael-mckenna.com/the-great-confusion-about-http-patch) of representing a set of changes as a partial entity. I don't want to introduce a dependency on the entire OData library just for their Patch support. I want to use the JSON Patch standard. 
 
 So we're going to build it ourselves™
 
