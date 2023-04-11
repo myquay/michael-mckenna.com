@@ -37,4 +37,4 @@ jobs:
       name: Upload to blob storage
       with:
         inlineScript: |
-            az storage blob upload-batch --account-name mck-production-blog  --auth-mode key -d '$web' -s ${{github.workspace}}/dist
+            az storage blob upload-batch --account-name mckproductionblog  --auth-mode key -d '$web' -s ${{github.workspace}}/dist
