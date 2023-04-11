@@ -37,15 +37,15 @@ jobs:
       name: 🧹 Clean destination
       with:
         inlineScript: |
-            az storage blob delete-batch --account-name ${{env.AZURE_STORAGE_ACCOUNT}}  --auth-mode key -s '$web'
+            az storage blob delete-batch --account-name ${{vars.AZURE_STORAGE_ACCOUNT}}  --auth-mode key -s '$web'
             
     - uses: azure/CLI@v1
       name: 🚀 Deploy to Azure
       with:
         inlineScript: |
-            az storage blob upload-batch --account-name ${{env.AZURE_STORAGE_ACCOUNT}}  --auth-mode key -d '$web' -s ${{github.workspace}}/dist --overwrite --no-progress
+            az storage blob upload-batch --account-name ${{vars.AZURE_STORAGE_ACCOUNT}}  --auth-mode key -d '$web' -s ${{github.workspace}}/dist --overwrite --no-progress
             
     - name: ♻️ Purge Cloudflare Cache
       run: |
-        curl -sS "https://api.cloudflare.com/client/v4/zones/${{env.CLOUDFLARE_ZONE}}/purge_cache" -H "Content-Type: application/json" -H "Authorization: Bearer ${secrets.CLOUDFLARE_TOKEN}" --data "{\"purge_everything\":true}"
+        curl -sS "https://api.cloudflare.com/client/v4/zones/${{vars.CLOUDFLARE_ZONE}}/purge_cache" -H "Content-Type: application/json" -H "Authorization: Bearer ${secrets.CLOUDFLARE_TOKEN}" --data "{\"purge_everything\":true}"
         
