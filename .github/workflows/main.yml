@@ -20,13 +20,11 @@ jobs:
       with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
         
-    - uses: actions/github-script@v6.4.1
-      with:
-        script: '.\bin\hugo.exe -s .\blog -d .\dist --log -v'
+    - run: '${GITHUB_WORKSPACE}/bin/hugo.exe -s ${GITHUB_WORKSPACE}/blog -d ${GITHUB_WORKSPACE}/dist --log -v'
+      name: Build website
         
-    
     - uses: azure/CLI@v1
       name: Upload to blob storage
       with:
         inlineScript: |
-            az storage blob upload-batch --account-name mck-production-blog  --auth-mode key -d '$web' -s .\dist
+            az storage blob upload-batch --account-name mck-production-blog  --auth-mode key -d '$web' -s ${GITHUB_WORKSPACE}/dist
