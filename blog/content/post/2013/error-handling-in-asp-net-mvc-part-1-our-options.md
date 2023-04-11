@@ -6,7 +6,7 @@ url = "/error-handling-in-asp-net-mvc-part-1-our-options"
 tags = ["asp dot net mvc"]
 +++
 
-This blog and most of the web applications we build over at [solve.solutions](http://solve.solutions/ "solve.solutions") are based on Microsoft's ASP.NET MVC framework. We wanted a standardised way to approach error handling across our web applications. 
+A lot of my work is built on Microsoft's ASP.NET MVC framework. We wanted a standardised way to approach error handling across our web applications. 
 
 We had a couple of requirements
 

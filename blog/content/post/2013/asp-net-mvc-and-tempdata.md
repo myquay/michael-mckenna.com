@@ -10,18 +10,14 @@ TempData initially seemed [kind of magical](http://msdn.microsoft.com/en-us/libr
 
 > Represents a set of data that persists only from one request to the next.
 
-Today I almost used it in a multi-instance Azure set up which didn't use session state and so didn't have a central session store. Whoops. 
+Today I ran into an issue on a multi-instance set up which didn't use shared session state and and didn't have a central session store.
 
-### Why was that bad?
+### What went wrong?
 
 By default TempData is stored in session state, which means if the redirected request didn't hit the same instance then it would look like TempData was simply not set.
 
+This bug wouldn't have presented itself on my development environment and resulted in some seemly random behaviour with a multi-instance deployment.
+
 ### But what if I still want to use it?
 
-You can specify an alternate TempData provider and store it somewhere else. [Greg Shackles has a great post here with all the details](http://www.gregshackles.com/2010/07/asp-net-mvc-do-you-know-where-your-tempdata-is/ "ASP.NET MVC: Do You Know Where Your TempData Is? «  Greg Shackles").
-
-### I learned a valuable lesson today
-
-Always thoroughly read the documentation and know the details. 
-
-This potential bug wouldn't have presented itself on my development machine and would have resulted in some seemly random behaviour in stage.
+You can specify an alternate TempData provider and store it somewhere else. [Greg Shackles has a great post here with all the details](https://gregshackles.com/asp-net-mvc-do-you-know-where-your-tempdata-is/ "ASP.NET MVC: Do You Know Where Your TempData Is?").

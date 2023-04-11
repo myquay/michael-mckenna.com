@@ -6,7 +6,7 @@ url = "/configuring-a-live-connect-application-to-use-the-new-microsoft-account-
 tags = ["asp dot net mvc"]
 +++
 
-When I first configured the new version of ConceptHQ Accounts to federate with Microsoft account using OAuth I used these two endpoints which I picked out of a sample.
+When configuring a new application to federate with Microsoft account using OAuth I used these two endpoints which I picked out of a sample.
 
     https://oauth.live.com/token
     https://oauth.live.com/authorize
@@ -24,4 +24,4 @@ We get a much smoother experience as the styles between the sign in and permissi
 
 ![New sign in page, new permissions page](/images/new-live-id-permissions.png)
 
-Much better. First impressions are important - one style change from your app to your identity provider's is enough :)
+Much better. First impressions are important - one style change from your app to your identity provider's is enough 🙂
