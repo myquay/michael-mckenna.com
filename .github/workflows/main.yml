@@ -22,7 +22,7 @@ jobs:
         
     - run: |
         cd ${{github.workspace}}\bin
-        hugo -s ${{github.workspace}}\blog -d ${{github.workspace}}\dist --log -v
+        hugo.exe -s ${{github.workspace}}\blog -d ${{github.workspace}}\dist --log -v
       name: Build website
         
     - uses: azure/CLI@v1
