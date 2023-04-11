@@ -6,19 +6,17 @@ url = "/improving-conversion-rates-in-kicksmoking"
 tags = ["article", "product", "kicksmoking"]
 +++
 
-> [In part 1 of this series](http://michael-mckenna.com/blog/monetising-kicksmoking) we looked at the current state of the application KickSmoking. In this series we'll take a look at some of the ways we're going improve conversion rates.
+> [In part 1 of this series](https://michael-mckenna.com/monetising-kicksmoking) we looked at the current state of the application KickSmoking. In this series we'll take a look at some of the ways we're going improve conversion rates.
 
-### Always  take care of your loyal users
+The problem we were having was getting people to upgrade from the free version to the paid version. Having them as two seperate apps makes the upgrade process basically impossible. With features such as trial accounts and in-app purchases available to Windows Phone developers there's really no need to have multiple apps anymore, however I don't want to leave one group of users out in the cold so we're forced to maintain two apps in the app store.
 
-People won't give you money if you treat them poorly.
+### What's going to change
 
-There are two main groups of users on KickSmoking, those on the free app and those on the paid app. With features such as trial accounts and in-app purchases available to Windows Phone developers there's really no need to have multiple apps, however I don't want to leave one group of users out in the cold so we're forced to maintain two apps in the app store.
-
-Because we don't want to force people to download a new app just to unlock all the features we're also going to support in-app purchases in the free version of the application which will bring it to feature parity of the pro version.
+Because we don't want to force people to download a new app just to unlock all the features, we're going to support in-app purchases in the free version of the application. Upgrading the free version will bring it to feature parity with the pro version.
 
 This has a few benefits
 
-* If someone bought the old KickSmoking pro version they will be seamlessly upgraded.
+* If someone bought the old KickSmoking pro they will be fully supported.
 * If someone downloaded the free version they will now have the convenience of upgrading in-app.
 
 **If it was free before, it's free now.**  All features that people used to enjoy for free will always be free. People just feel sad when you take things away - especially if you haven't warned them! But we want people to upgrade so there needs to be a reason to upgrade. We will be adding new features only available to our paying customers.
@@ -32,8 +30,6 @@ Our main upgrade path is going to be through in-app purchases. We have a few fea
 #### Upgrade page on launch
 
 Every N<sup>th </sup> time the app is opened we pop up an upgrade page.
-
-![Upgrade screen](https://dl.dropboxusercontent.com/u/88845372/kicksmoking-app-startup-upgrade.png)
 
 Not only does this remind the user on a constant basis but has the added advantage of reminding people more often if they like our app. Because people who like our app will open it more.
 
@@ -50,11 +46,3 @@ We need to make it as easy as possible to upgrade whenever they user feels like 
 When the person first downloads the app all the features will be fully unlocked - but after a short while all the premium features will be replaced with a link to the upgrade page.
 
 This lets the user know what they're getting before needing to spend any money. Hopefully this will make the users a little easier to convert.
-
-###Sneak peak at the new app
-
-We're about 30% through the new app build already, check out the new improved dashboard.
-
-![New KickSmoking Dashboard](https://dl.dropboxusercontent.com/u/88845372/kicksmoking-app-dashboard.png)
-
-Next time we'll take a break from monetisation and take a deep dive into the design and features of the app.
