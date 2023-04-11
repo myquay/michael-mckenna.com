@@ -37,4 +37,5 @@ jobs:
       name: 🚀 Deploy to Azure
       with:
         inlineScript: |
-            az storage blob upload-batch --account-name mckproductionblog  --auth-mode key -d '$web' -s ${{github.workspace}}/dist --overwrite
+            az storage blob upload-batch --account-name mckproductionblog  --auth-mode key -d '$web' -s ${{github.workspace}}/dist --overwrite --no-progress
+
