@@ -6,7 +6,7 @@ url = "/running-go-on-azure-websites"
 tags = ["go", "guide", "azure"]
 +++
 
-At first I thought I was going to have to go something tricky - [Wade Wegner has a great write up of one method here](http://www.wadewegner.com/2014/12/4-simple-steps-to-run-go-language-in-azure-websites/), but it turns [Azure App Services have now added native Go support](https://azure.microsoft.com/en-gb/blog/running-go-applications-on-azure-app-service/) so we don't need to set up Go on the server any more.
+At first I thought I was going to have to go do something tricky, but it turns [Azure App Services have now added native Go support](https://azure.microsoft.com/en-gb/blog/running-go-applications-on-azure-app-service/) so we don't need to set up Go on the server any more.
 
 The versions currently supported on the Azure App Service platform are 64bit Go 1.4.2 and Go 1.5.1 and it turns out to be super simple to get going.
 

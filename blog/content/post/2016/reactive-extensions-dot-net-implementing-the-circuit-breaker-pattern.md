@@ -10,7 +10,7 @@ _This article assumes you're familiar with both [reactive extensions](http://rea
 
 Microservices are great but they can be a little temperamental at times because there can be a lot of moving parts to service one request. This isn't all bad as the server can often tackle each moving part in parallel speeding up the response the client gets. However we don't normally want one moving part to bring down the entire request pipeline so we need to make sure we're handling each microservice in a reliable manner.
 
-It's hard to talk about microservices with mentioning Netflix - in projects if we go ahead with the microservices architecture I love to use reactive extensions. Netflix has a great [blog post here](http://techblog.netflix.com/2013/02/rxjava-netflix-api.html) about how and why they went ahead with reactive extensions which I agree with. My favourite thing about reactive extensions is that they allow developers to take advantage of server-side concurrency without worrying about too many of the messy details.
+It's hard to talk about microservices with mentioning Netflix. They have a great [blog post here](http://techblog.netflix.com/2013/02/rxjava-netflix-api.html) about how and why they went ahead with reactive extensions which I agree with. My favourite thing about reactive extensions is that they allow developers to take advantage of server-side concurrency without worrying about too many of the messy details.
 
 **Why use the circuit breaker pattern with reactive extensions**
 
@@ -90,6 +90,6 @@ public static IObservable<T> RecoverWith<T>(this IObservable<T> source, IObserva
 
 I won't go over the implementation of the circuit breaker line by line but the interesting method is `GetSourceOnError` which notifies the circuit breaker and gets back the observable we should continue with. If the circuit breaker hasn't tripped we'll re-wrap the source observable in our `RecoverWith` extension and retry.
 
-**Show me the <strike>money</strike> source code**
+**Example implemetation**
 
 The full source code including the extension and circuit breaker implementation are [available on GitHub here](https://github.com/myquay/Solve.Reliability.Rx).

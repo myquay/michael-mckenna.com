@@ -6,7 +6,7 @@ url = "/generating-an-apple-push-notification-certificate-on-windows"
 tags = ["ios", "guide"]
 +++
 
-Following [most instructions](https://wiki.scn.sap.com/wiki/display/SAPMOB/How+to+generate+an+APNS+certificate+used+for+sending+push+messages+to+the+custom+Afaria+Client+application) [on the](https://tomasmcguinness.com/2012/06/28/generating-an-apple-ios-certificate-using-windows/) [web make](https://help.landesk.com/Help/kor/mobl/9.0/Content/Mobility/Install/mobl_install_mdm_t_windows.htm) it sound as easy as generating a CSR using IIS. However I ran into a few difficulties - namely Apple seemed to think my brand new CSR was invalid. Probably has something to do with my local setup (IIS 10 on Windows 10) but that shouldn't be a road block.
+Following [most instructions](https://wiki.scn.sap.com/wiki/display/SAPMOB/How+to+generate+an+APNS+certificate+used+for+sending+push+messages+to+the+custom+Afaria+Client+application) [on the web make](https://tomasmcguinness.com/2012/06/28/generating-an-apple-ios-certificate-using-windows/) it sound as easy as generating a CSR using IIS. However I ran into a few difficulties - namely Apple seemed to think my brand new CSR was invalid. Probably has something to do with my local setup (IIS 10 on Windows 10) but that shouldn't be a road block.
 
 ![Invalid CSR](/images/apple-invalid-csr.png)
 
@@ -39,4 +39,4 @@ If you get the error *"unable to load certificates"* for step 5, try these addit
 
 If you need a PEM file instead of a PFX, just run this command `openssl pkcs12 -in new-ios-app.pfx -out new-ios-app.pem`
 
-Woohoo, too easy right. You now have your PFX/PEM file to push notifications to your iOS app from your windows server or where ever.
+Woohoo, too easy right. You now have your PFX/PEM file to push notifications to your iOS app from your windows server or wherever.

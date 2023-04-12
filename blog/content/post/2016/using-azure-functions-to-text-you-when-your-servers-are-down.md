@@ -73,8 +73,6 @@ We want a SMS when our servers are down so we will set up an alert on an availab
 
 We're going to set up a simple ping test but we're just scratching the surface here - you can define what a successful response looks like and [even set up multi-step tests](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-monitor-web-app-availability) which gives you a lot of control over what "availability" means in your situation.
 
-![Availability test](/images/ai-availability-test.png)
-
 If you click the "Alerts" option it allows you to specify a web hook, this is where we past the HTTP endpoint of our Azure Function we created earlier.
 
 ![](/images/alert-definition.png)

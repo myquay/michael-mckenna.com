@@ -18,9 +18,6 @@ Later on in this post we'll go into depth on how to implement an extension metho
 
     install-package System.Linq.Dynamic
 
-
-Or grab the source [directly from Microsoft here](https://msdn.microsoft.com/en-us/vstudio/bb894665.aspx)
-
 **How to use**
 
 Reference ```System.Dynamic.Linq``` and then you can order your LINQ queries like this

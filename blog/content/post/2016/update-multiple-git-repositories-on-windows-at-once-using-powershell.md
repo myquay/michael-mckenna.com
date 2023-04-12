@@ -22,7 +22,7 @@ Here's the script - I've split it into two parts.
 
 **Part 1: Configure for GitHub Desktop environment**
 
-You need to [have two snippets up the top](http://haacked.com/archive/2015/10/29/git-shell#powershell-configuration) to make sure it's configured to use all the goodness GitHub Desktop set up for us.
+You need to [have two snippets up the top](https://haacked.com/archive/2015/10/29/git-shell#powershell-configuration) to make sure it's configured to use all the goodness GitHub Desktop set up for us.
 
 ```  
 #1. Set up all the environment variables
@@ -60,4 +60,4 @@ When you run the script using the `sync.bat` you should see something like this.
 
 ![](/images/git-cmd.png)
 
-Thanks GitHub Desktop. Too easy :) 
+Thanks GitHub Desktop. Too easy 🙂

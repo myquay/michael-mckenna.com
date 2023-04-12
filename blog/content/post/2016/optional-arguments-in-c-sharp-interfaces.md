@@ -28,6 +28,9 @@ class Program
     static void Main(){
         DefaultArgDemo one = new DefaultArgDemo();
         IDefaultArgDemo two = new DefaultArgDemo();
+
+        one.Write();
+        two.Write();
     }
 }
 
@@ -50,4 +53,4 @@ And _(at least for me)_ the first port of call when debugging a run-time issue i
 
 I still like to put defaults on interfaces as it makes my code a lot more readable, and with IoC you're generally dealing in interfaces so get the benefits of optional arguments  in most cases. However, in the interest of code-safety I don't put default values on implementing classes any more - if you're dealing with an implementation directly, tough, you're going to have to be explicit. 
 
-That way there's no chance of them actually getting out of sync :)
+That way there's no chance of them actually getting out of sync 🙂
