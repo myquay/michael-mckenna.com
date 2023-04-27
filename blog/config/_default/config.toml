@@ -2,27 +2,26 @@ baseURL = "https://michael-mckenna.com"
 languageCode = "en-us"
 title = "Michael McKenna"
 themesDir = "themes"
-theme = "beautifulhugo"
+theme = "hugo-theme-peripheral"
 googleAnalytics = "UA-27845504-8"
+enableGitInfo = true
+
 pygmentsStyle = "trac"
 pygmentsUseClasses = true
 pygmentsCodeFences = true
 pygmentsCodefencesGuessSyntax = true
 
+[Params.Peripheral]
+    subtitle = "All my Keystrokes That's Fit to Print"
+    location = "Auckland, New Zealand"
+    github = "myquay"
 [Params]
   homeTitle = "Hi, I'm Michael"
   subtitle = "Software and Startups"
   favicon = "favicon.png"
   dateFormat = "January 2, 2006"
-  commit = false
   rss = true
-  comments = false
-  readingTime = false
-  wordCount = false
-  useHLJS = true
-  socialShare = false
-  delayDisqus = false
-  showRelatedPosts = true
+  showFragments = true
 
 # Add additional social link entries underneath
 [social]
@@ -30,42 +29,30 @@ pygmentsCodefencesGuessSyntax = true
     github   = "https://www.github.com/myquay"
 
 [[menu.main]]
-    name = "Blog"
-    url = ""
+    name = "Home"
+    url = "/"
     weight = 1
 
 [[menu.main]]
-    name = "Tags"
-    url = "tags"
+    name = "Blog"
+    url = "/blog"
+    weight = 2
+
+[[menu.main]]
+    name = "Fragments"
+    url = "/fragments"
     weight = 3
-	
-#[[menu.main]]
-#    name = "About"
-#   url = "page/about/"
-#    weight = 3
+
+[[menu.main]]
+    name = "Projects"
+    url = "/projects"
+    weight = 4
+
+[[menu.main]]
+    name = "About"
+    url = "/about"
+    weight = 5
 
 [Author]
 	name = "Michael McKenna"
 	website = "https://michael-mckenna.com"
-#	email = "youremail@domain.com"
-#	facebook = "username"
-#	googleplus = "+username" # or xxxxxxxxxxxxxxxxxxxxx
-#	github = "username"
-#	gitlab = "username"
-#	bitbucket = "username"
-#	twitter = "username"
-#	reddit = "username"
-#	linkedin = "username"
-#	xing = "username"
-#	stackoverflow = "users/XXXXXXX/username"
-#	snapchat = "username"
-#	instagram = "username"
-#	youtube = "user/username" # or channel/channelname
-#	soundcloud = "username"
-#	spotify = "username"
-#	bandcamp = "username"
-#	itchio = "username"
-#	vk = "username"
-#	paypal = "username"
-#	telegram = "username"
-#	500px = "username"
