@@ -1,6 +1,6 @@
 ---
 publishDate: 2016-06-07T22:40:32+12:00
-title: Getting it all to 'transpile' correctly.
+title: Creating custom knockout bindings in typescript.
 slug: /creating-custom-knockout-bindings-in-typescript
 aliases: 
     - /creating-custom-knockout-bindings-in-typescript
