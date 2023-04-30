@@ -32,6 +32,7 @@ enableGitInfo = true
     abbreviatedHash = "{{AbbreviatedHash}}"
     hash = "{{Hash}}"
     subject = "{{Subject}}"
+    branch = "main"
 
 [Params.Peripheral.Obselence]
     enabled = true
