@@ -6,17 +6,14 @@ url: /introducing-peripheral
 tags:
     - Design
     - Article
+draft: true
 ---
-
-## The motivation behind peripheral
 
 This blog just turned 10! It's a strange milestone; so inconsequnetial for everyone in the world bar me. Instead of going down a rabbit hole of irrelevance a better use of my time is to give this blog yet another refresh. 
 
 It started life as a custom ASP.NET MVC app and over the years the content has been dragged through a litany of platforms; [WordPress](https://wordpress.com/), [ghost](https://ghost.org/), [jekyll](https://jekyllrb.com/), and most "recently" [hugo](https://gohugo.io/) [1].
 
 The old theme of the site was a great little project called [Beautiful Hugo](https://github.com/halogenica/beautifulhugo) which was an adaptation of a theme I liked on [Jekyll](https://beautifuljekyll.com/). It's a good theme but it's very generic, I'd wanted something that is more suited to a developer blog so created [peripheral](https://github.com/myquay/hugo-theme-peripheral).
-
-## Peripheral
 
 Peripheral is a blog for the technical professional. It's clean, it's lean, it has a few conveniencies that I've wanted for my writing over the years.
 

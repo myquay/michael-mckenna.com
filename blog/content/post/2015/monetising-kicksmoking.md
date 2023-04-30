@@ -1,10 +1,14 @@
-+++
-date = "2015-03-03T08:51:32+12:00"
-description = "Despite being on the back-burner it's still the number one quit smoking app on the Windows Phone app store."
-title = "Monetising KickSmoking"
-url = "/monetising-kicksmoking"
-tags = ["article", "product", "kicksmoking"]
-+++
+---
+publishDate: 2015-03-03T08:51:32+12:00
+title: Monetising KickSmoking
+summary: Despite being on the back-burner it's still the number one quit smoking app on the Windows Phone app store.
+url: /monetising-kicksmoking
+tags:
+    - article
+    - product
+    - kicksmoking
+series: kicksmoking
+---
 
 [KickSmoking is a windows phone app](http://www.windowsphone.com/en-us/store/app/kicksmoking/53ab867a-417b-4aad-80e5-99022e0ce8d9) that I built 2-3 years ago which has been in maintenance mode for a while. 
 

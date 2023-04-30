@@ -1,14 +1,16 @@
-+++
-date = "2019-10-02T13:11:12+12:00"
-description = "Upgrading multi-tenancy to .NET Core 3.1"
-title = "Migrating multi-tenancy to .NET Core 3.1 (LTS)"
-subtitle = "How to make the multi-tenant solution compatible with .NET Core 3.1"
-url = "/multi-tenancy-compatibility-dot-net-core-three"
-tags = ["guide", "azure", "dot net core", "multitenant"]
-summary = ".NET Core 3.1 is out and it's a LTS release. Our 4 part multi-tenancy series is already out of date! Here we'll cover off the breaking changes and the updates we need to make."
-+++
-
-> **2019-12-03: Updated blog post from .NET 3.0 to .NET Core 3.1 which is a LTS release**
+---
+publishDate: 2019-10-02T13:11:12+12:00
+title: Migrating multi-tenancy to .NET Core 3.1 (LTS)
+summary: .NET Core 3.1 is out and it's a LTS release. Our 4 part multi-tenancy series is already out of date! Here we'll cover off the breaking changes and the updates we need to make.
+url: /multi-tenancy-compatibility-dot-net-core-three
+tags:
+    - guide
+    - azure
+    - dot net core
+    - multitenant
+series: multi-tenant
+concludeSeries: true
+---
 
 ## Introduction
 
@@ -18,9 +20,11 @@ Since writing our [multi-tenancy mini-series](/multi-tenant-asp-dot-net-core-app
 
 The custom service provider is used to support tenant specific containers as descripted [in Part 2 of the mini-series](/multi-tenant-asp-dot-net-core-application-tenant-containers).
 
-ASP.NET Core 3 has removed the ability to return a service provider from the `ConfigureServices` method, if you upgrade a project to ASP.NET Core 3 then our solution will give you a nice not supported exception on start up
+ASP.NET Core 3 has removed the ability to return a service provider from the **ConfigureServices** method, if you upgrade a project to ASP.NET Core 3 then our solution will give you a nice not supported exception on start up
 
-> System.NotSupportedException: 'ConfigureServices returning an System.IServiceProvider isn't supported.'
+```
+System.NotSupportedException: 'ConfigureServices returning an System.IServiceProvider isn't supported.'
+```
 
 Which is due to how we [configure tenant specific containers](/multi-tenant-asp-dot-net-core-application-tenant-containers) - we return a custom service provider.
 
@@ -41,7 +45,7 @@ _There's a good reason the default service container doesn't support it - the va
 
 ### The new integration point
 
-In ASP.NET Core 3+ _(and [Generic hosts](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-3.0))_ there is a new method called `UseServiceProviderFactory` which you use to register your custom service provider factory during host configuration.
+In ASP.NET Core 3+ _(and [Generic hosts](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-3.0))_ there is a new method called **UseServiceProviderFactory** which you use to register your custom service provider factory during host configuration.
 
 ```csharp
 public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -50,12 +54,12 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
                 .UseServiceProviderFactory(...)
 ```
 
-Going back to our `UseMultiTenantServiceProvider` extension, it preformed two tasks
+Going back to our **UseMultiTenantServiceProvider** extension, it preformed two tasks
 
 1. Register tenant specifc services
 2. Return the new service provider
 
-So our factory will need to also need to perform those tasks. We will call our service factory `MultiTenantServiceProviderFactory` and it will accept one argument, the callback to configure all of the multitenant services _(we don't want to configure them in the Host Configuration!)_.
+So our factory will need to also need to perform those tasks. We will call our service factory **MultiTenantServiceProviderFactory** and it will accept one argument, the callback to configure all of the multitenant services _(we don't want to configure them in the Host Configuration!)_.
 
 Once we're done the new way to enable tenant specific containers will be like this
 
@@ -77,57 +81,57 @@ Our implementation has two parts
 
 ### MultiTenantServiceProviderFactory
 
-The factory will do exactly what our extension method used to do, construct a new `MultiTenantContainer` and specifty the tenant specific services configuration
+The factory will do exactly what our extension method used to do, construct a new **MultiTenantContainer** and specifty the tenant specific services configuration
 
 ```charp
 
 public class MultiTenantServiceProviderFactory<T> : IServiceProviderFactory<ContainerBuilder> where T : Tenant
+{
+
+    public Action<T, ContainerBuilder> _tenantSerivcesConfiguration;
+
+    public MultiTenantServiceProviderFactory(Action<T, ContainerBuilder> tenantSerivcesConfiguration)
     {
-
-        public Action<T, ContainerBuilder> _tenantSerivcesConfiguration;
-
-        public MultiTenantServiceProviderFactory(Action<T, ContainerBuilder> tenantSerivcesConfiguration)
-        {
-            _tenantSerivcesConfiguration = tenantSerivcesConfiguration;
-        }
-
-        /// <summary>
-        /// Create a builder populated with global services
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public ContainerBuilder CreateBuilder(IServiceCollection services)
-        {
-            var builder = new ContainerBuilder();
-
-            builder.Populate(services);
-
-            return builder;
-        }
-
-        /// <summary>
-        /// Create our serivce provider
-        /// </summary>
-        /// <param name="containerBuilder"></param>
-        /// <returns></returns>
-        public IServiceProvider CreateServiceProvider(ContainerBuilder containerBuilder)
-        {
-            MultiTenantContainer<T> container = null;
-            
-            Func<MultiTenantContainer<T>> containerAccessor = () =>
-            {
-                return container;
-            };
-
-            containerBuilder
-                .RegisterInstance(containerAccessor)
-                .SingleInstance();
-
-            container = new MultiTenantContainer<T>(containerBuilder.Build(), _tenantSerivcesConfiguration);
-
-            return new AutofacServiceProvider(containerAccessor());
-        }
+        _tenantSerivcesConfiguration = tenantSerivcesConfiguration;
     }
+
+    /// <summary>
+    /// Create a builder populated with global services
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public ContainerBuilder CreateBuilder(IServiceCollection services)
+    {
+        var builder = new ContainerBuilder();
+
+        builder.Populate(services);
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Create our serivce provider
+    /// </summary>
+    /// <param name="containerBuilder"></param>
+    /// <returns></returns>
+    public IServiceProvider CreateServiceProvider(ContainerBuilder containerBuilder)
+    {
+        MultiTenantContainer<T> container = null;
+        
+        Func<MultiTenantContainer<T>> containerAccessor = () =>
+        {
+            return container;
+        };
+
+        containerBuilder
+            .RegisterInstance(containerAccessor)
+            .SingleInstance();
+
+        container = new MultiTenantContainer<T>(containerBuilder.Build(), _tenantSerivcesConfiguration);
+
+        return new AutofacServiceProvider(containerAccessor());
+    }
+}
 
 ```
 
@@ -150,7 +154,7 @@ Since we no longer register or service provider in the `ConfigureServices` metho
 
 ## Fix for Tenant specific options
 
-I couldn't track down exactly why, but it seems the framework now seems to agressively resolves any `IOptions`, sometimes even before the `HttpContext` is available. We potentially need the `HttpContext` depending on our tenant resolution strategy which was causing issues with our [Tenant Specific Options](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options) implementation. 
+I couldn't track down exactly why, but it seems the framework now seems to agressively resolves any **IOptions**, sometimes even before the **HttpContext** is available. We potentially need the **HttpContext** depending on our tenant resolution strategy which was causing issues with our [Tenant Specific Options](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options) implementation. 
 
 To resolve this we just shunted our registration down to the tenant container where we know our tenants are resolving correctly.
 

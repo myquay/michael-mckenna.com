@@ -1,10 +1,12 @@
-+++
-date = "2016-04-23T09:56:32+12:00"
-description = "Following most instructions Apple seemed to think my IIS generated CSR was invalud."
-title = "Generating an Apple Push Notification Certificate on Windows"
-url = "/generating-an-apple-push-notification-certificate-on-windows"
-tags = ["ios", "guide"]
-+++
+---
+publishDate: 2016-04-23T09:56:32+12:00
+title: Generating an Apple Push Notification Certificate on Windows
+summary: Following most instructions Apple seemed to think my IIS generated CSR was invalud.
+url: /generating-an-apple-push-notification-certificate-on-windows
+tags:
+    - ios
+    - guide
+---
 
 Following [most instructions](https://wiki.scn.sap.com/wiki/display/SAPMOB/How+to+generate+an+APNS+certificate+used+for+sending+push+messages+to+the+custom+Afaria+Client+application) [on the web make](https://tomasmcguinness.com/2012/06/28/generating-an-apple-ios-certificate-using-windows/) it sound as easy as generating a CSR using IIS. However I ran into a few difficulties - namely Apple seemed to think my brand new CSR was invalid. Probably has something to do with my local setup (IIS 10 on Windows 10) but that shouldn't be a road block.
 

@@ -1,10 +1,11 @@
-+++
-date = "2016-08-15T20:52:32+12:00"
-description = "In the interest of code-safety I don't put default values on implementing classes any more."
-title = "Optional arguments in C# interfaces"
-url = "/optional-arguments-in-c-sharp-interfaces"
-tags = ["csharp"]
-+++
+---
+publishDate: 2016-08-15T20:52:32+12:00
+title: Optional arguments in C# interfaces
+summary: In the interest of code-safety I don't put default values on implementing classes any more.
+url: /optional-arguments-in-c-sharp-interfaces
+tags:
+    - csharp
+---
 
 Optional arguments are a nice feature in C# that have been around for a while now, they were [introduced back in 2010 with C# 4](http://weblogs.asp.net/scottgu/optional-parameters-and-named-arguments-in-c-4-and-a-cool-scenario-w-asp-net-mvc-2). They are often mentioned in the same breath as named arguments but are two completely different concepts.
 
@@ -12,7 +13,7 @@ The great thing with development is that there's always something new to learn, 
 
 **Let's take a look at the example below**
 
-```
+```csharp
 public interface IDefaultArgDemo
 {
     void Write(string message = "hello!");

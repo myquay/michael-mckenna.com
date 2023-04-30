@@ -1,10 +1,11 @@
-+++
-date = "2014-07-14T15:56:32+12:00"
-description = "Is it still required? Or can we just use the naked domain?"
-title = "Should I use www or not?"
-url = "/should-i-use-www-or-not"
-tags = ["article"]
-+++
+---
+publishDate: 2014-07-14T15:56:32+12:00
+title: Should I use www or not?
+summary: Is it still required? Or can we just use the "naked" domain?
+url: /should-i-use-www-or-not
+tags:
+    - article
+---
 
 It's common convention to prefix the letter double-u three times on the front of every domain to represent the web host. It's pretty funny that we managed to pick the most awkward, visually dominating letter for this job. 
 

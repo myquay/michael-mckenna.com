@@ -1,10 +1,13 @@
-+++
-date = "2016-11-03T20:52:32+12:00"
-description = "I just needed to quickly run a few Python methods... in Azure"
-title = "How to import Python extension modules in Azure Functions"
-url = "/how-to-import-python-extension-modules-in-azure-functions"
-tags = ["azure", "python", "guide"]
-+++
+---
+publishDate: 2016-11-03T20:52:32+12:00
+title: How to import Python extension modules in Azure Functions
+summary: I just needed to quickly run a few Python methods... in Azure
+url: /how-to-import-python-extension-modules-in-azure-functions
+tags:
+    - azure
+    - python
+    - guide
+---
 
 An awesome feature of Azure Functions is its ability to run a wide range of languages,  [C#, F#, Node.js, Python, PHP, batch, bash, Java, or any executable](https://azure.microsoft.com/en-us/documentation/articles/functions-overview/). So when I wanted to do a bit of work with the Google Eddystone beacon format it was a natural fit as I just needed to quickly run a few Python methods - [given the example code Google provides is in Python](https://github.com/google/eddystone/tree/master/eddystone-eid).
 
@@ -109,17 +112,18 @@ Open up kudu by clicking the "Go to Kudu" button under "Function app settings".
 3. Install from requirements.txt
 `pip install -r requirements.txt`
 
-*If you get the error "Unable to find vcvarsall.bat" it means the wheel you have uploaded isn't compatible so it tried to download and compile it. Make sure the wheel is compiled for the correct version of Python - e.g in this example our wheel is for Python 2.7 and is pycrypto version 2.6.1: pycrypto-**2.6.1**-**cp27**-none-win32.whl*
+*If you get the error "Unable to find vcvarsall.bat" it means the wheel you have uploaded isn't compatible so it tried to download and compile it. Make sure the wheel is compiled for the correct version of Python - e.g in this example our wheel is for Python 2.7 and is pycrypto version 2.6.1: pycrypto-**2.6.1**-**cp27**-none-win32.whl*
 
 #### Done!
 
 You've just set up an isolated python function that can be called over HTTP which has multiple dependencies on normal and extension modules. You can call your shiny new Azure Function using the following parameters 
 
 
-    https://{function app name}.azurewebsites.net/api/EDIGenerator?scaler=12&ik=aaca6ae108054873947e0a8ccc52c881&beaconTime=321
+`https://{function app name}.azurewebsites.net/api/EDIGenerator?scaler=12&ik=aaca6ae108054873947e0a8ccc52c881&beaconTime=321`
 
 
 And you should get something like this back
 
-
+```json
     { eid:YDX9cjr/87A= }
+```

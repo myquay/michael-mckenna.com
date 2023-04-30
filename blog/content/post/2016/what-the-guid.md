@@ -1,16 +1,22 @@
-+++
-date = "2016-04-19T11:58:32+12:00"
-description = "I asked myself some questions and ended up learning a lot about the humble GUID - they really are quite cool."
-title = "GUIDs part 1: What the GUID?"
-url = "/what-the-guid"
-tags = ["guide", "guid"]
-+++
+---
+publishDate: 2016-04-19T11:58:32+12:00
+title: 'GUIDs part 1: What the GUID?'
+summary: I asked myself some questions and ended up learning a lot about the humble GUID - they really are quite cool.
+url: /what-the-guid
+tags:
+    - guid
+    - guide
+series: guid-one
+---
 
 Most developers have seen a GUID or two. A GUID *(Globally Unique Identifier)* is used extensively in computing to uniquely identify all sorts of things. You might also see them referred to as UUIDs - don't worry they're the same thing.
 
 > This specification defines a Uniform Resource Name namespace for
    UUIDs (Universally Unique IDentifier), also known as GUIDs (Globally
-   Unique IDentifier).<br /><cite>&mdash; <a href="https://www.ietf.org/rfc/rfc4122.txt" target="_blank">RFC 4122: A Universally Unique IDentifier (UUID) URN Namespace</a></cite>
+   Unique IDentifier).
+   \
+   \
+   -- [RFC 4122: A Universally Unique IDentifier (UUID) URN Namespace](https://www.ietf.org/rfc/rfc4122.txt)
 
 But why are they so pervasive? What about auto-incrementing numbers? Why do they look so ugly?? I asked myself the same questions and ended up learning a lot about the humble GUID - they really are quite cool.
 
@@ -27,7 +33,3 @@ Well, what if I wanted to make my own dog-chips? Nothing in the specification en
 GUIDs don't have this problem, uniqueness is baked into the standard. There is no requirement for a central authority to ensure uniqueness; GUIDs are 128-bit numbers generated in a particular way that allows you to create an identifier which you can be certain that _**no one else in the world will ever generate**_ *(assuming they also follow the standard - it doesn't prevent someone maliciously generating a duplicate GUID just to mess with you)*.
 
 Amazing right? Am I right? Over the next few installments in this series we'll take a look at how GUIDs ensure uniqueness without a central repository.
-
-<hr />
-
-This is a [3 part series](/tags/guid/) about my personal exploration of GUIDs. You can follow along to learn all about GUIDs, [check out my open source C# implementation](https://github.com/myquay/GuidOne) of the specification, and [visit a fun GUID generator I built called <b>guid.one</b>](http://guid.one).

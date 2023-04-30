@@ -1,11 +1,14 @@
-+++
-date = "2019-01-03T20:13:11+12:00"
-description = "Host your Hugo SSG using Azure Storage and KeyCDN."
-title = "Host your Hugo site on Azure Storage"
-subtitle = "deployed with VSTS"
-url = "/host-your-hugo-site-on-azure-storage-deployed-with-vsts"
-tags = ["guide", "azure", "hugo", "static site generator"]
-+++
+---
+publishDate: 2019-01-03T20:13:11+12:00
+title: 'Host your Hugo site on Azure Storage'
+summary: Host your Hugo SSG using Azure Storage and KeyCDN.
+url: /host-your-hugo-site-on-azure-storage-deployed-with-vsts
+tags:
+    - guide
+    - azure
+    - hugo
+    - static site generator
+---
 
 I'm a big fan of Static Site Generators (SSGs) for basic websites like this blog. By removing all the moving parts we can host blazing fast sites directly out of Azure Storage at very low cost. 
 
@@ -43,21 +46,25 @@ Cloudflare will provide a SSL certificate _(for better or worse)_ and you'll be 
 
 We need to generate the HTML and other resources that make up our static site on checkin and deploy those files to Azure Storage.
 
-In this process I've decided to [checkin the Hugo binary](https://github.com/myquay/michaelmckenna.com/tree/master/bin), but alternatively you could just add an eariler step to download the binary if you don't want it checked in.
+In this process I've decided to [checkin the Hugo binary](https://github.com/myquay/michaelmckenna.com/tree/main/bin), but alternatively you could just add an eariler step to download the binary if you don't want it checked in.
 
-The Hugo source for my site is located [in the `blog` directory](https://github.com/myquay/michaelmckenna.com/tree/master/blog) - if your strucutre is slightly different just update the paths as necessary _(e.g. you probably wouldn't have it in a subdirectory if you were downloading the hugo binary)_.
+The Hugo source for my site is located [in the blog directory](https://github.com/myquay/michaelmckenna.com/tree/main/blog) - if your strucutre is slightly different just update the paths as necessary _(e.g. you probably wouldn't have it in a subdirectory if you were downloading the hugo binary)_.
 
-First create a new pipeline and connect it to the GitHub repository which contains your blog (remember to enable `checkout submodules` if you've added your Hugo Theme as a `submodule`).
+First create a new pipeline and connect it to the GitHub repository which contains your blog (remember to enable **checkout submodules** if you've added your Hugo Theme as a **submodule**).
 
 ![](/images/azure-devops-pipeline.png)
 
-Next add a step that generates our site. Add the `Command Line` task and enter the following to use `hugo.exe` to compile our site `$(Build.SourcesDirectory)\bin\hugo.exe -s $(Build.SourcesDirectory)\blog -d $(Build.ArtifactStagingDirectory) --log -v`.
+Next add a step that generates our site. Add the **Command Line** task and enter the following to use **hugo.exe** to compile our site .
 
-`$(Build.SourcesDirectory)` is the directory our sources are kept in. `$(Build.ArtifactStagingDirectory)` is the local path build artifacts are kept before being pushed to their destination. We use the `-s` argument to specify the location of the source files for the blog and the `-d` argument to specify the location of the generated site.
+```shell
+$(Build.SourcesDirectory)\bin\hugo.exe -s $(Build.SourcesDirectory)\blog -d $(Build.ArtifactStagingDirectory) --log -v
+```
+
+**$(Build.SourcesDirectory) **is the directory our sources are kept in. **$(Build.ArtifactStagingDirectory)** is the local path build artifacts are kept before being pushed to their destination. We use the **-s** argument to specify the location of the source files for the blog and the **-d** argument to specify the location of the generated site.
 
 ![](/images/azure-static-site-vsts-step-one.png)
 
-Next we add the `Publish Build Artifacts` task to publish the generated static site files ready for deploy.
+Next we add the Publish **Build Artifacts task** to publish the generated static site files ready for deploy.
 
 ![](/images/azure-static-site-vsts-step-two.png)
 
@@ -77,11 +84,11 @@ First create a new release pipline and choose the build we just created as the r
 
 ![](/images/azure-static-site-vsts-step-four.png)
 
-Finally add the `Azure File Blob Copy` task and copy the files we generated in the `drop` folder and publish them to the special `$web` container which Azure Storage uses to serve static site content from.
+Finally add the **Azure File Blob Copy** task and copy the files we generated in the **drop** folder and publish them to the special **$web** container which Azure Storage uses to serve static site content from.
 
 ![](/images/azure-static-site-vsts-step-five.png)
 
-_Note: Make sure you use the `2.* (preview)` version as that uses a version of AzCopy which supports the special `$web` container: [see this issue](https://github.com/Microsoft/azure-pipelines-tasks/issues/7611)_
+_Note: Make sure you use the **2.\* (preview)** version as that uses a version of AzCopy which supports the special  **$web** container: [see this issue](https://github.com/Microsoft/azure-pipelines-tasks/issues/7611)_
 
 ## All done!!
 

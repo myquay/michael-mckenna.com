@@ -1,29 +1,22 @@
-+++
-date = "2019-07-01T13:11:12+12:00"
-description = "Overview of implementing multi-tenancy in .NET core"
-title = "Creating a multi-tenant .NET Core Application - Tenant specific options"
-subtitle = "Tenant specific configuration options, part 3 of 4"
-url = "/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options"
-tags = ["guide", "azure", "dot net core", "multitenant"]
-summary = "This time we are looking at how we can configure options on a per-tenant basis any third party service that supports the Options Pattern."
-+++
+---
+publishDate: 2019-07-01T13:11:12+12:00
+title: 'Creating a multi-tenant .NET Core Application - Tenant specific options'
+summary: This time we are looking at how we can configure options on a per-tenant basis any third party service that supports the Options Pattern.
+url: /multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options
+tags:
+    - guide
+    - azure
+    - dot net core
+    - multitenant
+series: multi-tenant
+---
 
+Update 2019-10-01: **This post is compatible with .NET Core 2.2 only**: We make this compatible with [**.NET Core 3.1** (LTS release) in this post here.](/multi-tenancy-compatibility-dot-net-core-three)
 ## Introduction
 
 Today we will extend our multi-tenant solution to work nicely with the [ASP.NET Core Options Pattern](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-2.2). This will allow us to configure components using tenant specific configuration options. 
 
-> **This post is compatible with .NET Core 2.2 only** <br />
-> We make this compatible with [**.NET Core 3.1** (LTS release) in this post here](/multi-tenancy-compatibility-dot-net-core-three)
-
 This is useful in situations where different tenants might have different settings _(connection strings, cookie policies etc)_, but the services we are configuring are unaware of the whole multi-tenant situation.
-
-### Parts in the series
-
-* Part 1: [Tenant resolution](/multi-tenant-asp-dot-net-core-application-tenant-resolution)
-* Part 2: [Tenant containers](/multi-tenant-asp-dot-net-core-application-tenant-containers)
-* *Part 3: Options configuration per tenant _(this post)_*
-* Part 4: [Authentication per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication)
-* Extra: [Upgrading to .NET Core 3.1 (LTS)](/multi-tenancy-compatibility-dot-net-core-three)
 
 ### Why have tenant specific options?
 

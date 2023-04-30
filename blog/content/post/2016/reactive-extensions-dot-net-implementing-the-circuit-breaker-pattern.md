@@ -1,10 +1,12 @@
-+++
-date = "2016-05-02T09:56:32+12:00"
-description = "We create an observable that either emits values from the source or the alternate source based on the status of the circuit breaker."
-title = "Reactive Extensions .NET: Implementing the circuit breaker pattern"
-url = "/reactive-extensions-dot-net-implementing-the-circuit-breaker-pattern"
-tags = ["csharp", "rx"]
-+++
+---
+publishDate: 2016-05-02T09:56:32+12:00
+title: 'Reactive Extensions .NET: Implementing the circuit breaker pattern'
+summary: We create an observable that either emits values from the source or the alternate source based on the status of the circuit breaker.
+url: /reactive-extensions-dot-net-implementing-the-circuit-breaker-pattern
+tags:
+    - csharp
+    - rx
+---
 
 _This article assumes you're familiar with both [reactive extensions](http://reactivex.io/) [and the circuit](http://martinfowler.com/bliki/CircuitBreaker.html) [breaker pattern](https://msdn.microsoft.com/en-us/library/dn589784.aspx), although we're focusing on .NET reactive extensions have been implemented in lots of different languages so the same principles apply._
 

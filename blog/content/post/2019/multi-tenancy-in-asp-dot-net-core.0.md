@@ -1,28 +1,21 @@
-+++
-date = "2019-05-25T20:13:11+12:00"
-description = "Overview of implementing multi-tenancy in .NET core"
-title = "Creating a multi-tenant .NET Core Application - Tenant resolution"
-subtitle = "Tenant resolution, part 1 of 4"
-url = "/multi-tenant-asp-dot-net-core-application-tenant-resolution"
-tags = ["guide", "azure", "dot net core", "multitenant"]
-summary = "This series of blog posts is an exploration of how to achieve multi-tenancy in an ASP.NET Core web application. In this part of the series we resolve a request to a tenant and introduce the ability to access information about that tenant."
-+++
+---
+publishDate: 2019-05-25T20:13:11+12:00
+title: 'Creating a multi-tenant .NET Core Application - Tenant resolution'
+summary: This series of blog posts is an exploration of how to achieve multi-tenancy in an ASP.NET Core web application. In this part of the series we resolve a request to a tenant and introduce the ability to access information about that tenant.
+url: /multi-tenant-asp-dot-net-core-application-tenant-resolution
+tags:
+    - guide
+    - azure
+    - dot net core
+    - multitenant
+series: multi-tenant
+---
 
 ## Introduction
 
 This series of blog posts is an exploration of how to achieve multi-tenancy in an ASP.NET Core web application.  There's a lot of code snippets so you can follow along with your own sample app. There's no NuGet package you can plug and play at the end of this but it is a great learning exercise. It touches a few "core" _(sorry, not sorry)_ parts of the framework 😉
 
 In this part of the series we resolve a request to a tenant and introduce the ability to access information about that tenant.
-
-> **2019-12-03: This post is compatible with .NET Core 3.1 which is a LTS release**
-
-### Parts in the series
-
-* *Part 1: Tenant resolution _(this post)_*
-* Part 2: [Tenant containers](/multi-tenant-asp-dot-net-core-application-tenant-containers)
-* Part 3: [Options configuration per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options)
-* Part 4: [Authentication per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication)
-* Extra: [Upgrading to .NET Core 3.1 (LTS)](/multi-tenancy-compatibility-dot-net-core-three)
 
 ### What is a multi-tenant app exactly?
 
@@ -77,11 +70,11 @@ public class Tenant
 }
 ```
 
-We will use the `Identifier` to match a tenant based on our resolution strategy _(Might be the tenat's domain name like `https://{tenant}.myapplication.com`)_.
+We will use the **Identifier** to match a tenant based on our resolution strategy _(Might be the tenat's domain name like **https://{tenant}.myapplication.com)**_.
 
-We will use the `Id` as a durable reference to the tenant _(the `Identifier` may change e.g. the host domain changes)_.
+We will use the **Id** as a durable reference to the tenant _(the **Identifier** may change e.g. the host domain changes)_.
 
-The property `Items` is just there to let develops add other things to the tenant during the request pipeline, they could also extend the class if they want specific properties or methods.
+The property **Items** is just there to let develops add other things to the tenant during the request pipeline, they could also extend the class if they want specific properties or methods.
 
 ### Common tenant resolution strategies
 
@@ -89,9 +82,9 @@ We will use a resolution strategy to match a request to a tenant, the strategy s
 
 #### Host header
 
-The tenant will be inferred based on the host header sent by the browser, this is perfect if all your tenants have different domains e.g. `https://host1.example.com`, `https://host2.example.com` or `https://host3.com` if you are supporting custom domains.
+The tenant will be inferred based on the host header sent by the browser, this is perfect if all your tenants have different domains e.g. `https://host1.example.com, https://host2.example.com, https://host3.com` if you are supporting custom domains.
 
-E.g. if the host header was `https://host1.example.com` we would load the `Tenant` with the `Identifier` holding the value `host1.example.com`.
+E.g. if the host header was `https://host1.example.com` we would load the **Tenant** with the **Identifier** holding the value **host1.example.com**.
 
 #### Request Path
 
@@ -141,7 +134,7 @@ public class HostResolutionStrategy : ITenantResolutionStrategy
 
 ## Tenant storage
 
-Now we know which tenant to load, where do we fetch it from? That will need to be some kind of tenant store. We will need to implement a `ITenantStore` which accepts the tenant identifier and returns the `Tenant` information.
+Now we know which tenant to load, where do we fetch it from? That will need to be some kind of tenant store. We will need to implement a `ITenantStore` which accepts the tenant identifier and returns the **Tenant** information.
 
 ```csharp
 public interface ITenantStore<T> where T : Tenant
@@ -347,13 +340,13 @@ And if you hit the endpoint you should see the tenant Id returned based on the U
 
 ![](/images/2019-multitenant-01.png)
 
-Next we can add some middleware to inject the curret `Tenant` into the `HttpContext`, this means we can get the `Tenant` wherever we can access the `HttpContext` for a bit more convienence. This will mean we no longer need to go around injecting our `TenantAccessService` so much.
+Next we can add some middleware to inject the curret **Tenant** into the **HttpContext**, this means we can get the **Tenant** wherever we can access the **HttpContext** for a bit more convienence. This will mean we no longer need to go around injecting our `TenantAccessService` so much.
 
 ### Registering the middleware
 
-Middleware in ASP.NET Core allows you to place some logic into the [request processing pipeline](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-3.1). In our case we should have our middleware registered before anything that needs to access `Tenant` information, like the MVC middleware. That will likely need the tenant context in the controllers processing the request.
+Middleware in ASP.NET Core allows you to place some logic into the [request processing pipeline](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-3.1). In our case we should have our middleware registered before anything that needs to access **Tenant** information, like the MVC middleware. That will likely need the tenant context in the controllers processing the request.
 
-First let's create our middleware class, this will process the request and inject the `Tenant` into the current `HttpContext` - super simple.
+First let's create our middleware class, this will process the request and inject the **Tenant** into the current **HttpContext** - super simple.
 
 ```csharp
 internal class TenantMiddleware<T> where T : Tenant
@@ -409,14 +402,14 @@ public static class IApplicationBuilderExtensions
 }
 ```
 
-Finally we can register our middleware, the best place to do this is before middleware such as `MVC` which may require access to the `Tenant` information.
+Finally we can register our middleware, the best place to do this is before middleware such as MVC which may require access to the **Tenant** information.
 
 ```csharp
 app.UseMultiTenancy();
 app.UseMvc()
 ```
 
-Now the `Tenant` will be in the items collection but we don't really want to force the developer to find out where we've stored it, remember the type, need to cast it etc. So we'll create a nice extension method to pull out the current tenant information.
+Now the **Tenant** will be in the items collection but we don't really want to force the developer to find out where we've stored it, remember the type, need to cast it etc. So we'll create a nice extension method to pull out the current tenant information.
 
 ```csharp
 /// <summary>
@@ -449,7 +442,7 @@ public static class HttpContextExtensions
 }
 ```
 
-Now we can upgrade our values controller to demostrate using the current `HttpContext` instead of injecting a service.
+Now we can upgrade our values controller to demostrate using the current **HttpContext** instead of injecting a service.
 
 ```csharp
 /// <summary>
@@ -480,7 +473,7 @@ Woohoo, our application is **'tenant aware'**. That's a big milestone.
 
 ## Bonus, the tenant context accessor
 
-In ASP.NET Core, to access the `HttpContext` in services [you use the `IHttpContextAccessor` service](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-context?view=aspnetcore-3.1), to provide a familiar access pattern to the Tenant information for a developer working on our application we can create a `ITenantAccessor` service. This will make the library feel familiar to developers used to the existing pattern.
+In ASP.NET Core, to access the **HttpContext** in services [you use the IHttpContextAccessor service](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-context?view=aspnetcore-3.1), to provide a familiar access pattern to the Tenant information for a developer working on our application we can create a **ITenantAccessor** service. This will make the library feel familiar to developers used to the existing pattern.
 
 First the interface
 
@@ -513,6 +506,4 @@ Just go back an mark the `TenantAccessService<T>` class as internal so it's not 
 
 ## Wrapping up
 
-In this post we looked at how we can map a request to a tenant. We configured the application container to be able to resolve our tenancy services and even created an `ITenantAccessor` service to allow the tenant to be accessible inside other services just like `IHttpContextAccessor`. We also wrote custom middleware to inject the current tenant information into the `HttpContext` so it's easily accessable to downstream middleware and created a nice extension method so you can grab the current `Tenant` as easy as `HttpContext.GetTenant()`. In the next post _(upcoming)_ we will look at isolating data acess on a per tenant basis.
-
-Next up in the series we look at how to [configure services on a per-tenant basis](/multi-tenant-asp-dot-net-core-application-tenant-containers) so that we can resolve a different implementation based on which tenant is active.
+In this post we looked at how we can map a request to a tenant. We configured the application container to be able to resolve our tenancy services and even created an `ITenantAccessor` service to allow the tenant to be accessible inside other services just like `IHttpContextAccessor`. We also wrote custom middleware to inject the current tenant information into the **HttpContext** so it's easily accessable to downstream middleware and created a nice extension method so you can grab the current **Tenant** as easy as `HttpContext.GetTenant()`. In the next post _(upcoming)_ we will look at isolating data acess on a per tenant basis.

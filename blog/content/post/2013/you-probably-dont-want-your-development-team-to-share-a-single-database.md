@@ -1,10 +1,11 @@
-+++
-date = "2013-08-14T11:51:32+12:00"
-description = "If you're currently working on a project where all developers are using the same centralized development database, then chances are that's the way the project has been run since the beginning."
-title = "You probably don't want your development team to share a single database"
-url = "/you-probably-dont-want-your-development-team-to-share-a-single-database"
-tags = ["article"]
-+++
+---
+publishDate: 2013-08-14T11:51:32+12:00
+title: You probably don't want your development team to share a single database
+summary: If you're currently working on a project where all developers are using the same centralized development database, then chances are that's the way the project has been run since the beginning.
+url: /you-probably-dont-want-your-development-team-to-share-a-single-database
+tags:
+    - article
+---
 
 The shared database model has the developers building and running the web application on their own machine locally, but connecting remotely to the shared database. It's a super simple way to get started, and on the surface it has a few benefits:
 

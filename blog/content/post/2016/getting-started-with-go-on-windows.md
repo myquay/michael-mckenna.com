@@ -1,10 +1,12 @@
-+++
-date = "2016-07-01T10:33:32+12:00"
-description = "I'm giving this Go-lang thing a whirl, turns out it's dead easy to set up on Windows."
-title = "Getting started with Go on Windows"
-url = "/getting-started-with-go-on-windows"
-tags = ["go", "guide"]
-+++
+---
+publishDate: 2016-07-01T10:33:32+12:00
+title: Getting started with Go on Windows
+summary: I'm giving this Go-lang thing a whirl, turns out it's dead easy to set up on Windows.
+url: /getting-started-with-go-on-windows
+tags:
+    - go
+    - guide
+---
 
 I'm giving this Go-lang thing a whirl, turns out it's dead easy to set up on Windows.
 
@@ -16,7 +18,9 @@ I'm giving this Go-lang thing a whirl, turns out it's dead easy to set up on Win
 
 **Great - now Go is installed!** 
 
-But we're not quite done yet - Go developers normally keep all their [Go code in a single _workspace_](https://golang.org/doc/code.html). The `GOPATH` environment variable specifies the location of this workspace. The workspace should contain 3 folders `bin`, `pkg` and `src`.
+But we're not quite done yet - Go developers normally keep all their [Go code in a single _workspace_](https://golang.org/doc/code.html). 
+
+The `GOPATH` environment variable specifies the location of this workspace. The workspace should contain 3 folders `bin`, `pkg` and `src`.
 
 4. Set up your workspace, I created my workspace at `C:\Development\Go` ![Go Workspace](/images/go.png)
 

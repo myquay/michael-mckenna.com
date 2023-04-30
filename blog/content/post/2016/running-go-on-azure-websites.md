@@ -1,16 +1,19 @@
-+++
-date = "2016-07-03T20:52:32+12:00"
-description = "It turns out Azure App Services have added native Go support."
-title = "Running Go on Azure App Services"
-url = "/running-go-on-azure-websites"
-tags = ["go", "guide", "azure"]
-+++
+---
+publishDate: 2016-07-03T20:52:32+12:00
+title: Running Go on Azure App Services
+summary: It turns out Azure App Services have added native Go support.
+url: /running-go-on-azure-websites
+tags:
+    - go
+    - guide
+    - azure
+---
 
 At first I thought I was going to have to go do something tricky, but it turns [Azure App Services have now added native Go support](https://azure.microsoft.com/en-gb/blog/running-go-applications-on-azure-app-service/) so we don't need to set up Go on the server any more.
 
 The versions currently supported on the Azure App Service platform are 64bit Go 1.4.2 and Go 1.5.1 and it turns out to be super simple to get going.
 
-##### Setting up the Azure App Service
+### Setting up the Azure App Service
 
 First we need to create and set up an Azure App Service to serve our new Go app as well as configure deployment.
 
@@ -28,18 +31,18 @@ First we need to create and set up an Azure App Service to serve our new Go app 
 
 Great - now we're ready to configure our development environment.
 
-##### Setting up your Go development environment
+### Setting up your Go development environment
 
 Typically with Go you will have one workspace and your source will be in the `src` subdirectory. This subdirectory usually contains multiple version control repositories, this is where we're going to set up our Git repository on our Azure App Service.
 
-    src/
-        {app-service-name}.azurewebsites.net/
+```shell
+src/
+    {app-service-name}.azurewebsites.net/
+```
 
 Navigate to this folder and go `git init` to initialise your local repo. Now go `git remote add azure https://{username}@{app-service-name}.scm.azurewebsites.net:443/{app-service-name}.git` to add the remote.
 
-Now we need to write some code!
-
-##### A super simple website
+## A super simple website
 
 Here's the source to our super simple website - all it's going to do is return a message.
 

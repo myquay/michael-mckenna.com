@@ -1,30 +1,21 @@
-+++
-date = "2019-06-06T20:13:11+12:00"
-description = "Overview of implementing multi-tenancy in .NET core"
-title = "Creating a multi-tenant .NET Core Application - Tenant containers"
-subtitle = "Tenant containers, part 2 of 4"
-url = "/multi-tenant-asp-dot-net-core-application-tenant-containers"
-tags = ["guide", "azure", "dot net core", "multitenant"]
-summary = "This time we are looking at how we can configure services on a per-tenant basis which allows us to resolve a different service based on which tenant is active. An application isn't truly multi-tenant unless you can have a different services container for each tenant."
-+++
+---
+publishDate: 2019-06-06T20:13:11+12:00
+title: 'Creating a multi-tenant .NET Core Application - Tenant containers'
+summary: This time we are looking at how we can configure services on a per-tenant basis which allows us to resolve a different service based on which tenant is active. An application isn't truly multi-tenant unless you can have a different services container for each tenant.
+url: /multi-tenant-asp-dot-net-core-application-tenant-containers
+tags:
+    - guide
+    - azure
+    - dot net core
+    - multitenant
+series: multi-tenant
+---
 
-
-
+Update 2019-10-01: **This post is compatible with .NET Core 2.2 only**: We make this compatible with [**.NET Core 3.1** (LTS release) in this post here.](/multi-tenancy-compatibility-dot-net-core-three)
 
 ## Introduction
 
 This post looks at how to configure services on a per-tenant basis. This allows us to resolve a different service or instance based on which tenant is active.
-
-> **This post is compatible with .NET Core 2.2 only** <br />
-> We make this compatible with [**.NET Core 3.1** (LTS release) in this post here](/multi-tenancy-compatibility-dot-net-core-three)
-
-### Parts in the series
-
-* Part 1: [Tenant resolution](/multi-tenant-asp-dot-net-core-application-tenant-resolution)
-* *Part 2: Tenant containers _(this post)_*
-* Part 3: [Options configuration per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options)
-* Part 4: [Authentication per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication)
-* Extra: [Upgrading to .NET Core 3.1 (LTS)](/multi-tenancy-compatibility-dot-net-core-three)
 
 ### Why have tenant specific containers?
 
@@ -40,7 +31,7 @@ This covers most scenarios you'll need in a standard web app, however when opera
 
 ### Why do we need a TenantSingleton dependency scope?
 
- We generally registers services as **transient** wherever possbile because it's simple to design, however some classes like `HttpClient` or `DocumentClient` [perform best when registered as a singleton](https://azure.microsoft.com/en-us/blog/performance-tips-for-azure-documentdb-part-1-2/) as they are expensive to create. These instances might have different state depending on the tenant. In the case of the `DocumentClient` each tenant might have a different endpoint and authentication key.
+ We generally registers services as **transient** wherever possbile because it's simple to design, however some classes like **HttpClient** or **DocumentClient** [perform best when registered as a singleton](https://azure.microsoft.com/en-us/blog/performance-tips-for-azure-documentdb-part-1-2/) as they are expensive to create. These instances might have different state depending on the tenant. In the case of the **DocumentClient** each tenant might have a different endpoint and authentication key.
 
  If you can restrict yourself to the **transient** service lifetime, then you won't need the complexity of tenant specific containers, but if you're still interested, carry on below.
 
@@ -320,5 +311,3 @@ In the screenshot below the current tenant is in the `URL`, either `t01` or `t02
 ## Wrapping up
 
 In this post we looked at how we can upgrade ASP.NET Core to support the concept of a **TenantSingleton** using syntax which is very similar to how services are registered in ASP.NET core by default. It also supports any application level serivces that have already been registered which makes it suitable to add to an existing project without needing to rewrite all the existing service registration logic. ⚡🎉
-
-Next up in the series we look at how to [configure options on a per-tenant basis](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options) so that different tenants can run with different configurations.

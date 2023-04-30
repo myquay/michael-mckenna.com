@@ -1,10 +1,12 @@
-+++
-date = "2014-07-07T15:56:32+12:00"
-description = "In this blog post we'll investigate how to set up an elasticsearch cluster on Windows Azure."
-title = "Setting up an elasticsearch cluster in azure"
-url = "/setting-up-an-elasticsearch-cluster-in-azure"
-tags = ["azure", "guide"]
-+++
+---
+publishDate: 2014-07-07T15:56:32+12:00
+title: Setting up an elasticsearch cluster in azure
+summary: In this blog post we'll investigate how to set up an elasticsearch cluster on Windows Azure.
+url: /setting-up-an-elasticsearch-cluster-in-azure
+tags:
+    - azure
+    - guide
+---
 
 One of the best things about Azure is that you can set up most of your favourite software on it regardless of its roots. In this blog post we'll investigate how to set up an elasticsearch cluster on Windows Azure.
 
@@ -12,9 +14,7 @@ One of the best things about Azure is that you can set up most of your favourite
 
 ### The set up
 
-We'll set up our cluster so that it can be used in a stock-standard multi-tier web application.
-
-In our configuration we will have a public facing web application that is using the elasticsearch cluster. 
+We'll set up our cluster so that it can be used in a stock-standard multi-tier web application. In our configuration we will have a public facing web application that is using the elasticsearch cluster. 
 
 We will use Azure's new [internal load balancing feature](https://azure.microsoft.com/blog/2014/05/20/internal-load-balancing/) to enable us to run a highly available service which isn't publicly exposed. This means the web application can reference the ILB instead of an individual machine in the cluster.
 
@@ -52,41 +52,48 @@ I'm going to install elasticsearch on Windows Server 2012 R2 but you can choose 
 Once the VM is provisioned install java and elasticsearch, [the process is super simple](https://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-service-win.html).
 
 1. Install Java
+
 2. I'm on windows so I need to set JAVA_HOME in the environment variables so programs like elasticsearch know where to find it.
 ![Setting java home](/images/setting-java-home.png)
+
 3. Unzip elasticsearch to somewhere on your permanent hard drive (not temporary storage) as you don't want anything silly to happen like losing all your data.
+
 4. We're going to be installing this as a service so open up the CMD and run "service install"
+
 5. Go into the services panel and set the start up type as "automatic" so that it starts up automatically as we spin up VMs.  
 ![Set as automatic](/images/startup-automatic.png)
+
 6. Great - it's set up, open up IE and hit `http://localhost:9200` to check it's all working as expected.   
 
 You be prompted to download a json file that looks something like this:
 
-    {
-      "status" : 200,
-      ... other stuff...
-      "tagline" : "You Know, for Search"
-    }
-    
+```json
+{
+    "status" : 200,
+    ... other stuff...
+    "tagline" : "You Know, for Search"
+}
+```
+
 #### Supporting discovery
 
 By default elasticsearch discovers a list of nodes using multicast where you don't need to configure anything, but this doesn't work in Azure. There is an official plugin that allows [nodes to automatically find each other on Azure](http://www.elasticsearch.org/blog/azure-cloud-plugin-for-elasticsearch/) but I'm just going to use unicast with a set number of addresses because it's simpler and this cluster will be upgraded to worker roles when they become available for the ILB.
 
-By default Azure internal name resolution knows how to resolve the name of VMs within the same **cloud service**, so I'm just going to specify a couple of host names using a pattern that I can name my VMs as I spin them up, something along the lines of es-01, es-02. directly in the configuration, super simple.
+Azure internal name resolution knows how to resolve the name of VMs within the same **cloud service**, so I'm just going to specify a couple of host names using a pattern that I can name my VMs as I spin them up, something along the lines of es-01, es-02. directly in the configuration, super simple.
 
 Try specify as many names as possible, specifying only one "master node" will work, but if it goes off-line the nodes will lose their ability to find each other. This will only work for nodes in the same cloud service. (For VMs in different cloud services but still in the same VNET you need to use the FQDN if you don't want to use the machine's IP address directly).
 
-Time to get our hands dirty to support this unicast business. Go open the configuration file (be careful, it's REALLY easy to break).
+Time to get our hands dirty to support this unicast business. Go open the configuration file (be careful, it's **REALLY** easy to break).
 
 Disable multicast by uncommenting this line
 
-    discovery.zen.ping.multicast.enabled: false
+`discovery.zen.ping.multicast.enabled: false`
     
 Enable unicast by uncommeting this line and specifying the names of your future VMs
 
-    discovery.zen.ping.unicast.hosts: ["host1", "host2:port"]
+`discovery.zen.ping.unicast.hosts: ["host1", "host2:port"]`
     
- Elasticsearch communicates with each other on 9200 and 9300 by default, make sure you've opened up the firewall.
+ Elasticsearch communicates with each other on `9200` and `9300` by default, make sure you've opened up the firewall.
 
 #### Capturing the image
 
@@ -120,40 +127,48 @@ The ILB gives us an internal endpoint that we can communicate with the cluster o
 
 **Create the ILB instance**
 
-    $svc="{Cloud service that your elasticsearch VMs are hosted in}"
-    $ilb="{Something descriptive}"
-    $subnet="<Name of the subnet within your virtual network-optional>"
-    $IP="<The IPv4 address to use on the subnet-optional>"
-    
-    Add-AzureInternalLoadBalancer -ServiceName $svc -InternalLoadBalancerName $ilb –SubnetName $subnet –StaticVNetIPAddress $IP
+```powershell
+$svc="{Cloud service that your elasticsearch VMs are hosted in}"
+$ilb="{Something descriptive}"
+$subnet="<Name of the subnet within your virtual network-optional>"
+$IP="<The IPv4 address to use on the subnet-optional>"
+
+Add-AzureInternalLoadBalancer -ServiceName $svc -InternalLoadBalancerName $ilb –SubnetName $subnet –StaticVNetIPAddress $IP
+```
 
 **Add the endpoints**
 
 Remember by default elasticsearch accepts requests on 9200, this is the port that we will be mapping to. Do this for each machine that you've added to the cluster.
 
-    $svc="{Cloud service that your elasticsearch VMs are hosted in}"
-    $vmname="<Name of the VM>"
-    $epname="elasticsearch"
-    $prot="tcp"
-    $locport= 9200
-    $pubport= 9200 (Could be any post you want elasticsearch to be available on)
-    $ilb="<Name of your ILB instance>"
-    $ilbsetname = "<Name of the load balanced set>"
-    
-    Get-AzureVM –ServiceName $svc –Name $vmname | Add-AzureEndpoint -Name $epname -Protocol $prot -LocalPort $locport -PublicPort $pubport -LBSetName $ilbsetname -ProbePort $locpost -ProbeProtocol "tcp" -ProbeIntervalSeconds 15 -ProbeTimeoutInSeconds 31 -InternalLoadBalancerName $ilb | Update-AzureVM
-    
+```powershell
+$svc="{Cloud service that your elasticsearch VMs are hosted in}"
+$vmname="<Name of the VM>"
+$epname="elasticsearch"
+$prot="tcp"
+$locport= 9200
+$pubport= 9200 (Could be any post you want elasticsearch to be available on)
+$ilb="<Name of your ILB instance>"
+$ilbsetname = "<Name of the load balanced set>"
+
+Get-AzureVM –ServiceName $svc –Name $vmname | Add-AzureEndpoint -Name $epname -Protocol $prot -LocalPort $locport -PublicPort $pubport -LBSetName $ilbsetname -ProbePort $locpost -ProbeProtocol "tcp" -ProbeIntervalSeconds 15 -ProbeTimeoutInSeconds 31 -InternalLoadBalancerName $ilb | Update-AzureVM
+```
+
 **ILB should now be live.**
     
 It should have the IP you specified when you created it but to check run
 
-    Get-AzureService -ServiceName $svc | Get-AzureInternalLoadBalancer
-    
+```powershell
+Get-AzureService -ServiceName $svc | Get-AzureInternalLoadBalancer
+```
+
 And you should get something along the lines of
 
-    ...Some information...
-    IPAddress                : {the IP address}
-    ...Some more information...
-    
+```powershell
+...Some information...
+IPAddress                : {the IP address}
+...Some more information...
+```
+
 Just use that IP from within the virtual network to access your shiny new elasticsearch cluster. Jump onto any machine on that VNET (that's not connected to the ILB) and browse to `http://{the ILB IP address}:9200/_nodes` and you should get a list of nodes on your cluster. 
 
 If you browser to `http://{the ILB IP address}:9200` and hit refresh, you'll hit one of the instances. Apparently it's supposed to be random but in my experience it will stick with one host unless you switch tabs in IE.

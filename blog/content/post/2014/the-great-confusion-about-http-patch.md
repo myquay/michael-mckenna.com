@@ -1,10 +1,11 @@
-+++
-date = "2014-06-20T20:51:32+12:00"
-description = "It's designed to allow an API to support partial updates."
-title = "The great confusion about HTTP Patch"
-url = "/the-great-confusion-about-http-patch"
-tags = ["article"]
-+++
+---
+publishDate: 2014-06-20T20:51:32+12:00
+title: The great confusion about HTTP Patch
+summary: It's designed to allow an API to support partial updates.
+url: /the-great-confusion-about-http-patch
+tags:
+    - article
+---
 
 PATCH is a relatively new addition to the set of HTTP verbs. Proposed about 4 years ago in [RFC 5789](http://tools.ietf.org/html/rfc5789) it's designed to allow an API to support partial updates.
 
@@ -16,10 +17,12 @@ PATCH is a relatively new addition to the set of HTTP verbs. Proposed about 4 ye
    
  Great, myself along with a bunch of other API designers started to treat it as PUT but for partial updates. Sure it only worked for simple entities and started to break down with objects containing complex properties but this was Web 2.0 and we started to do something along the lines of this.
  
-     PATCH /cars/1
-     Content-Type: application/json
-     
-     { "colour": "new-paint-colour" }
+ ```curl
+PATCH /cars/1
+Content-Type: application/json
+
+{ "colour": "new-paint-colour" }
+```
      
 Now we can just check the verb to see if we want to null out missing entities, if it was a PUT we'd replace the entire object, and if it's a PATCH we'd just update the properties specified right? ...right? Wrong!
 
@@ -44,10 +47,12 @@ In fact [the spec](http://tools.ietf.org/html/rfc578) goes on to say that there 
    
 So there we go, PATCH actually looks something along the lines of
 
-     PATCH /cars/1
-     Content-Type: [patch document content type]
-     
-     [Description of changes]
+ ```curl
+PATCH /cars/1
+Content-Type: [patch document content type]
+
+[Description of changes]
+```
      
 Because of the lack of standardisation around the content type at the moment to support PATCH you need to decide what type of patch documents you wish to support and implement that support yourself.
 
@@ -59,10 +64,12 @@ Myself, I like the look of [application/json-patch](https://www.mnot.net/blog/20
 
 Here's an example:
 
-     PATCH /cars/1
-     Content-Type: application/json-patch
-     
-     [{"replace": "/colour", "value": "red"}]
+ ```curl
+PATCH /cars/1
+Content-Type: application/json-patch
+
+[{"replace": "/colour", "value": "red"}]
+```
      
 It's super obvious that we're updating the colour property of the car resource to red. Fantastic.
 

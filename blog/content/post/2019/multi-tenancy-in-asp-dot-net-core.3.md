@@ -1,29 +1,22 @@
-+++
-date = "2019-07-15T13:11:12+12:00"
-description = "Overview of implementing multi-tenancy in .NET core"
-title = "Creating a multi-tenant .NET Core Application - Tenant specific authentication"
-subtitle = "Tenant specific authentication, part 4 of 4"
-url = "/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication"
-tags = ["guide", "azure", "dot net core", "multitenant"]
-summary = "This time we are looking at how we can configure authentication on a per-tenant basis."
-+++
+---
+publishDate: 2019-07-15T13:11:12+12:00
+title: Creating a multi-tenant .NET Core Application - Tenant specific authentication
+summary: This time we are looking at how we can configure authentication on a per-tenant basis.
+url: /multi-tenant-asp-dot-net-core-application-tenant-specific-authentication
+tags:
+    - guide
+    - azure
+    - dot net core
+    - multitenant
+series: multi-tenant
+---
+Update 2019-10-01: **This post is compatible with .NET Core 2.2 only**: We make this compatible with [**.NET Core 3.1** (LTS release) in this post here.](/multi-tenancy-compatibility-dot-net-core-three)
 
 ## Introduction
 
 In the final installment we will extend our multi-tenant solution to allow each tenant to have different [ASP.NET Identity](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-2.2) providers configured. This will allow each tenant to have different external identiy providers or different clients for the same identity provider.
 
-> **This post is compatible with .NET Core 2.2 only** <br />
-> We make this compatible with [**.NET Core 3.1** (LTS release) in this post here](/multi-tenancy-compatibility-dot-net-core-three)
-
 This is important to allow consent screens on third party services reflect the branding of the particular tenant that the user is signing in to.
-
-### Parts in the series
-
-* Part 1: [Tenant resolution](/multi-tenant-asp-dot-net-core-application-tenant-resolution)
-* Part 2: [Tenant containers](/multi-tenant-asp-dot-net-core-application-tenant-containers)
-* Part 3: [Options configuration per tenant](/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options)
-* *Part 4: Authentication per tenant _(this post)_*
-* Extra: [Upgrading to .NET Core 3.1 (LTS)](/multi-tenancy-compatibility-dot-net-core-three)
 
 ### Tenant specific authentication features
 
@@ -37,7 +30,7 @@ This is useful if different tenants want to allow different ways of signing in, 
 
 This is useful if tenants are sharing a domain, you don't want the cookies of one tenant signing you in to all tenants.
 
-> **⚠ Note:** If you follow this post your tenants will be sharing decryption keys so one tenant's cookie is a valid ticket on another tenant. Someone could send one tenant's cookie to a second tenant, you will need to either also include a tenant Id claim or extend this further to have seperate keys to verify the cookie supplied is intended for the tenant.
+**⚠ Note:** If you follow this post your tenants will be sharing decryption keys so one tenant's cookie is a valid ticket on another tenant. Someone could send one tenant's cookie to a second tenant, you will need to either also include a tenant Id claim or extend this further to have seperate keys to verify the cookie supplied is intended for the tenant.
 
 **Allow different tenants to use different configured clients on an external identity provider**
 

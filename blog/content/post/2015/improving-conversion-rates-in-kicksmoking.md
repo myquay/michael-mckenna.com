@@ -1,12 +1,15 @@
-+++
-date = "2015-03-22T08:45:32+12:00"
-description = "People won't give you money if you treat them poorly."
-title = "Improving conversion rates in KickSmoking"
-url = "/improving-conversion-rates-in-kicksmoking"
-tags = ["article", "product", "kicksmoking"]
-+++
-
-> [In part 1 of this series](https://michael-mckenna.com/monetising-kicksmoking) we looked at the current state of the application KickSmoking. In this series we'll take a look at some of the ways we're going improve conversion rates.
+---
+publishDate: 2015-03-22T08:45:32+12:00
+title: Improving conversion rates in KickSmoking
+summary: People won't give you money if you treat them poorly.
+url: /improving-conversion-rates-in-kicksmoking
+tags:
+    - article
+    - product
+    - kicksmoking
+series: kicksmoking
+concludeSeries: true
+---
 
 The problem we were having was getting people to upgrade from the free version to the paid version. Having them as two seperate apps makes the upgrade process basically impossible. With features such as trial accounts and in-app purchases available to Windows Phone developers there's really no need to have multiple apps anymore, however I don't want to leave one group of users out in the cold so we're forced to maintain two apps in the app store.
 

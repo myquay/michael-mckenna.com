@@ -1,10 +1,13 @@
-+++
-date = "2014-08-22T15:56:32+12:00"
-description = "For sites that are read heavy but get updated quite infrequently (like a blog, or marketing site) a static site is ideal."
-title = "Setting up a Jekyll workflow on windows"
-url = "/setting-up-a-jekyll-workflow-on-windows"
-tags = ["static site generator", "jekyll", "guide"]
-+++
+---
+publishDate: 2014-08-22T15:56:32+12:00
+title: Setting up a Jekyll workflow on windows
+summary: For sites that are read heavy but get updated quite infrequently (like a blog, or marketing site) a static site is ideal.
+url: /setting-up-a-jekyll-workflow-on-windows
+tags:
+    - static site generator
+    - jekyll
+    - guide
+---
 
 Static site generators are in at the moment, and for good reason. They remove a whole bunch of complexity from deploying and maintaining a site by creating a static representation of it, which you just upload to a web server.
 
@@ -22,11 +25,9 @@ This post isn't about setting up your first Jekyll site, there's already [great 
 
 ### The set up
 
-First we point a Visual Studio website at our Jekyll project, this allows us to edit the files with all that intellisense goodness.
+First we point a Visual Studio website at our Jekyll project, this allows us to edit the files with all that intellisense goodness. You'll notice from the file layout that this is just a standard Jekyll site. 
 
-You'll notice from the file layout that this is just a standard Jekyll site. 
-
->Warning: if there is a BOM (Byte order mark) header in your files Jekyll will implode. In my experience adding a file through VS will include this header, add blank files directly through windows explorer.
+If there is a BOM (Byte order mark) header in your files Jekyll will implode. In my experience adding a file through VS will include this header, add blank files directly through windows explorer.
 
 #### Grunt
 
@@ -34,33 +35,39 @@ We don't want to have to manually run _jekyll build_ every time we change a file
 
 The task **shell** will kick off a Jekyll build
 
-    shell: {
-      jekyllBuild: {
-        command: 'jekyll build --source ../ --destination ../_site'
-      }
-    },
+```javascript
+shell: {
+  jekyllBuild: {
+    command: 'jekyll build --source ../ --destination ../_site'
+  }
+},
+```
 
 The task **watch** will monitor the filesystem for changes then kick off any grunt tasks needed to build the Jekyll site.
 
-    watch: {
-      files: [
-        '../_includes/*.html',
-        
-        ..other directories..
-       
-        '../_config.yml',
-        '../index.html'
-      ],
-      tasks: ['concat', 'uglify', 'cssmin', 'shell:jekyllBuild'],
-      options: {
-        interrupt: true,
-        atBegin: true
-      }
-    }
+```javascript
+watch: {
+  files: [
+    '../_includes/*.html',
+    
+    ..other directories..
+    
+    '../_config.yml',
+    '../index.html'
+  ],
+  tasks: ['concat', 'uglify', 'cssmin', 'shell:jekyllBuild'],
+  options: {
+    interrupt: true,
+    atBegin: true
+  }
+}
+```
 
 Set _watch_ as the default task, so that you can just type "grunt" to kick it all off.
 
-    grunt.registerTask('default', ['watch']);
+```javascript
+grunt.registerTask('default', ['watch']);
+```
 
 #### IIS
 
@@ -70,25 +77,27 @@ Sure you can use the Jekyll command _jekyll serve_ but I don't want to introduce
 
 All you need to do to host the site using IIS is to create a new website and point it at the _site directory. If you want to serve the pages without a .html extension just use the IIS rewrite module. Here's how we configured ours:
 
-    <rewrite>
-      <rules>
-        <rule name="RedirectUserFriendlyURL1" stopProcessing="true">
-          <match url="^(.*)\.html$" />
-          <conditions>
-            <add input="{REQUEST_METHOD}" pattern="^POST$" negate="true" />
-          </conditions>
-          <action type="Redirect" url="{R:1}" appendQueryString="false" />
-        </rule>
-        <rule name="RewriteUserFriendlyURL1" stopProcessing="true">
-          <match url="^(.*)$" />
-          <conditions>
-            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
-            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
-          </conditions>
-          <action type="Rewrite" url="{R:1}.html" />
-        </rule>
-      </rules>
-    </rewrite>
+```xml
+<rewrite>
+  <rules>
+    <rule name="RedirectUserFriendlyURL1" stopProcessing="true">
+      <match url="^(.*)\.html$" />
+      <conditions>
+        <add input="{REQUEST_METHOD}" pattern="^POST$" negate="true" />
+      </conditions>
+      <action type="Redirect" url="{R:1}" appendQueryString="false" />
+    </rule>
+    <rule name="RewriteUserFriendlyURL1" stopProcessing="true">
+      <match url="^(.*)$" />
+      <conditions>
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+      </conditions>
+      <action type="Rewrite" url="{R:1}.html" />
+    </rule>
+  </rules>
+</rewrite>
+```
 
 #### Now you're all set!
 

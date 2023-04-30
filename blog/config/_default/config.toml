@@ -6,22 +6,41 @@ theme = "hugo-theme-peripheral"
 googleAnalytics = "UA-27845504-8"
 enableGitInfo = true
 
-pygmentsStyle = "trac"
-pygmentsUseClasses = true
-pygmentsCodeFences = true
-pygmentsCodefencesGuessSyntax = true
+[markup]
+  [markup.highlight]
+    anchorLineNos = false
+    codeFences = true
+    guessSyntax = true
+    hl_Lines = ''
+    lineAnchors = ''
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = true
+    style = 'nord'
+    tabWidth = 4
 
 [Params.Peripheral]
+    dateFormat = "January 2, 2006"
     subtitle = "All my Keystrokes That's Fit to Print"
     location = "Auckland, New Zealand"
     github = "myquay"
-[Params]
-  homeTitle = "Hi, I'm Michael"
-  subtitle = "Software and Startups"
-  favicon = "favicon.png"
-  dateFormat = "January 2, 2006"
-  rss = true
-  showFragments = true
+
+[Params.Peripheral.GitInfo]
+    enabled = true
+    repository = "https://github.com/myquay/michaelmckenna.com"
+    abbreviatedHash = "{{AbbreviatedHash}}"
+    hash = "{{Hash}}"
+    subject = "{{Subject}}"
+
+[Params.Peripheral.Obselence]
+    enabled = true
+    years = 3
+    message = "This content is more than 3 years old. Please read this keeping its age in mind."
+
+[Params.Peripheral.Series]
+    enabled = true
+    showToBeContinued = true
 
 # Add additional social link entries underneath
 [social]
@@ -56,3 +75,18 @@ pygmentsCodefencesGuessSyntax = true
 [Author]
 	name = "Michael McKenna"
 	website = "https://michael-mckenna.com"
+
+[mediaTypes]
+    [mediaTypes."application/atom+xml"]
+    suffixes = ["xml"]
+
+[outputFormats.RSS]
+    mediaType = "application/rss+xml"
+    baseName = "rss"
+
+[outputFormats.Atom]
+    mediaType = "application/atom+xml"
+    baseName = "atom"
+
+[outputs] 
+    section = ["HTML", "RSS", "Atom"]

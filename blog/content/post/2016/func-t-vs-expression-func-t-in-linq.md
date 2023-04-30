@@ -1,10 +1,12 @@
-+++
-date = "2016-06-07T22:40:32+12:00"
-description = "Don't worry if you haven't noticed the differences, you call them with the exact same syntax."
-title = "Func<T> vs. Expression<Func<T>> in LINQ"
-url = "/func-t-vs-expression-func-t-in-linq"
-tags = ["csharp", "linq"]
-+++
+---
+publishDate: 2016-06-07T22:40:32+12:00
+title: Func<T> vs. Expression<Func<T>> in LINQ
+summary: Don't worry if you haven't noticed the differences, you call them with the exact same syntax.
+url: /func-t-vs-expression-func-t-in-linq
+tags:
+    - csharp
+    - linq
+---
 
 Linq is fantastic in that it provides a consistent syntax to query all sorts of data sources from in-memory collections, SQL databases, XML files, even external APIs. One of its strengths is that you can write a Linq provider for any data source you want to support.
 

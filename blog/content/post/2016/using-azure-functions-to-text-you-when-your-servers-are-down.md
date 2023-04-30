@@ -1,10 +1,12 @@
-+++
-date = "2016-12-06T20:52:32+12:00"
-description = "The thing I like most about it is that it's serverless so no infrastructure to maintain and worry about."
-title = "Using Azure Functions to text you when your servers are down"
-url = "/using-azure-functions-to-text-you-when-your-servers-are-down"
-tags = ["guide", "azure"]
-+++
+---
+publishDate: 2016-12-06T20:52:32+12:00
+title: Using Azure Functions to text you when your servers are down
+summary: The thing I like most about it is that it's serverless so no infrastructure to maintain and worry about.
+url: /using-azure-functions-to-text-you-when-your-servers-are-down
+tags:
+    - guide
+    - azure
+---
 
 So I've just read a great blog post by [Nick Malcolm](http://nick.malcolm.net.nz/) on [Using AWS Lambda to call and text you when your servers are down](https://thisdata.com/blog/using-aws-lambda-to-call-and-text-you-when-your-servers-are-down/). The thing I like most about it is that it's serverless so no infrastructure to maintain and worry about. 
 

@@ -1,22 +1,25 @@
-+++
-date = "2014-05-29T20:51:32+12:00"
-description = "I don't want to re-implement the label HTML helper but I would like a way to inspect the model and update the label text based on the presence of the [Required] attribute."
-title = "Automatically marking required labels in ASP.NET MVC"
-url = "/automatically-marking-required-labels-in-asp-net-mvc"
-tags = ["asp dot net mvc"]
-+++
+---
+publishDate: 2014-05-29T20:51:32+12:00
+title: Automatically marking required labels in ASP.NET MVC
+summary: I don't want to re-implement the label HTML helper but I would like a way to inspect the model and update the label text based on the presence of the [Required] attribute.
+url: /automatically-marking-required-labels-in-asp-net-mvc
+tags:
+    - asp dot net mvc
+---
 
 A common requirement with any sort of form is marking the required fields. A common convention is to append an asterisk (*) to the label of all required fields.
 
 Normally I'd manually add the asterisk directly in the HTML, or add the [display] attribute to the model so that the @Html.LabelFor picks it up automatically.
     
-    public class SomeModel
-    {
-        [Required, Display(Name = "Email*")]
-        public string Email { get; set; }
-        
-        public string Subject { get; set; }
-    }
+```csharp
+public class SomeModel
+{
+    [Required, Display(Name = "Email*")]
+    public string Email { get; set; }
+    
+    public string Subject { get; set; }
+}
+```
     
 I prefer to get the HTML Helpers to add it as I'm less likely to forget to mark any of the fields. 
 
@@ -30,27 +33,29 @@ I don't want to re-implement the label HTML helper but I would like a way to ins
 
 ### @Html.ChqLabelFor(...)
 
-I ended up implementing a custom extension method that checks the required attribute and generates the label text before calling the existing label HTML helper methods. While this works it's not ideal as we still have to remember to use @Html.ChqLabelFor in place of @Html.LabelFor but since it's a blanket replacement I'm less likely to forget.
+I ended up implementing a custom extension method that checks the required attribute and generates the label text before calling the existing label HTML helper methods. While this works it's not ideal as we still have to remember to use `@Html.ChqLabelFor` in place of `@Html.LabelFor` but since it's a blanket replacement I'm less likely to forget.
 
 As an added bonus the code is short and sweet, all we do is check to see if the property has been marked as required, and if it has, append an asterisk on the end of its name. You can easily to add overrides to give options to supply your own label text, or to omit the htmlAttributes etc.
 
-    namespace System.Web.Mvc.Html
+```csharp
+namespace System.Web.Mvc.Html
+{
+
+    public static class ChqHtmlHelperExtensions
     {
-    
-        public static class ChqHtmlHelperExtensions
+        public static MvcHtmlString ChqLabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes)
         {
-            public static MvcHtmlString ChqLabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes)
+            var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
+            string resolvedLabelText = metadata.DisplayName ?? metadata.PropertyName;
+            if (metadata.IsRequired)
             {
-                var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
-                string resolvedLabelText = metadata.DisplayName ?? metadata.PropertyName;
-                if (metadata.IsRequired)
-                {
-                    resolvedLabelText += "*";
-                }
-                return LabelExtensions.LabelFor<TModel, TValue>(html, expression, resolvedLabelText, htmlAttributes);
+                resolvedLabelText += "*";
             }
+            return LabelExtensions.LabelFor<TModel, TValue>(html, expression, resolvedLabelText, htmlAttributes);
         }
     }
+}
+```
 
 To use it you just replace Html.LabelFor with Html.ChqLabelFor. I put it under the namespace "System.Web.Mvc.Html" so it will pop up in our razor views without adding anything additional to the view-level web.config.
 

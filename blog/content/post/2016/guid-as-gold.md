@@ -1,14 +1,20 @@
-+++
-date = "2016-04-28T09:56:32+12:00"
-description = "How are GUIDs unique with out a central watch dog?"
-title = "GUIDs part 2: GUID as gold"
-url = "/guid-as-gold"
-tags = ["guid", "guide"]
-+++
+---
+publishDate: 2016-04-28T09:56:32+12:00
+title: 'GUIDs part 2: GUID as gold'
+summary: How are GUIDs unique with out a central watch dog?
+url: /guid-as-gold
+tags:
+    - guid
+    - guide
+series: guid-one
+---
 
 How are GUIDs unique with out a central watch dog? They do it through the algorithm that generates them. The specification lists 5 different ways you can end up with a unique identifier, if and only if you follow the instructions. The specification can't prevent someone from choosing the same GUID as you on purpose *(a watchdog might be able to)* but it does prevent them accidentally generating the same GUID as you if they're following it.
 
-> ISBN numbers are not a security system, and neither are GUIDs; ISBN numbers and GUIDs  prevent accidental collisions. Similarly, traffic lights only prevent accidental collisions if everyone agrees to follow the rules of traffic lights; if anyone decides to go when the light is red then collisions might no longer be avoided, and if someone is attempting to deliberately cause a collision then traffic lights cannot stop them. <br /><cite>&mdash; <a href="https://blogs.msdn.microsoft.com/ericlippert/2012/04/24/guid-guide-part-one/" target="_blank">Eric Lippert's Erstwhile Blog</a></cite>
+> ISBN numbers are not a security system, and neither are GUIDs; ISBN numbers and GUIDs  prevent accidental collisions. Similarly, traffic lights only prevent accidental collisions if everyone agrees to follow the rules of traffic lights; if anyone decides to go when the light is red then collisions might no longer be avoided, and if someone is attempting to deliberately cause a collision then traffic lights cannot stop them. 
+\
+\
+-- [Eric Lippert's Erstwhile Blog](https://blogs.msdn.microsoft.com/ericlippert/2012/04/24/guid-guide-part-one/)
 
 There are 5 different kinds of GUIDs - all have the uniqueness property but some have slightly different attributes, I'm going to talk about the 4 [explicitly defined in the spec](https://www.ietf.org/rfc/rfc4122.txt).
 

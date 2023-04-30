@@ -1,10 +1,12 @@
-+++
-date = "2014-07-24T15:56:32+12:00"
-description = "We’re going to create a formatter that understands JSON Patch."
-title = "How to add JSON Patch support to ASP.NET Web API"
-url = "/how-to-add-json-patch-support-to-asp-net-web-api"
-tags = ["asp dot net mvc", "json patch"]
-+++
+---
+publishDate: 2014-07-24T15:56:32+12:00
+title: How to add JSON Patch support to ASP.NET Web API
+summary: We’re going to create a formatter that understands JSON Patch.
+url: /how-to-add-json-patch-support-to-asp-net-web-api
+tags:
+    - asp dot net mvc
+    - json patch
+---
 
 In this post we'll look at how to introduce support for the [JSON Patch content type (RFC 6902)](https://tools.ietf.org/html/rfc6902) to ASP.NET Web API.
 
@@ -38,72 +40,80 @@ For this approach we'll need to do two things:
 
 First we need to tell ASP.NET which content type our formatter should be invoked for.
 
-    SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json-patch+json"));
-    
-We're binding our model the type JsonPatchDocument&lt;EntityToUpdate&gt;. By making our JsonPatchDocument generic we'll be able to validate the paths we wish to operate on at the formatter level, before we get to the controller.
+```csharp
+SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json-patch+json"));
+```
+
+We're binding our model the type `JsonPatchDocument<EntityToUpdate>`. By making our JsonPatchDocument generic we'll be able to validate the paths we wish to operate on at the formatter level, before we get to the controller.
 
 This binding type means our CanReadType implementation looks something like this.
 
-    public override bool CanReadType(Type type)
-        {
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(JsonPatchDocument<>))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+```csharp
+public override bool CanReadType(Type type)
+{
+    if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(JsonPatchDocument<>))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+```
 
 A JSON Patch document is essentially an array of operations that looks something like this
 
-    [
-     { "op": "test", "path": "/a/b/c", "value": "foo" },
-     ... more operations ...
-     { "op": "copy", "from": "/a/b/d", "path": "/a/b/e" }
-    ]
+```json
+[
+    { "op": "test", "path": "/a/b/c", "value": "foo" },
+    ... more operations ...
+    { "op": "copy", "from": "/a/b/d", "path": "/a/b/e" }
+]
+```
 
 All our formatter needs to do is deserialise this set of instructions and construct a JsonPatchDocument
 
-    public override object ReadFromStream(Type type, System.IO.Stream readStream, System.Net.Http.HttpContent content, IFormatterLogger formatterLogger)
+```csharp
+public override object ReadFromStream(Type type, System.IO.Stream readStream, System.Net.Http.HttpContent content, IFormatterLogger formatterLogger)
+{
+    var entityType = type.GetGenericArguments()[0];
+
+    using (StreamReader reader = new StreamReader(readStream))
     {
-        var entityType = type.GetGenericArguments()[0];
+        var jsonPatchDocument = (IJsonPatchDocument)typeof(JsonPatchDocument<>)
+            .MakeGenericType(entityType)
+            .GetConstructor(Type.EmptyTypes)
+            .Invoke(null);
 
-        using (StreamReader reader = new StreamReader(readStream))
+        var jsonString = reader.ReadToEnd();
+        var operations = JsonConvert.DeserializeObject<PatchOperation[]>(jsonString);
+
+        foreach (var operation in operations)
         {
-            var jsonPatchDocument = (IJsonPatchDocument)typeof(JsonPatchDocument<>)
-                .MakeGenericType(entityType)
-                .GetConstructor(Type.EmptyTypes)
-                .Invoke(null);
-
-            var jsonString = reader.ReadToEnd();
-            var operations = JsonConvert.DeserializeObject<PatchOperation[]>(jsonString);
-
-            foreach (var operation in operations)
+            if (operation.op == Constants.Operations.ADD)
             {
-                if (operation.op == Constants.Operations.ADD)
-                {
-                    jsonPatchDocument.Add(operation.path, operation.value);
-                }
-                else if (operation.op == Constants.Operations.REMOVE)
-                {
-                    jsonPatchDocument.Remove(operation.path);
-                }
-                else if (operation.op == Constants.Operations.REPLACE)
-                {
-                    jsonPatchDocument.Replace(operation.path,  operation.value);
-                }
-                else
-                {
-                    throw new JsonPatchParseException(String.Format("The operation '{0}' is not supported.", operation.op));
-                }
+                jsonPatchDocument.Add(operation.path, operation.value);
             }
-
-            return jsonPatchDocument;
-
+            else if (operation.op == Constants.Operations.REMOVE)
+            {
+                jsonPatchDocument.Remove(operation.path);
+            }
+            else if (operation.op == Constants.Operations.REPLACE)
+            {
+                jsonPatchDocument.Replace(operation.path,  operation.value);
+            }
+            else
+            {
+                throw new JsonPatchParseException(String.Format("The operation '{0}' is not supported.", operation.op));
+            }
         }
+
+        return jsonPatchDocument;
+
     }
+}
+```
 
 That's it, that's all you need to do to introduce support for additional media types. However we won't cover the implementation details of our "JsonPatchDocument" here. It's the second piece of the puzzle that maps those operations to updates on an existing entity.
 
@@ -113,22 +123,26 @@ Now we have the formatter we can use it to bind the request.
 
 First add it to the formatters available
 
-    public static void ConfigureApis(HttpConfiguration config)
-    {
-        config.Formatters.Add(new JsonPatchFormatter());
-    }
+```csharp
+public static void ConfigureApis(HttpConfiguration config)
+{
+    config.Formatters.Add(new JsonPatchFormatter());
+}
+```
 
 Now the JsonPatchDocument will be available in our controller. With the default routing the PATCH verb matches the Patch action on a Web API controller.
 
-    public void Patch(Guid id, JsonPatchDocument<SomeDto> patchData)
-    {
-        //Remember to do some validation and all that fun stuff
-        var objectToUpdate = repository.GetById(id);
-        patchData.ApplyUpdatesTo(objectToUpdate);
-        repository.Save(objectToUpdate);
-    }
+```csharp
+public void Patch(Guid id, JsonPatchDocument<SomeDto> patchData)
+{
+    //Remember to do some validation and all that fun stuff
+    var objectToUpdate = repository.GetById(id);
+    patchData.ApplyUpdatesTo(objectToUpdate);
+    repository.Save(objectToUpdate);
+}
+```
     
-Notice the .ApplyUpdatesTo method? That's where all the details about how we translate those operations into changes on the entity.
+Notice the `.ApplyUpdatesTo` method? That's where all the details about how we translate those operations into changes on the entity.
 
 
 ### The library

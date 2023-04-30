@@ -1,10 +1,12 @@
-+++
-date = "2014-12-04T15:56:32+12:00"
-description = "Even though you can't do it from the online interface it, it's actually pretty simple."
-title = "Migrating an Azure VM to a different region"
-url = "/migrating-an-azure-vm-to-a-different-region"
-tags = ["azure", "guide"]
-+++
+---
+publishDate: 2014-12-04T15:56:32+12:00
+title: Migrating an Azure VM to a different region
+summary: Even though you can't do it from the online interface it, it's actually pretty simple.
+url: /migrating-an-azure-vm-to-a-different-region
+tags:
+    - azure
+    - guide
+---
 
 Microsoft just launched Azure cloud services in Australia, given the proximity to New Zealand where the majority of our customers are based it made sense to migrate our various azure hosted services there.
 
@@ -28,14 +30,16 @@ We use the [tool AzCopy ](https://azure.microsoft.com/en-us/documentation/articl
 
 To migrate the VHD use the following command.
 
-    AzCopy 
-    	/Source:{container your VHD is located} 
-    	/Dest:{container you're copying the VHD to} 
-    	/sourceKey:{storage access key} 
-    	/destkey:{storage access key}  
-    	/Pattern:{VHD file name} 
-    	/S
-    	
+```shell
+AzCopy 
+	/Source:{container your VHD is located} 
+	/Dest:{container you're copying the VHD to} 
+	/sourceKey:{storage access key} 
+	/destkey:{storage access key}  
+	/Pattern:{VHD file name} 
+	/S
+```
+
 ## Step 4: Create a disk from the copied VHD
 
 At this point our newly copied VHD is just a blob in the storage account. To make it bootable we need to create an Azure Disk from it. Navigate to "Virtual Machines" and select the "Disks" sub-nav item then click "create".
