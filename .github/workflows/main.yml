@@ -30,6 +30,16 @@ jobs:
         tar -xvzf hugo.tar.gz
         sudo mv hugo /usr/local/bin
       
+    - name: ✍️ Set outputs
+      id: custom_outputs
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        
+    - name: 🔎 Update GitHub References
+      run: | 
+        sed -i -e 's/{{AbbreviatedHash}}/${{steps.custom_outputs.outputs.sha_short}}/g' ${{github.workspace}}/blog/config/_default/config.toml
+        sed -i -e 's/{{Hash}}/${{github.sha}}/g' ${{github.workspace}}/blog/config/_default/config.toml
+        sed -i -e 's/{{Subject}}/${{github.event.commits[0].message}}/g' ${{github.workspace}}/blog/config/_default/config.toml
+      
     - name: 🛠️ Build website
       run: hugo -s ${{github.workspace}}/blog -d ${{github.workspace}}/dist --log -v
 
