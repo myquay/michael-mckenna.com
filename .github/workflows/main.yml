@@ -22,7 +22,7 @@ jobs:
     
     - name: ✨ Setup Hugo
       env:
-        HUGO_VERSION: 0.92.2
+        HUGO_VERSION: 0.111.3
       run: |
         mkdir ~/hugo
         cd ~/hugo
