@@ -5,7 +5,7 @@ themesDir = "themes"
 theme = "hugo-theme-peripheral"
 googleAnalytics = "G-372KBNXWEK"
 enableGitInfo = true
-defaultContentLanguage = "en"
+DefaultContentLanguage = "en"
 
 [markup]
   [markup.highlight]
@@ -17,8 +17,8 @@ defaultContentLanguage = "en"
     lineNoStart = 1
     lineNos = false
     lineNumbersInTable = true
-    noClasses = true
-    style = 'nord'
+    noClasses = false
+    style = 'github-dark'
     tabWidth = 4
 
 [Params.Peripheral]

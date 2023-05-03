@@ -83,7 +83,7 @@ Our implementation has two parts
 
 The factory will do exactly what our extension method used to do, construct a new **MultiTenantContainer** and specifty the tenant specific services configuration
 
-```charp
+```csharp
 
 public class MultiTenantServiceProviderFactory<T> : IServiceProviderFactory<ContainerBuilder> where T : Tenant
 {
