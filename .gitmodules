@@ -2,3 +2,6 @@
 	path = blog/themes/beautifulhugo
 	url = https://github.com/halogenica/beautifulhugo
 	branch = master
+[submodule "blog/themes/hugo-theme-peripheral"]
+	path = blog/themes/hugo-theme-peripheral
+	url = https://github.com/myquay/hugo-theme-peripheral.git
