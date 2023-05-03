@@ -2,6 +2,7 @@
 publishDate: 2016-06-07T22:40:32+12:00
 title: Creating custom knockout bindings in typescript.
 slug: /creating-custom-knockout-bindings-in-typescript
+summary: Something like `knockout.bindings.d.ts` and provide a definition for your binding.
 aliases: 
     - /creating-custom-knockout-bindings-in-typescript
 ---

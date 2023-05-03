@@ -2,6 +2,7 @@
 publishDate: 2016-11-28T20:52:32+12:00
 title: Could not load file or assembly 'Microsoft.VisualStudio.Web.PageInspector.Loader...
 slug: /could-not-load-file-or-assembly-microsoft-visualstudio-web-pageinspector-loader
+summary: It looks like it's an assembly that VS 2012 adds which is why it's no longer available after uninstall.
 aliases: 
     - /could-not-load-file-or-assembly-microsoft-visualstudio-web-pageinspector-loader
 ---

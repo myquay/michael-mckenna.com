@@ -3,7 +3,7 @@ languageCode = "en-us"
 title = "Michael McKenna"
 themesDir = "themes"
 theme = "hugo-theme-peripheral"
-googleAnalytics = "UA-27845504-8"
+googleAnalytics = "G-372KBNXWEK"
 enableGitInfo = true
 
 [markup]
@@ -21,6 +21,7 @@ enableGitInfo = true
     tabWidth = 4
 
 [Params.Peripheral]
+    favicon = "favicon.png"
     dateFormat = "January 2, 2006"
     subtitle = "All my Keystrokes That's Fit to Print"
     location = "Auckland, New Zealand"
@@ -47,31 +48,6 @@ enableGitInfo = true
 [social]
     twitter  = "https://www.twitter.com/myquay"
     github   = "https://www.github.com/myquay"
-
-[[menu.main]]
-    name = "Home"
-    url = "/"
-    weight = 1
-
-[[menu.main]]
-    name = "Blog"
-    url = "/blog"
-    weight = 2
-
-[[menu.main]]
-    name = "Fragments"
-    url = "/fragments"
-    weight = 3
-
-[[menu.main]]
-    name = "Projects"
-    url = "/projects"
-    weight = 4
-
-[[menu.main]]
-    name = "About"
-    url = "/about"
-    weight = 5
 
 [Author]
 	name = "Michael McKenna"

@@ -2,6 +2,7 @@
 date: 2023-04-27T10:00:00+12:00
 title: 'Goodreads API shutdown'
 slug: /goodreads-api-shutdown
+summary: Unfortunately the custodians of my literary history have decided to prevent all new API access in their quest to improve data control.
 ---
 
 I wanted to display a list of books I'd read which I keep track of in Goodreads. Unfortunately the custodians of my literary history have decided to prevent all new API access in their quest to improve data control.
