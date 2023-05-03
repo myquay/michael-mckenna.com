@@ -5,6 +5,7 @@ themesDir = "themes"
 theme = "hugo-theme-peripheral"
 googleAnalytics = "G-372KBNXWEK"
 enableGitInfo = true
+defaultContentLanguage = "en"
 
 [markup]
   [markup.highlight]
