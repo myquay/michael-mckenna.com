@@ -1,7 +1,7 @@
 ---
 date: 2023-05-04T10:00:00+12:00
 title: 'Wrong font size on iOS when using Chroma syntax highlighting with Hugo'
-subtitle: 'WebKit has this habit of trying to enlarge the "primary" text on the screen'
+summary: 'WebKit has this habit of trying to enlarge the "primary" text on the screen'
 slug: /wrong-font-size-on-ios-when-using-chroma-syntax-highlighting-with-hugo
 ---
 
