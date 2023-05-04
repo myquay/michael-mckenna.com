@@ -26,7 +26,6 @@ DefaultContentLanguage = "en"
     dateFormat = "January 2, 2006"
     subtitle = "All my Keystrokes That's Fit to Print"
     location = "Auckland, New Zealand"
-    github = "myquay"
 
 [Params.Peripheral.GitInfo]
     enabled = true
@@ -36,7 +35,7 @@ DefaultContentLanguage = "en"
     subject = "{{Subject}}"
     branch = "main"
 
-[Params.Peripheral.Obselence]
+[Params.Peripheral.Obsolescence]
     enabled = true
     years = 3
     message = "This content is more than 3 years old. Please read this keeping its age in mind."
