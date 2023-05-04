@@ -7,4 +7,4 @@ menu:
     weight: 3
 ---
 
-A slice of life commentary of bits and pieces that aren't substantial enough for a full blog post.
+A slice of commentary of bits and pieces that aren't substantial enough for a full blog post.
