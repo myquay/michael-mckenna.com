@@ -22,7 +22,7 @@ The only way I could find to introduce HTTP Patch support was through adding a d
 
 So we're going to build it ourselves™
 
-**TL;DR**: Not interested in the details, [grab the source on Github](https://github.com/myquay/JsonPatch), otherwise stick around for the implementation details.
+**TL;DR**: Not interested in the details, [grab the source on GitHub](https://github.com/myquay/JsonPatch), otherwise stick around for the implementation details.
 
 
 ### Getting started

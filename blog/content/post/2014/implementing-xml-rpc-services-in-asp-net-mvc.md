@@ -102,7 +102,7 @@ public class XmlRpcRoute : Route //Extend the base route class
 }
 ```
 
-Here we read in the XML-RPC request payload and set the controller and action of the method that we wish to call based on the 'methodCall' element. Note that the above code isn't very error safe so be careful with the ol' ctrl+c, ctrl+v. Get the source from the [project on Github instead](https://github.com/myquay/Chq.XmlRpc.Mvc).
+Here we read in the XML-RPC request payload and set the controller and action of the method that we wish to call based on the 'methodCall' element. Note that the above code isn't very error safe so be careful with the ol' ctrl+c, ctrl+v. Get the source from the [project on GitHub instead](https://github.com/myquay/Chq.XmlRpc.Mvc).
 
 Then to use the above route, just add it to the routes collection. I'd map it to something like **api/xml-rpc**.
 
@@ -165,7 +165,7 @@ public object BindModel(ControllerContext controllerContext, ModelBindingContext
 }
 ```
 
-You might have noticed that we're magically  decoding the value of the parameter using the static method 'XmlRpcData.DeserialiseValue'. That's one that we've created and you can grab the code in the [project on Github](https://github.com/myquay/Chq.XmlRpc.Mvc).
+You might have noticed that we're magically  decoding the value of the parameter using the static method 'XmlRpcData.DeserialiseValue'. That's one that we've created and you can grab the code in the [project on GitHub](https://github.com/myquay/Chq.XmlRpc.Mvc).
 
 ### Step 4: The Response
 
@@ -241,6 +241,6 @@ public class MetaWeblogController : Controller
 
 ### The source code
 
-Check out the [source on Github here](https://github.com/myquay/Chq.XmlRpc.Mvc). 
+Check out the [source on GitHub here](https://github.com/myquay/Chq.XmlRpc.Mvc). 
 
 I haven't exactly "battle tested" the code and I have my doubts regarding performance and stability so use it at your own risk. Please help me fix any bugs you come across and feel free to use it in your own works as it's released under the [MIT License](http://opensource.org/licenses/mit-license.html) just like the awesome [XML-RPC.NET library](https://github.com/marcosbozzani/xmlrpcnet).
