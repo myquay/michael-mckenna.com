@@ -1,7 +1,7 @@
 ---
 date: 2023-05-10T10:00:00+12:00
-title: 'The Mythical Man Month: The tar pit'
-summary: 'First published in 1975, I''m interested to see how it''s aged'
+title: 'TMMM: The tar pit'
+summary: 'The Mythical Man-Month: first published in 1975, I''m interested to see how it''s aged'
 slug: /tmmm-into-the-tar-pit
 ---
 
