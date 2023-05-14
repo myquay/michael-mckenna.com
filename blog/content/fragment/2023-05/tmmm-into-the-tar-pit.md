@@ -16,5 +16,5 @@ It starts with the author posits a little observation in which the author launch
 \
 -- Federick P. Brooks, JR
 
-I found it interesting because of the parallels it draws with the origin stories of companies such as HP, Microsoft, Amazon, Google or Apple which were all founded in a garage. [The whole founded in a garage situation](https://www.fastcompany.com/90270226/the-origins-of-silicon-valleys-garage-myth) comes across as cliché today and is a somewhat romanticised aspect [crucial to any good founding mythology](https://www.theguardian.com/technology/2014/dec/05/steve-wozniak-apple-starting-in-a-garage-is-a-myth). I hope spurring discussion with such a anecdote isn't a harbinger of what's in store.
+I found it interesting because of the parallels it draws with the origin stories of companies such as HP, Microsoft, Amazon, Google or Apple which were all founded in a garage. [The whole founded in a garage situation](https://www.fastcompany.com/90270226/the-origins-of-silicon-valleys-garage-myth) comes across as cliché today and is a somewhat romanticised aspect [crucial to any good founding mythology](https://www.theguardian.com/technology/2014/dec/05/steve-wozniak-apple-starting-in-a-garage-is-a-myth). I hope spurring discussion with a dubious anecdote isn't a harbinger of what's in store.
 

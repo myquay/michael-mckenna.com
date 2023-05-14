@@ -5,13 +5,13 @@ summary: 'Chapter 2, the titular essay and perhaps the most well known.'
 slug: /tmmm-the-mythical-man-month
 ---
 
-This is one of the more famous essays in the book, and the one I was most looking forward to. I've thought of it as the source of the notion that adding additional developers to a late project will just make it later.
+One to the more famous essays in the book, and the one I was most looking forward to. It carries the book's signature observation: adding people to a late project just makes it later.
 
-Most of what this chapter covered is standard practice now days, the conclusions shouldn't come as much of a surprise such as
+It was interesting to see that many of the points argued in the section are just as valid today, a lot of it could just be classified as standard practice or baseline knowledge. Some conclusions are
 
 * The client puts pressure on the scheduled completion date - that doesn't govern when the actual completion date is. A Project Manager needs to be an effective communicator to set expectations appropriately.
 * Adding additional developers late in the piece will slow the whole project down
-* There's an optimal number of developers on a project that's governed sequential constraints on task partitioning
+* There's an optimal number of developers on a project
 * Individual developers, more often than not, are optimistic with their estimates. There's often an unspoken assumption that nothing will go awry in the effort analysis
 
 A factor that wasn't talked about which I think fits right in is that developer optimisim isn't just about assuming that nothing will go wrong, but also a mismatch between their understanding of the problem and the actual solution required. There is a lot of hidden complexity masquerading as domain knowledge which can cause a developer to underestimate a task. You don't know what you don't know.
