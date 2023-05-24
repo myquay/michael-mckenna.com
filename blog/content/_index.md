@@ -11,4 +11,4 @@ menu:
 
 ### About 
 
-I'm passionate about creating robust, long-lived software that's a joy to use. I enjoy thinking about and writing software.
+I'm passionate about creating robust, long-lived software that's a joy to use. I enjoy thinking and writing about the craft.
