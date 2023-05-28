@@ -11,4 +11,4 @@ The proliferation of cheap computer hardware has made this chapter mostly obsole
 >
 > -- Federick P. Brooks, JR
 
-That's about _**USD $13,000**_ in today's dollars. In a world where we take space for granted (the front page of a digital newspaper like the New Zealand Herald can exceed 10-20 MB), this was a refreshing read. I really enjoyed concrete figures been used, it really emphasises the hardware revolution over the last 50 or so years has dramatically lowered cost and greatly improved access to computing hardware.
+That's about _**USD $13,000**_ in today's dollars. In a world where we take space for granted (the front page of a digital newspaper like the New Zealand Herald can exceed 10-20 MB), this was a refreshing read. I really enjoyed that concrete 1970s figures were used, it really emphasises the hardware revolution over the last 50 years or so. This revolution has dramatically lowered cost and greatly improved access to computing hardware.
