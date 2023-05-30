@@ -1,7 +1,7 @@
 ---
 date: 2023-05-28T00:00:00+12:00
 title: 'TMMM: Plan to Throw One Away'
-summary: 'Chapter 10, The throw-one-away concept is itself just an acceptance of the fact that as one learns, he changes the design.'
+summary: 'Chapter 11, The throw-one-away concept is itself just an acceptance of the fact that as one learns, he changes the design.'
 slug: /tmmm-plan-to-throw-one-away
 ---
 
