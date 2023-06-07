@@ -14,13 +14,14 @@ In the [Peripheral theme](https://github.com/myquay/hugo-theme-peripheral) we ha
 
 It is not related to a particular page [which means the inbuilt](https://gohugo.io/variables/git/) .GitInfo [isn't quite suitable.](https://github.com/gohugoio/hugo/issues/9738)
 
-## The solution
+To get around this we will
 
-To get around this we put some placeholder varibles in the config, then update the GitHub workflow to update the placeholders before building the site
+1. put some placeholder varibles in the config
+2. update the GitHub workflow to update the placeholders before building the site. 
 
 It's not the most seamless solution in the world, but it'll do for now.
 
-## Update the site configuration
+### Update the site configuration
 
 The instructions below are the Params for the theme Peripheral, but you can use any custom param defined in `config.toml`
 
@@ -38,7 +39,9 @@ The GitHub workflow will replace the `{{Hash}}`, `{{AbbreviatedHash}}`, and `{{S
 
 ### Update the GitHub workflow
 
-The update consists of two steps. First we generate an abbreviated hash we can use in the UI.
+The modified workflow needs two steps additional steps. 
+
+First we generate an abbreviated hash we can use in the UI.
 
 ```yml
       - name: ✍️ Set outputs
@@ -56,7 +59,7 @@ Then we use the stream editor to replace the placeholder values with the actual 
           sed -i -e 's/{{Subject}}/${{github.event.commits[0].message}}/g' ${{github.workspace}}/quickstart/config/github-pages/config.toml
 ```
 
-This is set up for the theme example website, so you will need to update the paths to work with your file structure. 
+One thing to watch out for is that this is [set up for the theme example website](https://github.com/myquay/hugo-theme-peripheral-example), so you will need to update the paths to work with your file structure. 
 
 ### That's it
 
