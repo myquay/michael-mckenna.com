@@ -111,4 +111,4 @@ The GUID for this example is: **200adb3d-b3f4-4bde-a9c8-2c6888d6be30**
 
 <hr />
 
-This is a [3 part series](/tags/guid/) about my personal exploration of GUIDs. You can follow along to learn all about GUIDs, [check out my open source C# implementation](https://github.com/myquay/GuidOne) of the specification, and [visit a fun GUID generator I built called <b>guid.one</b>](http://guid.one).
+This is a 3 part series about my personal exploration of GUIDs. You can follow along to learn all about GUIDs, [check out my open source C# implementation](https://github.com/myquay/GuidOne) of the specification, and [visit a fun GUID generator I built called <b>guid.one</b>](http://guid.one).
