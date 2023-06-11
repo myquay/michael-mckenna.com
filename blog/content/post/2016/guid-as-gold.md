@@ -62,33 +62,33 @@ The general idea of this method is to convert the namespace and the name given t
 For this example we'll generate a GUID for the name "www.example.com" using the namespace "6ba7b810-9dad-11d1-80b4-00c04fd430c8" _(what the spec suggests for DNS)_.
 
 1. Convert the name into bytes
-_77-77-77-2E-77-69-64-67-65-74-73-2E-63-6F-6D_
+_77-77-77-2E-65-78-61-6D-70-6C-65-2E-63-6F-6D_
 
 2. Convert the namespace into bytes
-_10-B8-A7-6B-AD-9D-D1-11-80-B4-00-C0-4F-D4-30-C8_
+_6B-A7-B8-11-9D-AD-11-D1-80-B4-00-C0-4F-D4-30-C8_
 
-3. Concatenate them and hash using the correct hashing method
-_2E-D6-65-7D-E9-27-46-8B-55-E1-26-65-A8-AE-A6-A2-2D-EE-3E-35_
+3. Concatenate them and hash using the correct hashing method and take the first 16 bytes
+_B6-3C-DF-A4-3D-F9-A6-8E-D7-AE-00-6C-5B-8F-D6-52_
 
 4. Break up the hash into the main components of a GUID, **<span style="color:dodgerblue">timestamp</span>, <span style="color:red">clock sequence</span>, and <span style="color:forestgreen">node ID</span>**
-**<span style="color:dodgerblue">2E-D6-65-7D-E9-27-46-8B</span>-<span style="color:red">55-E1</span>-<span style="color:forestgreen">26-65-A8-AE-A6-A2</span>**
+**<span style="color:dodgerblue">B6-3C-DF-A4-3D-F9-A6-8E</span>-<span style="color:red">D7-AE</span>-<span style="color:forestgreen">00-6C-5B-8F-D6-52</span>**
 
-5. Insert the timestamp component into the GUID: **<span style="color:dodgerblue">2ed6657de927468b</span>**
-_GUID so far: **<span style="color:dodgerblue">2ed6657d-e927-468b</span>**-xxxx-xxxxxxxxxxxx_
+5. Insert the timestamp component into the GUID: **<span style="color:dodgerblue">b63cdfa43df9a68e</span>**
+_GUID so far: **<span style="color:dodgerblue">b63cdfa4-3df9-a68e</span>**-xxxx-xxxxxxxxxxxx_
 
-6. Insert the clock sequence component into the GUID: **<span style="color:red">55e1</span>**
-_GUID so far: 2ed6657d-e927-468b-**<span style="color:red">55e1</span>**-xxxxxxxxxxxx_
+6. Insert the clock sequence component into the GUID: **<span style="color:red">d7ae</span>**
+_GUID so far: b63cdfa4-3df9-a68e-**<span style="color:red">d7ae</span>**-xxxxxxxxxxxx_
 
-7. Insert the node ID component into the GUID: **<span style="color:forestgreen">2665a8aea6a2</span>**
-_GUID so far: 2ed6657d-e927-468b-55e1- **<span style="color:forestgreen">2665a8aea6a2</span>**_
+7. Insert the node ID component into the GUID: **<span style="color:forestgreen">b63cdfa43df9</span>**
+_GUID so far: b63cdfa4-3df9-a68e-d7ae- **<span style="color:forestgreen">006c5b8fd652</span>**_
 
 8. Next we set the version. Take the 7th byte perform an and operation with 0x0f followed by an or operation of 0x50.
-_GUID so far: 2ed6657d-e927-**5**68b-55e1-2665a8aea6a2_
+_GUID so far: b63cdfa4-3df9-**5**68e-d7ae-006c5b8fd652
 
 9. Finally we set the variant. Take the 9th byte perform an and operation with 0x3f followed by an or operation of 0x80.
-_GUID so far: 2ed6657d-e927-568b-**9**5e1-2665a8aea6a2_
+_GUID so far: b63cdfa4-3df9-568e-**9**7ae-006c5b8fd652
 
-The GUID for this example is: **2ed6657d-e927-568b-95e1-2665a8aea6a2**
+The GUID for this example is: **b63cdfa4-3df9-568e-97ae-006c5b8fd652**
 
 #### Version 4: Random
 
