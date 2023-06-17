@@ -11,7 +11,11 @@ tags:
 series: multi-tenant
 ---
 
-Update 2019-10-01: **This post is compatible with .NET Core 2.2 only**: We make this compatible with [**.NET Core 3.1** (LTS release) in this post here.](/multi-tenancy-compatibility-dot-net-core-three)
+**Updates**
+
+* **2019-10-01:** This post is compatible with .NET Core 2.2 only, we make this compatible with [**.NET Core 3.1** (LTS release) in this post here.](/multi-tenancy-compatibility-dot-net-core-three)
+* **2023-06-17:** This technique does not support auto-reload of configuration, [IOptionSnapshot does not get a new value after being cached with the initial data](https://github.com/myquay/michaelmckenna.com/issues/2).
+
 ## Introduction
 
 Today we will extend our multi-tenant solution to work nicely with the [ASP.NET Core Options Pattern](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-2.2). This will allow us to configure components using tenant specific configuration options. 
