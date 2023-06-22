@@ -46,7 +46,6 @@ DefaultContentLanguage = "en"
 
 # Add additional social link entries underneath
 [social]
-    twitter  = "https://www.twitter.com/myquay"
     github   = "https://www.github.com/myquay"
 
 [Author]
