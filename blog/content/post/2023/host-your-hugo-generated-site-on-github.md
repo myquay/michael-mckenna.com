@@ -1,7 +1,6 @@
 ---
 date: 2023-05-01T10:00:00+12:00
 title: 'Host your Hugo Generated site on GitHub'
-subtitle: 'Automated deployment to GitHub pages with GitHub Actions'
 summary: GitHub Pages are are a great way to host a blog, share your résumé, or even host a website about one of your projects.
 url: /host-your-hugo-generated-site-on-github
 tags:
