@@ -1,13 +1,16 @@
 ---
 date: 2023-06-18T10:00:00+12:00
-title: 'Automated versioning and publishing of NuGet packages using GitHub Actions'
+title: 'Automated versioning and publishing of a Non-SDK-style NuGet packages using GitHub Actions'
 url: /automated-versioning-and-publishing-nuget-packages-using-github-actions
 summary: 'In this article we look at the method of automating the NuGet packaging process using GitHub Actions that we used for JsonPatch.'
 tags:
     - GitHub
+series: nuget
 ---
 
-In this article we look at the method of automating the NuGet packaging process using GitHub Actions that we used for [JsonPatch](https://www.nuget.org/packages/JsonPatch). It is[a Non-SDK style project](https://learn.microsoft.com/en-us/nuget/resources/check-project-format) so the process is a but more convoluted than a simple SDK style project and the process we used covers the following points. 
+This is a series of two articles looking at how I implemented automated packaging and building of NuGet packages in GitHub actions for two open-source libraries; [JsonPatch](https://www.nuget.org/packages/JsonPatch) and [GuidOne](https://github.com/myquay/GuidOne). One was a SDK style project, and the other was a Non-SDK style project which made for a good look the the differences between the packaging processes.
+
+In this first article we look at the process that we used for [JsonPatch](https://www.nuget.org/packages/JsonPatch). It is [a Non-SDK style project](https://learn.microsoft.com/en-us/nuget/resources/check-project-format) so the process is a bit more convoluted than a simple SDK style project and the process we used covers the following points. 
 
 * [Support for multiple .NET versions](https://learn.microsoft.com/en-us/nuget/create-packages/supporting-multiple-target-frameworks)
 * [Versioning & release notes using GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases)
@@ -102,7 +105,7 @@ Because one of the projects we're packaging up is .NET Framework, this is [a Non
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <license type="expression">MIT</license>
         <projectUrl>https://github.com/myquay/JsonPatch</projectUrl>
-        <repository type="git" url="https://github.com/myquay/JsonPatch.git" branch="dev" commit="$commit$" />
+        <repository type="git" url="https://github.com/myquay/JsonPatch.git" branch="master" commit="$commit$" />
         <description>
             ... omitted ...
         </description>
