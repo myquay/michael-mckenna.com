@@ -20,6 +20,8 @@ DefaultContentLanguage = "en"
     noClasses = false
     style = 'github-dark'
     tabWidth = 4
+  [markup.goldmark.extensions]
+    footnote = true
 
 [Params.Peripheral]
     favicon = "favicon.png"
