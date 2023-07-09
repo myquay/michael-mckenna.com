@@ -3,7 +3,6 @@ languageCode = "en-us"
 title = "Michael McKenna"
 themesDir = "themes"
 theme = "hugo-theme-peripheral"
-googleAnalytics = "G-372KBNXWEK"
 enableGitInfo = true
 DefaultContentLanguage = "en"
 
