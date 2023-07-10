@@ -26,7 +26,7 @@ The visual design is purposely simple to celebrate the content. The text is high
 
 The main fustration when trying to write a post was coming up with something long enough to do a full blog post justice. I didn't want short and long form articles mashed together as you wouldn't know what you were getting yourself into before jumping into the text. Is this a full deep dive? A hot take? A little anecdote? Sometimes I want to write in depth and quite technical, other times a brief "today I learned" type situation. To avoid breaking consistency I have shied away from the latter. 
 
-This theme has two types of content, a **post** and a **fragment**. A post is your standard long-form blog post - nothing to write home about here, this blog has 10 years worth of those. The fragment is something new, it's a small piece of content that can be published without impacting visibility or searchability of the main content. Twitter has gone to the birds, so I might as well post all those fun little thoughts to my own slice of the web as a fragment. The two types of content have their own RSS feeds so someone can decide what they want to subscribe to.
+This theme has two types of content, a **post** and a **note**. A post is your standard long-form blog post - nothing to write home about here, this blog has 10 years worth of those. The note is something new, it's a small piece of content that can be published without impacting visibility or searchability of the main content. Twitter has gone to the birds, so I might as well post all those fun little thoughts to my own slice of the web as a note. The two types of content have their own RSS feeds so someone can decide what they want to subscribe to.
 
 ### Features
 
