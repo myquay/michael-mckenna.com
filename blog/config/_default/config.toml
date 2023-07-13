@@ -5,6 +5,7 @@ themesDir = "themes"
 theme = "hugo-theme-peripheral"
 enableGitInfo = true
 DefaultContentLanguage = "en"
+disableKinds = ["term", "taxonomy"]
 
 [markup]
   [markup.highlight]
@@ -46,12 +47,13 @@ DefaultContentLanguage = "en"
     showToBeContinued = true
 
 # Add additional social link entries underneath
-[social]
-    github   = "https://www.github.com/myquay"
+[Social]
+    github   = "myquay"
 
 [Author]
 	name = "Michael McKenna"
 	website = "https://michael-mckenna.com"
+    photo = "/images/site/b3d01d0c-0fd9-4e9a-9f30-41044cc68dc7.jpg"
 
 [mediaTypes]
     [mediaTypes."application/atom+xml"]
