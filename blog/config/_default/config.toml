@@ -22,6 +22,8 @@ disableKinds = ["term", "taxonomy"]
     tabWidth = 4
   [markup.goldmark.extensions]
     footnote = true
+  [markup.goldmark.renderer]
+hardWraps = true
 
 [Params.Peripheral]
     favicon = "favicon.png"
@@ -48,13 +50,14 @@ disableKinds = ["term", "taxonomy"]
 
 # Add additional social link entries underneath
 [Social]
-    github   = "myquay"
+    github = "myquay"
 
 [Params.Peripheral.IndieWeb]
 	name = "Michael McKenna"
 	website = "https://michael-mckenna.com"
-    photo = "/images/site/b3d01d0c-0fd9-4e9a-9f30-41044cc68dc7.jpg"
+    photo = "/images/site/45eb93e3-6a59-4a2e-a16a-4dbfafc1a531.jpg"
     bio = "//TODO: Write short bio"
+    auth = ["github"]
 
 [mediaTypes]
     [mediaTypes."application/atom+xml"]
