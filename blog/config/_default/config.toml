@@ -58,6 +58,8 @@ hardWraps = true
     photo = "/images/site/45eb93e3-6a59-4a2e-a16a-4dbfafc1a531.jpg"
     bio = "//TODO: Write short bio"
     auth = ["github"]
+    authorization_endpoint = "https://indieauth.com/auth"
+    token_endpoint = "https://indieauth.com/auth"
 
 [mediaTypes]
     [mediaTypes."application/atom+xml"]
