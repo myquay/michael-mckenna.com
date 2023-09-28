@@ -1,13 +1,14 @@
 ---
-publishDate: 2023-08-20T20:13:11+12:00
-title: 'IndieAuth in ASP.NET Part 1: What is IndieAuth?'
-summary: This series of blog posts is an exploration of how to I added IndieAuth as a supported authentication method to a .NET 6 application. In this first installment we take a look at what is IndieAuth exactly.
-url: /indieauth-in-asp-dot-net-part-1-what-is-indieauth
+publishDate: 2023-09-27T20:13:11+12:00
+title: 'IndieAuth in ASP.NET'
+summary: This is a long form blog post about how I added support for IndieAuth as an authentication method for a .NET 6 application.
+url: /indieauth-in-asp-dot-net
+aliases:
+    - /indieauth-in-asp-dot-net-part-1-what-is-indieauth
 tags:
     - guide
     - dot net core
     - indieauth
-series: indieauth
 ---
 
 ## Introduction
@@ -17,6 +18,12 @@ series: indieauth
 An important aspect of OAuth was to move away from providing your password to third-party apps directly, you only needed to enter your password in one place - where the account was held. OAuth has been a great success in this regard with many major platforms such as Google, GitHub, Facebook, Twitter, etc. all supporting OAuth. 
 
 IndieAuth takes this a step further by allowing you to use your own domain to authenticate rather than being bound to a particular authentication provider.
+
+#### TL;DR
+
+If you already know the ins and outs around the protocol you can skip straight to
+* The [source code on GitHub](https://github.com/myquay/IndieAuth)
+* The [related NuGet package: AspNet.Security.IndieAuth](https://www.nuget.org/packages/AspNet.Security.IndieAuth/) 
 
 ### Advantages of IndieAuth
 
@@ -65,7 +72,12 @@ At a high level, the process is:
 
 ## How to add IndieAuth to ASP.NET?
 
-In this series of blog posts we'll be looking both at how to add IndieAuth support to a .NET 6 application as well as how to create your very own IndieAuth server implemented in .NET 6.
+There are two standalone componenets to implement:
+
+  * the authentication handler for the client ASP.NET application that a user logs into
+  * the authorization server which is responsible for authenticating the user.
+
+I decided to implement the authentication handler first as we can use the IndieAuth server at [indieauth.com](https://indieauth.com/) to authenticate the user. This will allow us to test the authentication handler without having to implement the authorization server.
 
 ### The client application
 
@@ -80,8 +92,41 @@ With a remote scheme typically two handlers are used:
 
 Since IndieAuth is an extension to the OAuth 2.0 protocol [we can use the MIT Licensed `OAuthHandler` as inspiration](https://github.com/dotnet/aspnetcore/tree/main/src/Security/Authentication/OAuth/src) for our `IndieAuthHandler`.
 
-We'll be looking at how to implement an IndieAuth handler in .NET 6 in the next installment of this series.
+#### The source code
+
+You can view the full source code on [GitHub](https://github.com/myquay/IndieAuth) to see how it all hangs together.
+
+If you just want to to quickly add support to an application you're developing then you can install the [AspNet.Security.IndieAuth](https://www.nuget.org/packages/AspNet.Security.IndieAuth/) NuGet package. If you find any issues or have any suggestions then please [raise an issue on GitHub](https://github.com/myquay/IndieAuth/issues) or submit a pull request!
+
+#### Usage
+
+I wanted to make it easy to add IndieAuth support so the library API similar to adding support for other authentication methods. You set it up by adding a few lines of code to your config file similar to any other handler.
+
+```csharp
+
+builder.Services.AddAuthentication()
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+    {
+        options.LoginPath = "/account/sign-in";
+    })
+    .AddIndieAuth(IndieAuthDefaults.AuthenticationScheme, options =>
+    {
+        options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.ClientId = config!.IndieAuth.ClientId;
+        options.CallbackPath = "/authentication/indie-auth/callback";
+        options.Events = new IndieAuthEvents
+        {
+            OnRemoteFailure = context =>
+            {
+                context.Response.Redirect(...);
+                context.HandleResponse();
+                return Task.CompletedTask;
+            },
+        };
+    });
+
+```
 
 ### The authorization server
 
-The authrorization server is a bit more complicated. We'll be looking at how to implement an IndieAuth server in .NET 6 in a future blog post. Will probably be some sort of middleware that you can add to your ASP.NET Core 6 application to add IndieAuth support.
+The authrorization server is a bit more complicated. I'm currently looking at how to implement an IndieAuth server in .NET 6 and will update this blog post in the future. Will probably be some sort of middleware that you can add to your ASP.NET Core 6 application to add IndieAuth server support.
