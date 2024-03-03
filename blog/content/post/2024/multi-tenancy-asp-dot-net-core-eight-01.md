@@ -10,7 +10,6 @@ tags:
     - multitenant
 series: multi-tenant-net-8
 concludeSeries: false
-draft: true
 ---
 
 ## Introduction
