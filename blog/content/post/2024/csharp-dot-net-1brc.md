@@ -17,8 +17,6 @@ This isn't an offical entry or anything - the orginal challenge was specifically
 
 This is a living post, I intend to update it as I try different approaches and learn more about the problem. I'll also be updating the GitHub repo with the code and results.
 
-## The parameters
-
 |  Parameter   | Description |
 | -------- | ------- |
 | **Language**  | C#     |
