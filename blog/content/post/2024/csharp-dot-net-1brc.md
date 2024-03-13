@@ -21,7 +21,7 @@ This is a living post, I intend to update it as I try different approaches and l
 | -------- | ------- |
 | **Language**  | C#     |
 | **Framework** | .NET 8 |
-| **GitHub** | *TBC* |
+| **GitHub** | https://github.com/myquay/1brc |
 | **Input** | 1 billion rows of weather data |
 | **Output** | Minimum, mean, and maximum for each station |
 | **Test Machine** | i7-8809G, 32GB |
@@ -102,3 +102,73 @@ The most expensive operations are all in parsing the file where we are iterating
 |\| - System.String.Split\(char, StringSplitOptions\)|205.04ms \(10.53%\)|205.04ms \(10.53%\)|999702|system.runtime|
 |\| - Dictionary\`2.TryGetValue\(!0, ref !1\)|142.98ms \(7.34%\)|142.98ms \(7.34%\)|999702|System.Collections|
 |\| - Dictionary\`2.set\_Item\(!0, !1\)|124.20ms \(6.38%\)|124.20ms \(6.38%\)|999702|System.Collections|
+
+### Attempt 02: Improved Parser
+
+**Update: 2024-03-13**
+
+I'm going to try and improve the parser first. `ReadLineAsync` is a terrible choice because it's doing a [bunch of string things](https://github.com/Microsoft/referencesource/blob/master/mscorlib/system/io/streamreader.cs) that we don't need. 
+
+My general strategy here is to work with the byte stream directly to avoid all the string operations and use Span<T> so we can avoid unnecessary allocations.
+
+```csharp
+Span<byte> buffer = new byte[1024 * 512];
+var data = new Dictionary<string, Measurement>();
+
+using var reader = file.OpenRead();
+
+int bufferOffsetStart = 0;
+
+while (reader.Read(buffer) is int numberRead)
+{
+    if(numberRead == 0)
+        break;
+
+    if(numberRead < buffer.Length) //If bytes read is maller than buffer, truncate the buffer
+        buffer = buffer[..numberRead];
+
+    if (buffer[bufferOffsetStart] == 239)
+        bufferOffsetStart+=3; //SKIP BOM
+
+    //Iterate through all the lines
+    while(buffer.Slice(bufferOffsetStart).IndexOf(newLine) is int newLineIndex and > -1)
+    {
+        var line = buffer.Slice(bufferOffsetStart, newLineIndex);
+        bufferOffsetStart += newLineIndex + 1; //Skip the newline
+
+        var seperatorIndex = line.IndexOf(seperator);
+
+        var name = Encoding.UTF8.GetString(line[..seperatorIndex]);
+        var measurement = data.TryGetValue(name, out var m) ? m : new Measurement();
+
+        var value = double.Parse(line[(seperatorIndex + 1)..]);
+
+        measurement.Sum += value;
+        measurement.Min = measurement.Min < value ? measurement.Min : value;
+        measurement.Max = measurement.Max > value ? measurement.Max : value;
+        measurement.Count++;
+
+        data[name] = measurement;
+    }
+
+    //Backtrack to the start of the line
+    reader.Seek(bufferOffsetStart - buffer.Length, SeekOrigin.Current);
+    bufferOffsetStart = 0;
+}
+```
+
+|  Metric   | Value |
+| -------- | ------- |
+| **Elapsed Time** | 3 Minutes 21 Seconds |
+
+#### Remarks
+
+Better! I guess the parsing is still the most expensive part, I'm going to see what I can do to optimise that.
+
+|Function Name|Total \[unit, %\]|Self \[unit, %\]|Call Count|Module|
+|-|-|-|-|-|
+|\| - System.Double.Parse\(ReadOnlySpan\`1, NumberStyles, IFormatProvider\)|201.09ms \(11.61%\)|201.09ms \(11.61%\)|1000000|system.runtime|
+|\| - Span\`1.Slice\(int32, int32\)|124.24ms \(7.17%\)|124.24ms \(7.17%\)|3000001|system.runtime|
+|\| - Dictionary\`2.TryGetValue\(!0, ref !1\)|115.96ms \(6.70%\)|115.96ms \(6.70%\)|1000000|System.Collections|
+|\| - System.MemoryExtensions.IndexOf\(Span\`1, !!0\)|105.26ms \(6.08%\)|105.26ms \(6.08%\)|2000027|System.Memory|
+|\| - Dictionary\`2.set\_Item\(!0, !1\)|103.00ms \(5.95%\)|103.00ms \(5.95%\)|1000000|System.Collections|
