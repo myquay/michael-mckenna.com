@@ -109,7 +109,7 @@ The most expensive operations are all in parsing the file where we are iterating
 
 I'm going to try and improve the parser first. `ReadLineAsync` is a terrible choice because it's doing a [bunch of string things](https://github.com/Microsoft/referencesource/blob/master/mscorlib/system/io/streamreader.cs) that we don't need. 
 
-My general strategy here is to work with the byte stream directly to avoid all the string operations and use Span<T> so we can avoid unnecessary allocations.
+My general strategy here is to work with the byte stream directly to avoid all the string operations and use Span<T> so we can avoid some unnecessary allocations.
 
 ```csharp
 Span<byte> buffer = new byte[1024 * 512];
@@ -124,7 +124,7 @@ while (reader.Read(buffer) is int numberRead)
     if(numberRead == 0)
         break;
 
-    if(numberRead < buffer.Length) //If bytes read is maller than buffer, truncate the buffer
+    if(numberRead < buffer.Length) //If bytes read is smaller than buffer, truncate the buffer
         buffer = buffer[..numberRead];
 
     if (buffer[bufferOffsetStart] == 239)
@@ -172,3 +172,58 @@ Better! I guess the parsing is still the most expensive part, I'm going to see w
 |\| - Dictionary\`2.TryGetValue\(!0, ref !1\)|115.96ms \(6.70%\)|115.96ms \(6.70%\)|1000000|System.Collections|
 |\| - System.MemoryExtensions.IndexOf\(Span\`1, !!0\)|105.26ms \(6.08%\)|105.26ms \(6.08%\)|2000027|System.Memory|
 |\| - Dictionary\`2.set\_Item\(!0, !1\)|103.00ms \(5.95%\)|103.00ms \(5.95%\)|1000000|System.Collections|
+
+
+### Attempt 03: Directly Parse the Temperature
+
+**Update: 2024-03-27**
+
+I'm going to try and avoid the `double.Parse` call and directly parse the temperature.
+
+There's been some amazing techniques on display with such as [@merykitty's Magic SWAR](https://questdb.io/blog/1brc-merykittys-magic-swar/) but I'm going to keep it simple for now. I'll just convert the bytes directly to an int by taking advantage of the fact that all the digits are next to each other in the UTF8 Code page.
+
+All we're doing is pasing in the bytes that represent the temperature and converting them to an int. I think an int will be faster to process than a float or double and we can display the temperature correctly by dividing by 10.
+
+
+```csharp
+public class FastParser
+{
+
+    public const byte sign = (byte)'-';
+    public const byte dot = (byte)'.';
+    public const byte digitOffset = (byte)'0';
+
+    public static int TempAsInt(ReadOnlySpan<byte> chunk)
+    {
+        bool negative = chunk[0] == sign;
+        int off = negative ? 1 : 0;
+
+        int temp = chunk[off++] - digitOffset;
+        
+        if (chunk[off] != dot)
+            temp = 10 * temp + chunk[off++] - digitOffset;
+        off++; //Skip the '.' (Max 2 digits before '.')
+
+        temp = 10 * temp + chunk[off] - digitOffset;
+        return negative ? -temp : temp;
+    }
+}
+```
+
+The actual code for the attempt is identical to the previous attempt other than just replacing the `double.Parse` call with the `FastParser.TempAsInt` call and updating the output to divide by 10.
+
+|  Metric   | Value |
+| -------- | ------- |
+| **Elapsed Time** | 1 Minute 54 Seconds |
+
+#### Remarks
+
+Still improving, but I think we can do better. Next we'll look at how we're storing and processing the measurements.
+
+|Function Name|Total \[unit, %\]|Self \[unit, %\]|Call Count|Module|
+|-|-|-|-|-|
+|\| - brc.Attempts.Lib03.FastParser.TempAsInt\(ReadOnlySpan\`1\)|572.58ms \(23.86%\)|318.18ms \(13.26%\)|1000000|1brc|
+|\| - ReadOnlySpan\`1.get\_Item\(int32\)|254.40ms \(10.60%\)|254.40ms \(10.60%\)|4754639|system.runtime|
+|\| - System.MemoryExtensions.IndexOf\(Span\`1, !!0\)|175.33ms \(7.31%\)|175.33ms \(7.31%\)|2000027|System.Memory|
+|\| - Span\`1.Slice\(int32, int32\)|159.82ms \(6.66%\)|159.82ms \(6.66%\)|3000001|system.runtime|
+|\| - Dictionary\`2.TryGetValue\(!0, ref !1\)|126.74ms \(5.28%\)|126.74ms \(5.28%\)|1000000|System.Collections|
