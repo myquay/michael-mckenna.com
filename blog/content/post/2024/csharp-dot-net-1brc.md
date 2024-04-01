@@ -242,9 +242,9 @@ For this update I've made two changes:
 - Use [CollectionsMarshal ref accessors for `Dictionary<TKey, TValue>`](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.collectionsmarshal.getvaluereforadddefault?view=net-8.0)
 -  Use a long for the key in the dictionary
 
-The first change is to use CollectionsMarshal.GetValueRefOrAddDefault<TKey,TValue>` which gets a reference to the value in the dictionaty while also creating it if it doesn't exist. Then we can then modify the value directly without having to do a secondary lookup to set the mutated value.
+The first change is to use `CollectionsMarshal.GetValueRefOrAddDefault<TKey,TValue>` which gets a reference to the value in the dictionary while also creating it if it doesn't exist. Then we can then modify the value directly without having to do a secondary lookup to set the mutated value.
 
-The second change is to use a long for the key in the dictionary, mainly to avoid the overhead of generating the hash code for the string key on every lookup. To achieve this I created a function to turn the station name into a unique long key.
+The second change is to use a `long` for the key in the dictionary instead of a `string`, mainly to avoid the overhead of generating the hash code on every lookup. To achieve this we use this function to turn the station name into a unique long.
 
 ```csharp
 public static long GenerateKey(ReadOnlySpan<byte> chunk)
