@@ -30,7 +30,12 @@ This is a living post, I intend to update it as I try different approaches and l
 
 I'm going to try a few different approaches and see how they compare. I'll start with a simple, naive implementation and then iterate on that. I'll cover what I was trying in each of my attempts and the results I got.
 
-I'm really interested in any other approaches people have tried or if you have any suggestions for me. Please open an issue in the GitHub repo if you have any ideas.
+I'm really interested in any other approaches people have tried or if you have any suggestions for me. Please open an issue in the GitHub repo if you have any ideas. 
+
+Some other solutions I've seen and taken inspriation from include:
+
+* [markrendle/OneBRC](https://github.com/markrendle/OneBRC/tree/main)
+* [buybackoff/1brc](https://github.com/buybackoff/1brc)
 
 ### Attempt 01: Simple implementation
 
@@ -227,3 +232,93 @@ Still improving, but I think we can do better. Next we'll look at how we're stor
 |\| - System.MemoryExtensions.IndexOf\(Span\`1, !!0\)|175.33ms \(7.31%\)|175.33ms \(7.31%\)|2000027|System.Memory|
 |\| - Span\`1.Slice\(int32, int32\)|159.82ms \(6.66%\)|159.82ms \(6.66%\)|3000001|system.runtime|
 |\| - Dictionary\`2.TryGetValue\(!0, ref !1\)|126.74ms \(5.28%\)|126.74ms \(5.28%\)|1000000|System.Collections|
+
+### Attempt 04: Dictonary Key and Lookup Optimisation
+
+**Update: 2024-04-02**
+
+For this update I've made two changes:
+
+- Use [CollectionsMarshal ref accessors for `Dictionary<TKey, TValue>`](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.collectionsmarshal.getvaluereforadddefault?view=net-8.0)
+-  Use a long for the key in the dictionary
+
+The first change is to use CollectionsMarshal.GetValueRefOrAddDefault<TKey,TValue>` which gets a reference to the value in the dictionaty while also creating it if it doesn't exist. Then we can then modify the value directly without having to do a secondary lookup to set the mutated value.
+
+The second change is to use a long for the key in the dictionary, mainly to avoid the overhead of generating the hash code for the string key on every lookup. To achieve this I created a function to turn the station name into a unique long key.
+
+```csharp
+public static long GenerateKey(ReadOnlySpan<byte> chunk)
+{
+    //Take the first 7 characters + length
+    long key = chunk.Length << 64;
+
+    for (int i = 0, l = chunk.Length; i < l && i < 7; i++)
+        key += chunk[i] << (56 - i * 8);
+
+    return key;
+}
+```
+
+It makes the assumption that the first 7 letters and the length of the station name are enough to make a unique key. It's true for all the possilbe names in the dataset but it's not a general solution.
+
+There's only a couple of minor modifications to the main loop to use the new key generation and the `CollectionsMarshal.GetValueRefOrAddDefault` function.
+
+```csharp
+while (reader.Read(buffer) is int numberRead)
+{
+    if (numberRead == 0)
+        break;
+
+    if (numberRead < buffer.Length) //If bytes read is maller than buffer, truncate the buffer
+        buffer = buffer[..numberRead];
+
+    if (buffer[bufferOffsetStart] == 239)
+        bufferOffsetStart += 3; //SKIP BOM
+
+    //Iterate through all the lines
+    while (buffer[bufferOffsetStart..].IndexOf(newLine) is int newLineIndex and > -1)
+    {
+        var line = buffer.Slice(bufferOffsetStart, newLineIndex);
+        bufferOffsetStart += newLineIndex + 1; //Skip the newline
+
+        var seperatorIndex = line.IndexOf(seperator);
+
+        var dictKey = v4.Utilities.GenerateKey(line[..seperatorIndex]);
+
+        ref var measurement = ref CollectionsMarshal.GetValueRefOrAddDefault(data, dictKey, out bool exists);
+        if(!exists)
+            measurement.Name = Encoding.UTF8.GetString(line[..seperatorIndex]);
+
+        var value = v4.Utilities.FastParseTemp(line[(seperatorIndex + 1)..]);
+
+        measurement.Sum += value;
+        measurement.Min = measurement.Min < value ? measurement.Min : value;
+        measurement.Max = measurement.Max > value ? measurement.Max : value;
+        measurement.Count++;
+    }
+
+    //Backtrack to the start of the line
+    reader.Seek(bufferOffsetStart - buffer.Length, SeekOrigin.Current);
+    bufferOffsetStart = 0;
+}
+```
+
+|  Metric   | Value |
+| -------- | ------- |
+| **Elapsed Time** | 57 Seconds |
+
+#### Remarks
+
+Woohoo - we're under a minute! I think we can still do better though. 
+
+That's most of the low hanging fruit I can see around code that's obviously slow, my quick and dirty profiling is just throwing up my optimised functions or system ones that I'm not to concerned about at this stage - I'll optimise the algorthm futher later on. 
+
+Since the challenge is compute heavy I'm going to look at multi-threading next.
+
+|Function Name|Total \[unit, %\]|Self \[unit, %\]|Call Count|Module|
+|-|-|-|-|-|
+|\| - brc.Attempts.Lib04.Utilities.GenerateKey\(ReadOnlySpan\`1\)|922.22ms \(28.77%\)|500.23ms \(15.61%\)|1000000|1brc|
+|\| - brc.Attempts.Lib04.Utilities.FastParseTemp\(ReadOnlySpan\`1\)|549.94ms \(17.16%\)|309.00ms \(9.64%\)|1000000|1brc|
+|\| - ReadOnlySpan\`1.get\_Item\(int32\)|319.19ms \(9.96%\)|319.19ms \(9.96%\)|6434602|system.runtime|
+|\| - Span\`1.Slice\(int32, int32\)|204.69ms \(6.39%\)|204.69ms \(6.39%\)|4000441|system.runtime|
+|\| - System.Linq.Enumerable.ToArray\(IEnumerable\`1\)|171.87ms \(5.36%\)|171.23ms \(5.34%\)|1|System.Linq|
