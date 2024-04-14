@@ -14,17 +14,19 @@ concludeSeries: false
 
 ## Introduction
 
-Can you believe it, just like that it's been 4 and a half years since I wrote my initial series on [multi-tenancy](/multi-tenant-asp-dot-net-core-application-tenant-resolution) which was based on .NET Core 2.2. Later I looked at how'd you'd modify the approach for [.NET Core 3.1](https://devblogs.microsoft.com/dotnet/announcing-net-core-3-1/). Now .NET Core 8 is out and I thought it would be a good time to revisit multi-tenancy in ASP.NET Core and take a fresh look at how I'd implement multi-tenancy today.
+Can you believe it, just like that it's been 4 and a half years since I wrote my initial series on [multi-tenancy](/multi-tenant-asp-dot-net-core-application-tenant-resolution) which was based on .NET Core 2.2. Later I looked at how'd you'd modify the approach for [.NET Core 3.1](https://devblogs.microsoft.com/dotnet/announcing-net-core-3-1/). 
 
-In this first installment of the series we'll look at how to resolve the tenant from the request.
+Now [.NET 8 is out](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-8/overview) and I thought it would be a good time to revisit multi-tenancy in ASP.NET Core and take a fresh look at how I'd implement multi-tenancy today.
+
+In this first installment we'll look at what exactly is multi-tenancy and how to resolve the tenant from the request.
 
 ## What is multi-tenancy?
 
 You can achieve [multi-tenancy in a number of ways](https://learn.microsoft.com/en-us/azure/azure-sql/database/saas-tenancy-app-design-patterns?view=azuresql), the most common are:
 
-* Standalone app: Redeploy the application for each tenant
-* Database per tenant: Each tenant has their own database, but the application is shared
-* Sharded multi-tenant: All tenants share the same database, but tenant data is partitioned
+* **Standalone app:** Redeploy the application on new infrastructure for each tenant
+* **Database per tenant:** Each tenant has their own database, but the application is shared
+* **Sharded multi-tenant:** All tenants share the same database, but tenant data is partitioned
 
 In this series we will be looking at the last option where a single deployed instance of your application has the ability to host multiple tenants. Each tenant shares the same infrastrucutre (including the application and database) to reduce hosting costs. Tenant isolation is enforced at the code level. This is a common requirement for SaaS applications where you want to host multiple customers on a single instance of your application.
 
@@ -198,7 +200,7 @@ We tocuhed on this earlier with the following piece of code from the builder ext
 
 ```csharp
 //Register middleware to populate the ambient tenant context early in the pipeline
-        Services.Insert(0, ServiceDescriptor.Transient<IStartupFilter>(provider => new MultiTenantContextAccessorStartupFilter<T>()));
+Services.Insert(0, ServiceDescriptor.Transient<IStartupFilter>(provider => new MultiTenantContextAccessorStartupFilter<T>()));
 ```
 
 This is a `IStartupFilter` which is used to register middleware that sets the current tenant on the `IMultiTenantContextAccessor` for each request. This is important because we want the tenant to be available as [early as possible in the request pipeline](https://andrewlock.net/exploring-istartupfilter-in-asp-net-core/).
