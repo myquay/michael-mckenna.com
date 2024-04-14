@@ -1,8 +1,10 @@
 ---
 publishDate: 2024-03-03T23:29:12+12:00
 title: Multi-tenancy in ASP.NET Core 8 (LTS) - Tenant Resolution
-summary: Can you believe it, just like that it's been 4 and a half years since I wrote my initial series on multi-tenancy in ASP.NET and now .NET Core 8 is out. In this post I revisit multi-tenancy in ASP.NET Core and take a fresh look at how I'd implement multi-tenancy today.
-url: /multi-tenancy-compatibility-dot-net-core-eight
+summary: Can you believe it, just like that it's been 4 and a half years since I wrote my initial series on multi-tenancy in ASP.NET and now ASP.NET Core 8 is out. In this post I revisit multi-tenancy in ASP.NET Core and take a fresh look at how I'd implement multi-tenancy today.
+url: /multi-tenant-asp-dot-net-8-tenant-resolution
+aliases:
+    - /multi-tenancy-compatibility-dot-net-core-eight
 tags:
     - guide
     - azure
