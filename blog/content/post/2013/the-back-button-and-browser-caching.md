@@ -11,7 +11,9 @@ I [recently found out](https://stackoverflow.com/questions/49547/how-do-we-contr
 
 ### How was this a problem?
 
-We had an issue where we'd update a page in place and save the changes using JavaScript. If the user navigated away then used the back button they would be shown the original page with the original data. They'd then think the changes weren't saved. There's also a few other areas such as security applications which might not want to redisplay content for reasons.
+We had an issue where we'd update a page in place and save the changes using JavaScript. If the user navigated away then used the back button they would be shown the original page with the original data. They'd then think the changes weren't saved. 
+
+There's also a few other areas such as security applications which might not want to redisplay content for reasons.
 
 ### How do we change this behaviour?
 

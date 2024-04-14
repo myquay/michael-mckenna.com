@@ -15,11 +15,10 @@ While an application recently I had problems with our Facebook integration, name
 
 >   6\. Your website must offer an explicit "Log Out" option that also logs the user out of Facebook
     \
-    \
     -- Facebook Guidelines
 
 
-However Azure ACS 2.0 [doesn’t really support single sign out][azuresso] making the requirement a little harder to meet.
+However Azure ACS 2.0 doesn’t really support single sign out making the requirement a little harder to meet.
 
 This isn't just Facebook being difficult, it makes sense to enforce this on every identity provider that we federate with. If the user signs into your website via a large identity provider like Facebook, it is not obvious to the user that they need to explicitly visit Facebook to logout after they log out of your website.
 
@@ -35,7 +34,12 @@ We went the image tag approach as it provides an easy way to trigger the complet
 
 ### The implementation
 
-He's how we implemented the process on our MVC 3 web application. It only involves a little extra code in the existing sign out action, a new model and a new view.
+Here's how we implemented the process on our MVC 3 web application. 
+
+It involves 
+* a little extra code in the existing sign out action
+* a new model
+* a new view.
 
 
 #### Step1: Create the model
@@ -96,6 +100,5 @@ The Facebook sign out URL is the only one with a special format
 
 ACS may not directly support single sign out but you can easily log the user out of their identity provider as well as your website using this technique. 
 
-[azuresso]: https://social.msdn.microsoft.com/Forums/pl-PL/windowsazuresecurity/thread/cea8aeec-e710-4ab3-812d-5e04e4627809/  "Single Sign Out with AppFabric ACS"
 [haishibai]: https://haishibai.blogspot.co.nz/2012/08/sign-out-from-identity-providers-when.html  "Sign out cleanly from Identity Providers when using ACS"
 [overcode]: https://www.overcode.hk/?cat=10  "Azure | OverCode"

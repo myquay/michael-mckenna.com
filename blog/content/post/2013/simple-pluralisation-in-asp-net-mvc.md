@@ -7,7 +7,7 @@ tags:
     - asp dot net mvc
 ---
 
-Your software application is like an iceberg in that your users only see a small fraction of it. The parts above the water; the parts that they interact with. Your application can be a mess under the covers but as long as you have a beautiful, quick interface that's super usable, your uses will think your app is designed really well.
+Your software application is like an iceberg; your users only see a small fraction of it. They only see the small parts above the water which they interact with. Your application can be a mess under the covers but as long as you have a beautiful, quick interface that's super usable, your uses will think your app is designed really well.
 
 If you don't bother with correct pluralisation your users will be less likely to appreciate the care you put into the rest of your application.
 
@@ -32,9 +32,9 @@ pluralize(3, 'person', 'users')
 
 ### Let's port this to MVC
 
-First we need to decide how we are going to pluralise words. Luckily for us [Entity Framework has a pluralisation service](https://www.hanselman.com/blog/FunWithNounPluralizationLibrariesAndTheNETFramework.aspx "Fun with Noun Pluralization libraries and the .NET Framework - Scott Hanselman") that we can in place of the "Inflector" that Ruby on Rails uses.
+First we need to decide how we are going to pluralise words. Luckily for us [Entity Framework has a pluralisation service](https://www.hanselman.com/blog/FunWithNounPluralizationLibrariesAndTheNETFramework.aspx "Fun with Noun Pluralization libraries and the .NET Framework - Scott Hanselman") that we can use in place of the "Inflector" from Ruby on Rails.
 
-Secondly we need to decide on how the library is going to be used. I only really want to use this in my razor views and [I love the @helper syntax](http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx "ASP.NET MVC 3 and the @helper syntax within Razor - ScottGu's Blog") that was introduced in ASP.NET MVC 3 so we'll go with that. We'll also stick with the same method signature from the RoR TextHelper. 
+Secondly we need to decide on how the library is going to be used. I only really want to use this in my razor views and [I'm a fan of the @helper syntax](http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx "ASP.NET MVC 3 and the @helper syntax within Razor - ScottGu's Blog") that was introduced in ASP.NET MVC 3 so we'll go with that. We'll also stick with the same method signature from the Rails TextHelper. 
 
 The code is simple so you can easily pull out the implementation and use it in your own way.
 

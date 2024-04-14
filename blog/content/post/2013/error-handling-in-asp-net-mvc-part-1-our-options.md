@@ -14,16 +14,15 @@ We had a couple of requirements
 
 1. Super easy to implement
 2. Covers the entire ASP.NET request pipeline
-3. See friendly error messages in production and see stack traces in development
-4. Respects HTTP status codes - we do not want the site returning a 302 redirect on error to redirect to an error page
+3. See friendly error messages in production and stack traces in development
+4. Respects HTTP status codes - we do not want the site returning a 302 redirect on error, that should be a 500 or something
 5. Able to log exceptions
 
 This is the first post in a two part series, in this part we will look at the options available to us in ASP.NET MVC.
 
 ### Exception Filters
 
-Exception filters implement the **IExceptionFilter** interface and are applied as attributes on either actions or controllers. They catch exceptions that occur during the MVC pipeline like errors in filters, actions, or views. 
-In addition to being applied as an attribute, you can register an *ExceptionFilter* as a global filter in MVC 3 or 4. By default ASP.NET's **HandleErrorAttribute** is registered.
+Exception filters implement the **IExceptionFilter** interface and are applied as attributes on either actions or controllers. They catch exceptions that occur during the MVC pipeline like errors in filters, actions, or views.  In addition to being applied as an attribute, you can register an *ExceptionFilter* as a global filter in MVC 3 or 4. By default ASP.NET's **HandleErrorAttribute** is registered.
 
 ```csharp
 public class FilterConfig
