@@ -16,9 +16,7 @@ concludeSeries: false
 
 ## Introduction
 
-Can you believe it, just like that it's been 4 and a half years since I wrote my initial series on [multi-tenancy](/multi-tenant-asp-dot-net-core-application-tenant-resolution) which was based on .NET Core 2.2. Later I looked at how'd you'd modify the approach for [.NET Core 3.1](https://devblogs.microsoft.com/dotnet/announcing-net-core-3-1/). 
-
-Now [.NET 8 is out](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-8/overview) and I thought it would be a good time to revisit multi-tenancy in ASP.NET Core and take a fresh look at how I'd implement multi-tenancy today.
+Can you believe it, just like that and it's been 4 and a half years since I wrote my initial series on [multi-tenancy](/multi-tenant-asp-dot-net-core-application-tenant-resolution) which was initially based on ASP.NET Core 2.2 & later [ASP.NET Core 3.1](https://devblogs.microsoft.com/dotnet/announcing-net-core-3-1/).  Now [ASP.NET Core 8 is out](https://learn.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-8.0?view=aspnetcore-8.0) and I thought it would be a good time to revisit the topic and take a fresh look at how I'd implement multi-tenancy today.
 
 In this first installment we'll look at what exactly is multi-tenancy and how to resolve the tenant from the request.
 
@@ -30,15 +28,19 @@ You can achieve [multi-tenancy in a number of ways](https://learn.microsoft.com/
 * **Database per tenant:** Each tenant has their own database, but the application is shared
 * **Sharded multi-tenant:** All tenants share the same database, but tenant data is partitioned
 
-In this series we will be looking at the last option where a single deployed instance of your application has the ability to host multiple tenants. Each tenant shares the same infrastrucutre (including the application and database) to reduce hosting costs. Tenant isolation is enforced at the code level. This is a common requirement for SaaS applications where you want to host multiple customers on a single instance of your application.
+In this series we will be looking at the last two options where a single deployed instance of your application has the ability to host multiple tenants. 
 
-There's a few core requirements that we need to meet to support multi-tenancy in ASP.NET Core:
+Each tenant can share the same infrastrucutre (including the application and database) to reduce hosting costs. Tenant isolation is enforced at the code level. This is a common requirement for SaaS applications where you want to host multiple customers on a single instance of your application.
+
+## Core requirements
+
+To achieve this we need to solve a few key problems:
 
 ### Tenant resolution
 
 We need a way to identify which tenant is making the current request. This could be a domain, a path, or a header in the request.
 
-### Tenant specific settings
+### Tenant specific settings & services
 
 The applicaiton might be configured differently depending on the which tenant context is loaded, e.g. the tenant's name, connection string, and other such things.
 
@@ -46,17 +48,17 @@ The applicaiton might be configured differently depending on the which tenant co
 
 We need to ensure that tenant data is isolated from other tenants. This could be at the database level, or at the code level; regardless, we need to ensure that a tenant can't access another tenant's data.
 
-### TL;DR
+## The source code
 
-Just want to see it in action? You can find the code for this post on [GitHub](https://github.com/myquay/Microsoft.AspNetCore.Contrib.MultiTenant). I refer to the library quite a bit in this post so it's worth checking out to see how it all fits together.
+Just want to see it in action? You can find the code for this series on [GitHub](https://github.com/myquay/Microsoft.AspNetCore.Contrib.MultiTenant). I refer to the library quite a bit in this post so it's worth checking out to see how it all fits together.
 
 ## Tenant Resolution
 
-First things first we need a way to identify which tenant is making the current request, to do this we need to be able to extract something from the HTTP request that identifies which tenant we need to load. 
+We need a way to identify which tenant is making the current request, to do this we need to be able to extract something from the HTTP request that identifies which tenant we need to load. 
 
-To do this we use a `ITenantResolutionStrategy` to extract the tenant identifier from the request. For example this could be a domain, a path, or a header in the request.
+To do this we use a `ITenantResolutionStrategy` to extract the tenant identifier from the request. For example this could be the domain, path, or a header in the request.
 
-In the library we define a `HostResolutionStrategy` which uses the request host to resolve the tenant. This is a common approach for SaaS applications where each tenant has their own subdomain.
+In the library we define a `HostResolutionStrategy` which uses the host to resolve the tenant. This is a common approach for SaaS applications where each tenant has their own subdomain.
 
 ```csharp
 /// <summary>
@@ -81,7 +83,7 @@ internal class HostResolutionStrategy(IHttpContextAccessor httpContextAccessor) 
 }
 ```
 
-Once we have the identifier we can then use a `ITenantLookupService` to fetch the tenant information for that identifier. This could be from a database, a configuration file, or any other source of truth for tenant information.
+Once we have the identifier we need a way to exchange this for a tenant. This is where the `ITenantLookupService` comes into play. We use it to fetch the tenant information for that identifier. This could be from a database, a configuration file, or any other datasource that's suitable for your application.
 
 In the library we define a `InMemoryTenantLookupService` which is a simple implementation that stores the tenant information in memory. This is useful for testing and development.
 
@@ -116,7 +118,7 @@ public interface ITenantInfo
 }
 ```
 
-The implementing application can implement `ITenantLookupService`, `ITenantInfo` and `ITenantLookupService` to resolve the tenant in a way that makes sense for their application.
+The implementing application can implement `ITenantLookupService`, `ITenantInfo` and `ITenantLookupService` to resolve the tenant in a way that makes sense for their specific application.
 
 Other tenant resolution strategies and lookup services can be implemented to resolve tenants in different ways, for example a `PathResolutionStrategy` could be used to resolve tenants based on the request path.
 
@@ -129,9 +131,9 @@ There are two main aspects to integrating the tenant resolution strategy and loo
 
 #### Registering the services
 
-To provide a familiar developer experience to other ASP.NET Core services we will use the builder pattern to register the tenant resolution strategy and lookup service with the dependency injection container.
+To provide a familiar developer experience to other ASP.NET Core services we will use the builder pattern to register the tenant resolution strategy and lookup services.
 
-First an extension method to support the `.AddMultiTenancy<TenantOptions>()` pattern.
+First an extension method to support the `.AddMultiTenancy<...>()` pattern.
 
 ```csharp
 /// <summary>
@@ -273,4 +275,6 @@ public class Values : Controller
 
 ## Summary
 
-In this post we looked at how to resolve the tenant from the request. We looked at how to use a `ITenantResolutionStrategy` to extract the tenant identifier from the request and a `ITenantLookupService` to fetch the tenant information for that identifier. We then looked at how to integrate the tenant resolution strategy and lookup service with the ASP.NET Core pipeline to make the current tenant available to access through ambient context.
+In this post we looked at how to resolve the tenant from the request. We looked at how to use a `ITenantResolutionStrategy` to extract the tenant identifier from the request and a `ITenantLookupService` to fetch the tenant information for that identifier. 
+
+We also looked at how to integrate the tenant resolution strategy and lookup service with the ASP.NET Core pipeline to make the current tenant available to access through ambient context.
