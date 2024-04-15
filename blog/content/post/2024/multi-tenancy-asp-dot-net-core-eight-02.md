@@ -14,11 +14,13 @@ concludeSeries: false
 
 ## Introduction
 
-In this post we're looking at how we can have tenant specific services in a multi-tenant application in ASP.NET Core 8.
+This post discusses how we can have tenant specific services in a multi-tenant ASP.NET Core 8 application. 
 
-We'll look at how we can modify the `IServiceProvider` backing `RequestServices` to proivde the capability to resolve different services for different tenants. This is useful when you want to have tenant specific services that are resolved based on the current tenant.
+We'll look at how we can modify the `IServiceProvider` behind `RequestServices` to proivde the capability to resolve different services for different tenants. This is useful if you want a tenant specific configuration for a resolved service or even a completely different implementation returned.
 
-First I want to acknowledge the huge amount of great information out there that really helped me out. I found these resources particularly good:
+### Acknowledgements
+
+First I want to acknowledge the huge amount of great information out there that really helped me out. I found these resources particularly good
 
 * [This StackOverflow post](https://stackoverflow.com/questions/38940241/autofac-multitenant-in-an-aspnet-core-application-does-not-seem-to-resolve-tenan/38960122#38960122)
 Great highlevel overview
@@ -31,21 +33,30 @@ Excellent codebase that helped me understand some interactions with the ASP.NET 
 
 ## Overview of the implementation
 
-To help understand the approach we're going to take, let's take a look at the how the default DI container works in ASP.NET Core.
+Before we get into it let's take a look at the how the default DI container works in ASP.NET Core. [A basic understanding of how dependency injection works in ASP.NET Core is essential here](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-8.0).
 
-We start with a service collection that we can register services with during application startup. Everyone is familiar with this part of the ASP.NET Core pipeline. It's all `builder.Services.AddHttpContextAccessor()` and `builder.Services.AddControllers()` etc. When the application starts up, the `IServiceProvider` is created from the service collection. This is the "root" `IServiceProvider`. When a request comes in, the root provider is scoped automatically for each request to allow you to resolve scoped services. These services can be accessed from the `RequestServices` property on the `HttpContext` which is the scoped `IServiceProvider` for the current request.
+#### The root service provider
+We start with a service collection that we can register services with during application startup. Everyone is familiar with this part of the ASP.NET Core pipeline. It's all `builder.Services.AddHttpContextAccessor()` and `builder.Services.AddControllers()` etc. When the application starts up, the `IServiceProvider` is created from the service collection. This is the "root" `IServiceProvider`. 
 
-#### How to make this tenant aware
+#### The scoped service provider
+When a request comes in, the root provider is scoped automatically for each request to allow you to resolve scoped services. These services can be accessed from the `RequestServices` property on the `HttpContext` which is the scoped `IServiceProvider` for the current request. All these scoped services are automatically disposed of at the end of the request.
 
-To make this process tenant aware we need to be able to modify the services registered in the root IServiceCollection and build a new provider specific for the current tenant. 
+### How to make this tenant aware
 
-We then need to ensure that the scoped `IServiceProvider` for the current request is built from the new tenant specific `IServiceProvider`.
+To make this process tenant aware we need to be able to modify the services registered in the root `IServiceCollection` and build a new `IServiceProvider` specific for the current tenant. 
+
+The big departure here is that we don't actually know the tenant until the request comes in so we need to be able to build a new `IServiceProvider` for the current tenant during runtime at the start of the request. 
+
+Then the scoped `IServiceProvider` for the current request can be built from this new tenant specific `IServiceProvider`.
+
+#### The goal
+Our plan is to be able to configure the tenant container ahead of the scoped request services but after we have establised our tenant context.
 
 ![](/images/2024/request-services.png)
 
-### TL;DR
+### The source code
 
-You can see all the code in acton on [GitHub](https://github.com/myquay/Microsoft.AspNetCore.Contrib.MultiTenant). I refer to the library quite a bit in this post so it's worth checking out to see how it all fits together.
+You can see all the code in acton on [GitHub](https://github.com/myquay/MultiTenant.AspNetCore). I refer to the library quite a bit in this post so it's worth checking out to see how it all fits together.
 
 ## The implementation
 
@@ -58,7 +69,7 @@ The implementation consists of the following steps
 
 ### Create the service provider factory
 
-The service provider factory is responsible for creating a tenant specific `IServiceProvider` from the root container. It does this by creating a new `IServiceCollection` and copying all the services from the root container then using a tenant specific service configuration action to add tenant specific services to the new container.
+The service provider factory is responsible for creating a tenant specific `IServiceProvider` from the root container. It does this by creating a new `IServiceCollection` and copying all the services from the root container. It then uses the tenant service configuration action to add tenant specific services to the new container.
 
 ```csharp
 /// <summary>
@@ -91,7 +102,7 @@ internal class MultiTenantServiceProviderFactory<T>(IServiceCollection container
 
 ### Create the scope factory
 
-The scope factory is responsible for creating a tenant specific `IServiceScope` from the tenant specific `IServiceProvider`. This is an integration point with the ASP.NET Core pipeline and implements `IServiceScopeFactory` so it can be used to create the scoped `IServiceProvider` for the current request.
+The scope factory is responsible for creating a tenant specific `IServiceScope` from the tenant specific `IServiceProvider`. This is an integration point with the ASP.NET Core pipeline and implements `IServiceScopeFactory` so it can be used to create the scoped `IServiceProvider` for the current request. This is what the `RequestServices` property on the `HttpContext` uses to resolve services for the current request.
 
 ```csharp
 /// <summary>
@@ -118,7 +129,7 @@ public interface IMultiTenantServiceScopeFactory : IServiceScopeFactory
 
 ### Create the middleware 
 
-The middleware is responsible for replacing the `IServiceProvidersFeature` with one that can use the tenant specific `IServiceProvider` to create new service scopes. This is the integration point which allows us to use tenant specific scoped services for the rest of the request.
+The middleware is responsible for replacing the `IServiceProvidersFeature` with one that can use the tenant specific `IServiceProvider` when creating new service scopes. This is the integration point which allows us to use tenant specific scoped services for the rest of the request.
 
 ```csharp
 /// <summary>
@@ -157,7 +168,7 @@ internal class MultiTenantRequestServicesMiddleware<T>(RequestDelegate next, IMu
 }
 ```
 
-We also use a `IStartupFilter` to register the above middleware as early on as possible so the tenant specific services are available for the rest of the application to use.
+We also use a `IStartupFilter` to register the middleware as early on as possible in the pipeline so the tenant specific services are available for the rest of the application to use.
 
 ```csharp
  /// <summary>
@@ -183,7 +194,7 @@ We also use a `IStartupFilter` to register the above middleware as early on as p
 
 ### Easy configuration
 
-To provide a familiar developer experience we will extend the TenantBuilder to provide a method to make it easy to configure the tenant specific services. 
+To provide a familiar developer experience we will extend the `TenantBuilder` from the previous post to provide a method to make it easy to configure the tenant specific services. 
 
 ```csharp
 /// <summary>
@@ -194,7 +205,8 @@ To provide a familiar developer experience we will extend the TenantBuilder to p
 public TenantBuilder<T> WithTenantedServices(Action<IServiceCollection, T?> configuration)
 {
     //Replace the default service provider with a multitenant service provider
-    Services.Insert(0, ServiceDescriptor.Transient<IStartupFilter>(provider => new MultitenantRequestServicesStartupFilter<T>()));
+    Services.Insert(0, ServiceDescriptor.Transient<IStartupFilter>(provider => new 
+        MultitenantRequestServicesStartupFilter<T>()));
 
     //Register the multi-tenant service provider
     Services.AddSingleton(new MultiTenantServiceProviderFactory<T>(Services, configuration));
@@ -204,9 +216,12 @@ public TenantBuilder<T> WithTenantedServices(Action<IServiceCollection, T?> conf
 }
 ```
 
+
+This allows the developer to provide the action that configures tenant specific services in the same place they configure the tenant resolution strategy and lookup service.
+
 ### The result
 
-Now you can configure tenant specific services in the same place you configure the tenant resolution strategy and lookup service. 
+Now it's super simple to add tenant specific services to your application with the `WithTenantedServices` method on the `TenantBuilder`.
 
 ```csharp
 //Add multi-tenant services
@@ -224,4 +239,4 @@ builder.Services.AddMultiTenancy<...>()
 
 In this post we looked at how to we extended the ASP.NET Core dependency injection services to cater for multi-tenanted scenarios. We demonstarted how to replace `RequestServices` with a scoped tenant specific `IServiceProvider` that can resolve tenant specific services.
 
-All the code is available on [GitHub](https://github.com/myquay/Microsoft.AspNetCore.Contrib.MultiTenant)
+All the code is available on [GitHub](https://github.com/myquay/MultiTenant.AspNetCore)

@@ -48,9 +48,9 @@ The applicaiton might be configured differently depending on the which tenant co
 
 We need to ensure that tenant data is isolated from other tenants. This could be at the database level, or at the code level; regardless, we need to ensure that a tenant can't access another tenant's data.
 
-## The source code
+### The source code
 
-Just want to see it in action? You can find the code for this series on [GitHub](https://github.com/myquay/Microsoft.AspNetCore.Contrib.MultiTenant). I refer to the library quite a bit in this post so it's worth checking out to see how it all fits together.
+Just want to see it in action? You can find the code for this series on [GitHub](https://github.com/myquay/MultiTenant.AspNetCore). I refer to the library quite a bit in this post so it's worth checking out to see how it all fits together.
 
 ## Tenant Resolution
 
