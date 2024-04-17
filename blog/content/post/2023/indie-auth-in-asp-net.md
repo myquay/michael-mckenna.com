@@ -15,7 +15,7 @@ tags:
 
 [IndieAuth is an extension of the OAuth 2.0 protocol](https://indieauth.spec.indieweb.org/) which allows you to authenticate with your own domain instead of relying directly on a particular authenticaton provider. 
 
-An important aspect of OAuth was to move away from providing your password to third-party apps directly, you only needed to enter your password in one place - where the account was held. OAuth has been a great success in this regard with many major platforms such as Google, GitHub, Facebook, Twitter, etc. all supporting OAuth. 
+An important aspect of OAuth was to move away from providing your password to third-party apps directly. With OAuth you only need to enter your password in one place; where the account was held. OAuth has been a great success in this regard with many major platforms such as Google, GitHub, Facebook, Twitter, etc. all supporting OAuth. 
 
 IndieAuth takes this a step further by allowing you to use your own domain to authenticate rather than being bound to a particular authentication provider.
 
@@ -27,9 +27,15 @@ If you already know the ins and outs around the protocol you can skip straight t
 
 ### Advantages of IndieAuth
 
-The main advantage is that you can sign into a website with any supported authentication service listed on your domain. For example, if you have a Twitter account listed on your website then you use that to sign into a website which supports IndieAuth. Lose access to Twitter? No problem, just add a new account to your website and you can still sign into the website. It's basically a way to decouple your identity from a particular authentication provider; the "Dependency Inversion" in SOLID, if you will.
+The main advantage is that you can sign into an application with any supported authentication service listed on your domain. 
 
-A secondary advantage is for third party app developers. Traditionally with OAuth if you wanted to support a particular authentication provider such as Facebook or GitHub then you need to register your application to receive a `client_id` and `client_secret`. That's okay if there's a few main providers you want to support, but if you want to support a large number of providers then it can be a lot of work to register your application with each provider. With IndieAuth, you don't need to register your application with any provider, you just need to support the IndieAuth protocol and you automatically support any IndieAuth server (and their supported authentication methods).
+For example, if you have a Twitter account listed on your website then you use that to sign into an application which supports IndieAuth. Lose access to Twitter? No problem, just add a new provider to your website and sign into your existing account with that instead. 
+
+It's a way to decouple your identity from a particular authentication provider.
+
+A secondary advantage is for third party app developers. Traditionally with OAuth if you wanted to support a particular authentication provider such as Facebook or GitHub then you need to register your application to receive a `client_id` and `client_secret`. 
+
+That's okay if there's a few main providers you want to support, but if you want to support a large number of providers then it can be a lot of work to register your application with each provider. With IndieAuth, you don't need to register your application with any provider, you just need to support the IndieAuth protocol and you automatically support any IndieAuth server (and their supported authentication methods).
 
 ### Disadvantages of IndieAuth
 
@@ -47,11 +53,11 @@ From the perspective of a client application, [IndieAuth is very similar to OAut
 
 At a high level, the process is:
 
-* Present a sign-in form askign the user to enter their domain
-* Fetch the domain to discover their IndieAuth server
+* Present a sign-in form asking the user to enter their domain
+* Fetch the domain to discover the IndieAuth server
 * Redirect the user to the IndieAuth server to authenticate
 * Receive a redirect back to the client application with an access code
-* Exchange the access code for an access token by making a HTTP request to their IndieAuth server
+* Exchange the access code for an access token by making a HTTP request to the IndieAuth server
 
 The main difference between IndieAuth and OAuth is that the client application doesn't need to register with the IndieAuth server. Instead, the client application just needs to support the IndieAuth protocol.
 
@@ -100,7 +106,7 @@ If you just want to to quickly add support to an application you're developing t
 
 #### Usage
 
-I wanted to make it easy to add IndieAuth support so the library API similar to adding support for other authentication methods. You set it up by adding a few lines of code to your config file similar to any other handler.
+I wanted to make it easy to add IndieAuth support so the library API is similar to adding support for other authentication methods. You set it up by adding a few lines of code to your config file similar to any other handler.
 
 ```csharp
 
