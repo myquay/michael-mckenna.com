@@ -1,6 +1,6 @@
 ---
 publishDate: 2024-04-13T23:29:12+12:00
-title: Multi-tenancy in ASP.NET Core 8 (LTS) - Dependency Injection & Tenant Specific Services
+title: Multi-tenancy in ASP.NET Core 8 - Dependency Injection & Tenant Specific Services
 summary: In this post we look at how to have tenant specific services in a multi-tenant application in ASP.NET Core 8.
 url: /multi-tenant-asp-dot-net-8-tenant-services
 tags:
@@ -56,7 +56,9 @@ Our plan is to be able to configure the tenant container ahead of the scoped req
 
 ### The source code
 
-You can see all the code in acton on [GitHub](https://github.com/myquay/MultiTenant.AspNetCore). I refer to the library quite a bit in this post so it's worth checking out to see how it all fits together.
+You can see all the code in acton on [GitHub](https://github.com/myquay/MultiTenant.AspNetCore) and there's a [NuGet package](https://www.nuget.org/packages/MultiTenant.AspNetCore/) which you can use to implement multi-tenancy in your application.
+
+ I refer to the library quite a bit in this post so it's worth checking out to see how it all fits together.
 
 ## The implementation
 

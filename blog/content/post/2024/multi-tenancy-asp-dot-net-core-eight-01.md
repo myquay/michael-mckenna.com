@@ -1,6 +1,6 @@
 ---
 publishDate: 2024-03-03T23:29:12+12:00
-title: Multi-tenancy in ASP.NET Core 8 (LTS) - Tenant Resolution
+title: Multi-tenancy in ASP.NET Core 8 - Tenant Resolution
 summary: Can you believe it, just like that it's been 4 and a half years since I wrote my initial series on multi-tenancy in ASP.NET and now ASP.NET Core 8 is out. In this post I revisit multi-tenancy in ASP.NET Core and take a fresh look at how I'd implement multi-tenancy today.
 url: /multi-tenant-asp-dot-net-8-tenant-resolution
 aliases:
@@ -50,7 +50,7 @@ We need to ensure that tenant data is isolated from other tenants. This could be
 
 ### The source code
 
-Just want to see it in action? You can find the code for this series on [GitHub](https://github.com/myquay/MultiTenant.AspNetCore). I refer to the library quite a bit in this post so it's worth checking out to see how it all fits together.
+You can see all the code in acton on [GitHub](https://github.com/myquay/MultiTenant.AspNetCore) and there's a [NuGet package](https://www.nuget.org/packages/MultiTenant.AspNetCore/) which you can use to implement multi-tenancy in your application.
 
 ## Tenant Resolution
 
