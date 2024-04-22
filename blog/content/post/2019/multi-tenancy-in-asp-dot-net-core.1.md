@@ -11,7 +11,15 @@ tags:
 series: multi-tenant
 ---
 
-Update 2019-10-01: **This post is compatible with .NET Core 2.2 only**: We make this compatible with [**.NET Core 3.1** (LTS release) in this post here.](/multi-tenancy-compatibility-dot-net-core-three)
+### Update 2024-04-13
+
+I've recently taken another look at multi-tenancy in ASP.NET Core 8 and written a [new series of posts which you can find here](/multi-tenant-asp-dot-net-8-tenant-services). I'd recommend checking that out if you are looking to implement multi-tenancy in your application.
+
+The code for the new approach is [available on GitHub](https://github.com/myquay/MultiTenant.AspNetCore) and there's a [NuGet package](https://www.nuget.org/packages/MultiTenant.AspNetCore/) which you can use to implement multi-tenancy in your application.
+
+### Update 2019-10-01
+
+This post is compatible with **.NET Core 2.2** only. We make this compatible with [**.NET Core 3.1** (LTS release) in this post here.](/multi-tenancy-compatibility-dot-net-core-three)
 
 ## Introduction
 

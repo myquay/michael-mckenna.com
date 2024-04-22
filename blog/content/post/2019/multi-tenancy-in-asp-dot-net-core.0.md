@@ -11,6 +11,12 @@ tags:
 series: multi-tenant
 ---
 
+### Update 2024-03-03
+
+I've recently taken another look at multi-tenancy in ASP.NET Core 8 and written a [new series of posts which you can find here](/multi-tenant-asp-dot-net-8-tenant-resolution). I'd recommend checking that out if you are looking to implement multi-tenancy in your application.
+
+The code for the new approach is [available on GitHub](https://github.com/myquay/MultiTenant.AspNetCore) and there's a [NuGet package](https://www.nuget.org/packages/MultiTenant.AspNetCore/) which you can use to implement multi-tenancy in your application.
+
 ## Introduction
 
 This series of blog posts is an exploration of how to achieve multi-tenancy in an ASP.NET Core web application.  There's a lot of code snippets so you can follow along with your own sample app. There's no NuGet package you can plug and play at the end of this but it is a great learning exercise. It touches a few "core" _(sorry, not sorry)_ parts of the framework 😉
