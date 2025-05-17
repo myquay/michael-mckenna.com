@@ -42,7 +42,7 @@ We need a way to identify which tenant is making the current request. This could
 
 ### Tenant specific settings & services
 
-The applicaiton might be configured differently depending on the which tenant context is loaded, e.g. the tenant's name, connection string, and other such things.
+The application might be configured differently depending on the which tenant context is loaded, e.g. the tenant's name, connection string, and other such things.
 
 ### Tenant data isolation
 
@@ -50,7 +50,7 @@ We need to ensure that tenant data is isolated from other tenants. This could be
 
 ### The source code
 
-You can see all the code in acton on [GitHub](https://github.com/myquay/MultiTenant.AspNetCore) and there's a [NuGet package](https://www.nuget.org/packages/MultiTenant.AspNetCore/) which you can use to implement multi-tenancy in your application.
+You can see all the code in action on [GitHub](https://github.com/myquay/MultiTenant.AspNetCore) and there's a [NuGet package](https://www.nuget.org/packages/MultiTenant.AspNetCore/) which you can use to implement multi-tenancy in your application.
 
 ## Tenant Resolution
 
@@ -200,7 +200,7 @@ Then it returns a `TenantBuilder` which is used to provide the "fluent" extensio
 
 #### Setting the current tenant
 
-We tocuhed on this earlier with the following piece of code from the builder extensions
+We touched on this earlier with the following piece of code from the builder extensions
 
 ```csharp
 //Register middleware to populate the ambient tenant context early in the pipeline
