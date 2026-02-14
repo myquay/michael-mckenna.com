@@ -5,6 +5,10 @@ on:
     push:
         branches: [ main ]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     name: Build Website
@@ -12,14 +16,16 @@ jobs:
     steps:
     
     - name: 📄 Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: true
         
     - name: 🔑 Log into Azure
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
-          creds: ${{secrets.AZURE_CREDENTIALS}}
+          client-id: ${{vars.AZURE_CLIENT_ID}}
+          tenant-id: ${{vars.AZURE_TENANT_ID}}
+          subscription-id: ${{vars.AZURE_SUBSCRIPTION_ID}}
     
     - name: ✨ Setup Hugo
       env:
@@ -44,17 +50,17 @@ jobs:
     - name: 🛠️ Build website
       run: hugo -s ${{github.workspace}}/blog -d ${{github.workspace}}/dist --log -v
 
-    - uses: azure/CLI@v1
+    - uses: azure/CLI@v2
       name: 🧹 Clean destination
       with:
         inlineScript: |
-            az storage blob delete-batch --account-name ${{vars.AZURE_STORAGE_ACCOUNT}}  --auth-mode key -s '$web'
+            az storage blob delete-batch --account-name ${{vars.AZURE_STORAGE_ACCOUNT}}  --auth-mode login -s '$web'
             
-    - uses: azure/CLI@v1
+    - uses: azure/CLI@v2
       name: 🚀 Deploy to Azure
       with:
         inlineScript: |
-            az storage blob upload-batch --account-name ${{vars.AZURE_STORAGE_ACCOUNT}}  --auth-mode key -d '$web' -s ${{github.workspace}}/dist --overwrite --no-progress
+            az storage blob upload-batch --account-name ${{vars.AZURE_STORAGE_ACCOUNT}}  --auth-mode login -d '$web' -s ${{github.workspace}}/dist --overwrite --no-progress
             
     - name: ♻️ Purge Cloudflare Cache
       run: |
