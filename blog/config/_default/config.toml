@@ -58,8 +58,8 @@ hardWraps = true
     photo = "/images/site/45eb93e3-6a59-4a2e-a16a-4dbfafc1a531.jpg"
     bio = "//TODO: Write short bio"
     auth = ["github"]
-    authorization_endpoint = "https://indielogin.com/auth"
-    token_endpoint = "https://indielogin.com/auth"
+    authorization_endpoint = "https://talos.michael-mckenna.com/auth"
+    token_endpoint = "https://talos.michael-mckenna.com/auth"
 
 [mediaTypes]
     [mediaTypes."application/atom+xml"]
