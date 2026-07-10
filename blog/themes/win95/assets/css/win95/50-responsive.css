@@ -58,6 +58,7 @@
 
   .window-control {
     height: 24px;
+    touch-action: manipulation;
     width: 24px;
   }
 
@@ -91,6 +92,7 @@
 
   .start-button {
     flex: 0 0 auto;
+    touch-action: manipulation;
   }
 
   .taskbar-divider,
@@ -112,6 +114,7 @@
     min-width: 44px;
     padding-left: 7px;
     padding-right: 7px;
+    touch-action: manipulation;
   }
 
   .taskbar-button:not(.is-active) span {
@@ -240,6 +243,7 @@
 
   .setup-button {
     min-height: 32px;
+    touch-action: manipulation;
   }
 
   .about-body {
@@ -255,6 +259,7 @@
     min-width: max-content;
     padding-left: 12px;
     padding-right: 12px;
+    touch-action: manipulation;
   }
 
   .about-panel-shell {
@@ -324,6 +329,7 @@
     grid-template-rows: minmax(22px, auto) 18px;
     min-height: 46px;
     padding: 3px 5px;
+    touch-action: manipulation;
   }
 
   .file-list[data-view="list"] .file-icon-wrap {

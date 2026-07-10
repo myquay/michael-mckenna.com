@@ -37,3 +37,9 @@ export const migrateOsState = (state, { routeIndex = {}, currentVersion = 3, bas
   state.version = currentVersion;
   return state;
 };
+
+export const isVisibleNonModalWindow = (item, modalWindowKind = "modal") => Boolean(
+  item
+  && item.state !== "minimized"
+  && item.windowKind !== modalWindowKind
+);

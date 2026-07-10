@@ -3,7 +3,10 @@ import test from "node:test";
 
 import { constrainWindowBounds } from "../../blog/themes/win95/assets/js/win95/core/geometry.mjs";
 import { normalizePath, readExplorerRouteIndex, resolveExplorerWindowId } from "../../blog/themes/win95/assets/js/win95/core/routing.mjs";
-import { migrateOsState } from "../../blog/themes/win95/assets/js/win95/core/state.mjs";
+import {
+  isVisibleNonModalWindow,
+  migrateOsState
+} from "../../blog/themes/win95/assets/js/win95/core/state.mjs";
 
 test("normalizes route paths consistently", () => {
   assert.equal(normalizePath(""), "/");
@@ -63,6 +66,14 @@ test("migrates the legacy shared explorer window without losing state", () => {
 test("leaves current state versions unchanged", () => {
   const state = { version: 3, windows: {}, explorers: {}, taskbarOrder: [] };
   assert.equal(migrateOsState(state), state);
+});
+
+test("does not treat a missing window as a visible route owner", () => {
+  assert.equal(isVisibleNonModalWindow(undefined), false);
+  assert.equal(isVisibleNonModalWindow(null), false);
+  assert.equal(isVisibleNonModalWindow({ state: "minimized", windowKind: "normal" }), false);
+  assert.equal(isVisibleNonModalWindow({ state: "normal", windowKind: "modal" }), false);
+  assert.equal(isVisibleNonModalWindow({ state: "maximized", windowKind: "normal" }), true);
 });
 
 test("constrains window size and position to the viewport", () => {

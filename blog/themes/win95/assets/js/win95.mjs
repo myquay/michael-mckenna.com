@@ -1,6 +1,9 @@
 import { clamp, constrainWindowBounds } from "./win95/core/geometry.mjs";
 import { normalizePath, readExplorerRouteIndex, resolveExplorerWindowId } from "./win95/core/routing.mjs";
-import { migrateOsState as migrateStoredOsState } from "./win95/core/state.mjs";
+import {
+  isVisibleNonModalWindow,
+  migrateOsState as migrateStoredOsState
+} from "./win95/core/state.mjs";
 
   const desktop = document.getElementById("desktop");
   let shortcuts = Array.from(document.querySelectorAll(".desktop-shortcut"));
@@ -388,20 +391,22 @@ import { migrateOsState as migrateStoredOsState } from "./win95/core/state.mjs";
   const nextWindowZ = () => Object.values(osState.windows)
     .reduce((highest, item) => Math.max(highest, Number(item.z) || 0), 0) + 1;
 
+  const isVisibleWindow = (item) => isVisibleNonModalWindow(item, modalWindowKind);
+
   const visibleNonModalWindows = () => Object.values(osState.windows)
-    .filter((item) => item.state !== "minimized" && !isModalApplication(item))
+    .filter(isVisibleWindow)
     .sort((a, b) => (b.z || 0) - (a.z || 0));
 
   const resolveRouteOwner = () => {
     const active = osState.windows[osState.activeWindowId];
 
-    if (active?.state !== "minimized" && !isModalApplication(active)) {
+    if (isVisibleWindow(active)) {
       return active;
     }
 
     const overlayOwner = osState.windows[overlayRouteOwnerId];
 
-    if (overlayOwner?.state !== "minimized" && !isModalApplication(overlayOwner)) {
+    if (isVisibleWindow(overlayOwner)) {
       return overlayOwner;
     }
 
@@ -411,7 +416,7 @@ import { migrateOsState as migrateStoredOsState } from "./win95/core/state.mjs";
   const routeSnapshot = () => {
     const directModal = osState.windows[directModalRouteId];
     const directModalIsActive = Boolean(directModal && osState.activeWindowId === directModalRouteId);
-    const owner = resolveRouteOwner();
+    const owner = isCompactMode() && !osState.activeWindowId ? null : resolveRouteOwner();
     const target = directModalIsActive
       ? normalizePath(directModal.url)
       : owner?.state === "maximized" ? normalizePath(owner.url) : desktopUrl;
@@ -515,9 +520,9 @@ import { migrateOsState as migrateStoredOsState } from "./win95/core/state.mjs";
 
     const preferredOwner = osState.windows[overlayRouteOwnerId];
     directModalRouteId = null;
-    osState.activeWindowId = preferredOwner?.state !== "minimized" && !isModalApplication(preferredOwner)
+    osState.activeWindowId = !isCompactMode() && isVisibleWindow(preferredOwner)
       ? preferredOwner.id
-      : visibleNonModalWindows()[0]?.id || null;
+      : isCompactMode() ? null : visibleNonModalWindows()[0]?.id || null;
     overlayRouteOwnerId = null;
     saveOsState();
     applyWindowState();
@@ -546,6 +551,7 @@ import { migrateOsState as migrateStoredOsState } from "./win95/core/state.mjs";
     const removedDirectModalRoute = directModalRouteId === appId;
     const removedModal = isModalApplication(osState.windows[appId]);
     const preferredOwner = osState.windows[overlayRouteOwnerId];
+    const removedActiveWindow = osState.activeWindowId === appId;
 
     if (removedDirectModalRoute) {
       directModalRouteId = null;
@@ -553,12 +559,12 @@ import { migrateOsState as migrateStoredOsState } from "./win95/core/state.mjs";
 
     delete osState.windows[appId];
 
-    if (osState.activeWindowId === appId) {
-      osState.activeWindowId = removedModal
-        && preferredOwner?.state !== "minimized"
-        && !isModalApplication(preferredOwner)
+    if (removedActiveWindow) {
+      osState.activeWindowId = !isCompactMode()
+        && removedModal
+        && isVisibleWindow(preferredOwner)
         ? preferredOwner.id
-        : visibleNonModalWindows()[0]?.id || null;
+        : isCompactMode() ? null : visibleNonModalWindows()[0]?.id || null;
     }
 
     if (removedModal) {
@@ -581,8 +587,9 @@ import { migrateOsState as migrateStoredOsState } from "./win95/core/state.mjs";
     item.state = "minimized";
 
     if (osState.activeWindowId === appId) {
-      osState.activeWindowId = visibleNonModalWindows()
-        .find((windowState) => windowState.id !== appId)?.id || null;
+      osState.activeWindowId = isCompactMode()
+        ? null
+        : visibleNonModalWindows().find((windowState) => windowState.id !== appId)?.id || null;
     }
 
     saveOsState();
@@ -624,11 +631,12 @@ import { migrateOsState as migrateStoredOsState } from "./win95/core/state.mjs";
       const historyWindow = osState.windows[window.history.state?.windowId];
       const persistedActive = osState.windows[osState.activeWindowId];
       const normalWindow = visibleNonModalWindows().find((item) => item.state === "normal");
-      const owner = historyWindow && !isModalApplication(historyWindow)
+      const shouldShowDesktop = isCompactMode() && !historyWindow && !persistedActive;
+      const owner = shouldShowDesktop ? null : historyWindow && !isModalApplication(historyWindow)
         ? historyWindow
         : persistedActive?.state === "normal" && !isModalApplication(persistedActive)
           ? persistedActive
-          : normalWindow || (persistedActive?.state !== "minimized" && !isModalApplication(persistedActive)
+          : normalWindow || (isVisibleWindow(persistedActive)
             ? persistedActive
             : visibleNonModalWindows()[0] || null);
 
@@ -927,11 +935,12 @@ import { migrateOsState as migrateStoredOsState } from "./win95/core/state.mjs";
       const historyWindow = osState.windows[historyState?.windowId];
       const persistedActive = osState.windows[osState.activeWindowId];
       const normalWindow = visibleNonModalWindows().find((item) => item.state === "normal");
-      const owner = historyWindow && !isModalApplication(historyWindow)
+      const shouldShowDesktop = isCompactMode() && !historyWindow && !persistedActive;
+      const owner = shouldShowDesktop ? null : historyWindow && !isModalApplication(historyWindow)
         ? historyWindow
         : persistedActive?.state === "normal" && !isModalApplication(persistedActive)
           ? persistedActive
-          : normalWindow || (persistedActive?.state !== "minimized" && !isModalApplication(persistedActive)
+          : normalWindow || (isVisibleWindow(persistedActive)
             ? persistedActive
             : visibleNonModalWindows()[0] || null);
 
@@ -1253,11 +1262,6 @@ import { migrateOsState as migrateStoredOsState } from "./win95/core/state.mjs";
       windowKind
     };
 
-    event.preventDefault();
-    event.stopPropagation();
-    closeStartMenu();
-    closeViewMenu();
-
     const existingTarget = osState.windows[targetWindowId];
     const targetState = isModalApplication(applications[targetWindowId])
       ? "normal"
@@ -1267,8 +1271,13 @@ import { migrateOsState as migrateStoredOsState } from "./win95/core/state.mjs";
     const proposed = proposedWindowState(targetWindowId, targetState);
 
     if (!proposed) {
-      return true;
+      return false;
     }
+
+    event.preventDefault();
+    event.stopPropagation();
+    closeStartMenu();
+    closeViewMenu();
 
     activateWindow(targetWindowId, { requestedState: targetState })
       .catch(() => fallbackWindowNavigation(proposed));
@@ -2259,7 +2268,9 @@ import { migrateOsState as migrateStoredOsState } from "./win95/core/state.mjs";
       addWindowResizeHandles(appWindow, appId);
 
       appWindow.addEventListener("pointerdown", () => {
-        if (osState.windows[appId]?.state !== "minimized") {
+        const item = osState.windows[appId];
+
+        if (item && item.state !== "minimized" && osState.activeWindowId !== appId) {
           focusWindowState(appId);
         }
       });
