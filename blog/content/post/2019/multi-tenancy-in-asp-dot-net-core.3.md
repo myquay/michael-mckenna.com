@@ -2,7 +2,9 @@
 publishDate: 2019-07-15T13:11:12+12:00
 title: Creating a multi-tenant .NET Core Application - Tenant specific authentication
 summary: This time we are looking at how we can configure authentication on a per-tenant basis.
-url: /multi-tenant-asp-dot-net-core-application-tenant-specific-authentication
+url: /blog/multi-tenant-asp-dot-net-core-application-tenant-specific-authentication
+aliases:
+  - /multi-tenant-asp-dot-net-core-application-tenant-specific-authentication
 tags:
     - guide
     - azure
@@ -50,7 +52,7 @@ There are 3 main steps to our solution
 
 ### 1. Register the services depending on your tenant
 
-In [Part 2](/multi-tenant-asp-dot-net-core-application-tenant-containers") of this series we added support for a tenant specific services container backed by [Autofac](https://autofac.org/), we can use this to register our authentication services for each tenant.
+In [Part 2](/multi-tenant-asp-dot-net-core-application-tenant-containers) of this series we added support for a tenant specific services container backed by [Autofac](https://autofac.org/), we can use this to register our authentication services for each tenant.
 
 ```csharp
 public IServiceProvider ConfigureServices(IServiceCollection services)

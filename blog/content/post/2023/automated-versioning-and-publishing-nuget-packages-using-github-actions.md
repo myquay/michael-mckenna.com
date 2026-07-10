@@ -1,7 +1,9 @@
 ---
 date: 2023-06-18T10:00:00+12:00
 title: 'Automated versioning and publishing of a Non-SDK-style NuGet packages using GitHub Actions'
-url: /automated-versioning-and-publishing-nuget-packages-using-github-actions
+url: /blog/automated-versioning-and-publishing-nuget-packages-using-github-actions
+aliases:
+  - /automated-versioning-and-publishing-nuget-packages-using-github-actions
 summary: 'In this article we look at the method of automating the NuGet packaging process using GitHub Actions that we used for JsonPatch.'
 tags:
     - GitHub

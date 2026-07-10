@@ -1,7 +1,10 @@
 ---
 date: 2024-03-26T10:00:00+12:00
 title: 'Iterating over a resource collection in bicep - avoid BCP144'
-slug: /iterating-over-resource-collection-in-bicep-avoid-BCP144
+url: /notes/iterating-over-resource-collection-in-bicep-avoid-BCP144
+aliases:
+  - /iterating-over-resource-collection-in-bicep-avoid-BCP144
+
 ---
 
 Being doing a bit of IaC with Bicep recently and I ran into an issue when trying to iterate over a list of provisioned resources. I was trying to create a new resource for each one and I kept getting an error - bicep(BCP144)

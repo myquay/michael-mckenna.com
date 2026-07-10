@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="{{ site.Language.Lang | default "en" }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+{{ $pageWindowId := "" }}
+{{ $pageWindowKind := "normal" }}
+{{ if .IsSection }}
+  {{ $pageWindowId = partial "explorer-window-id.html" . }}
+{{ else if not .IsHome }}
+  {{ $file := partial "file-metadata.html" (dict "page" . "defaultType" "Document") }}
+  {{ $pageWindowKind = $file.window }}
+  {{ if ne $file.application "document" }}
+    {{ $pageWindowId = $file.application }}
+  {{ else }}
+    {{ with .File }}{{ $pageWindowId = printf "document-%s" .UniqueID }}{{ end }}
+  {{ end }}
+{{ end }}
+<body data-page-url="{{ .RelPermalink }}" data-page-window-id="{{ $pageWindowId }}" data-page-window-kind="{{ $pageWindowKind }}" data-page-kind="{{ if .IsHome }}desktop{{ else if .IsSection }}explorer{{ else }}document{{ end }}" data-page-title="{{ .Title }}">
+  {{ block "main" . }}{{ end }}
+  {{ $jsParts := slice
+    (resources.Get "js/win95/00-bootstrap.js")
+    (resources.Get "js/win95/10-state.js")
+    (resources.Get "js/win95/20-windows.js")
+    (resources.Get "js/win95/30-taskbar.js")
+    (resources.Get "js/win95/40-explorer.js")
+    (resources.Get "js/win95/50-ui.js")
+    (resources.Get "js/win95/60-interactions.js")
+    (resources.Get "js/win95/70-bindings.js")
+  }}
+  {{ $js := $jsParts | resources.Concat "js/win95.js" | minify | fingerprint }}
+  <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+</body>
+</html>

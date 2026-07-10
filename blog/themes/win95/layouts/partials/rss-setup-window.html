@@ -1,0 +1,44 @@
+<section class="setup-window" id="rss-setup-window" data-modal-window="rss-setup" role="dialog" aria-modal="true" aria-labelledby="rss-setup-title" aria-describedby="rss-setup-description">
+  <div class="setup-titlebar" data-modal-titlebar>
+    <span>RSS Setup</span>
+    <button class="setup-close" id="rss-setup-close" type="button" aria-label="Close">x</button>
+  </div>
+  <div class="setup-body">
+    <img class="setup-art" src="/images/rss-icons-95/rss-setup-wizard-tower-panel.png" alt="">
+    <div class="setup-content">
+      <section class="setup-step is-active" data-wizard-step="0">
+        <h1 id="rss-setup-title">RSS Setup Wizard</h1>
+        <p id="rss-setup-description">Welcome to the RSS Setup Wizard, which will guide you through connecting to this blog using RSS. To begin, click Next.</p>
+        <p class="setup-list-intro">The next two parts of the Setup are:</p>
+        <ol class="setup-numbered-list">
+          <li class="is-current">1) Determining which content you would like to subscribe to</li>
+          <li>2) Providing the RSS connection information</li>
+        </ol>
+        <p class="setup-note">Note: RSS is delivered in a strictly chronological order. No algorithms applied.</p>
+      </section>
+
+      <section class="setup-step" data-wizard-step="1">
+        <h1>Choose Feeds</h1>
+        <p>Select the content you would like to subscribe to.</p>
+        <div class="feed-choice-list">
+          <label class="feed-choice"><input type="checkbox" data-feed-choice value="articles" checked> Posts</label>
+          <label class="feed-choice"><input type="checkbox" data-feed-choice value="activity" checked> Activity</label>
+          <label class="feed-choice"><input type="checkbox" data-feed-choice value="photos"> Photos</label>
+          <label class="feed-choice"><input type="checkbox" data-feed-choice value="everything"> Everything</label>
+        </div>
+      </section>
+
+      <section class="setup-step" data-wizard-step="2">
+        <h1>Connection Information</h1>
+        <p>The URL for each of the feeds selected.</p>
+        <div class="feed-url-list" id="feed-url-list" aria-live="polite"></div>
+      </section>
+
+      <div class="setup-button-row">
+        <button class="setup-button" id="rss-setup-back" type="button" disabled>&lt; Back</button>
+        <button class="setup-button is-default" id="rss-setup-next" type="button">Next &gt;</button>
+        <button class="setup-button" id="rss-setup-cancel" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+</section>

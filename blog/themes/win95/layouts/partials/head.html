@@ -1,0 +1,18 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
+<meta name="description" content="{{ site.Params.Win95.subtitle | default site.Title }}">
+<link rel="alternate" type="application/rss+xml" title="{{ site.Title }} RSS" href="{{ "rss.xml" | absURL }}">
+{{ with site.Params.Win95.favicon }}
+<link rel="icon" href="{{ . | absURL }}">
+{{ end }}
+{{ $cssParts := slice
+  (resources.Get "css/win95/00-base.css")
+  (resources.Get "css/win95/10-desktop.css")
+  (resources.Get "css/win95/20-dialogs.css")
+  (resources.Get "css/win95/30-windows.css")
+  (resources.Get "css/win95/40-explorer.css")
+  (resources.Get "css/win95/50-responsive.css")
+}}
+{{ $css := $cssParts | resources.Concat "css/win95.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">

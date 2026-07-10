@@ -2,7 +2,9 @@
 date: 2023-07-19T10:00:00+12:00
 title: Adding snake_case support to System.Text.Json
 summary: It's not supported out of the box (yet) despite being quite popular (e.g. GitHub API) but it's super simple to add if you need it. 
-url: /add-snake-case-to-system-text-json
+url: /blog/add-snake-case-to-system-text-json
+aliases:
+  - /add-snake-case-to-system-text-json
 tags:
     - dotnet
 ---

@@ -2,7 +2,9 @@
 publishDate: 2024-04-21T23:29:12+12:00
 title: Multi-tenancy in ASP.NET Core 8 - Tenant Specific Options
 summary: In this post we will configure options on a per-tenant basis using the Options Pattern.
-url: /multi-tenant-asp-dot-net-8-tenant-options
+url: /blog/multi-tenant-asp-dot-net-8-tenant-options
+aliases:
+  - /multi-tenant-asp-dot-net-8-tenant-options
 tags:
     - guide
     - azure

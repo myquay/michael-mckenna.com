@@ -2,7 +2,9 @@
 publishDate: 2019-07-01T13:11:12+12:00
 title: 'Creating a multi-tenant .NET Core Application - Tenant specific options'
 summary: This time we are looking at how we can configure options on a per-tenant basis any third party service that supports the Options Pattern.
-url: /multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options
+url: /blog/multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options
+aliases:
+  - /multi-tenant-asp-dot-net-core-application-tenant-specific-configuration-options
 tags:
     - guide
     - azure

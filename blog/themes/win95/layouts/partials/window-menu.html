@@ -1,0 +1,11 @@
+<nav class="window-menu" aria-label="{{ .label }}">
+  <button type="button">File</button>
+  <button type="button">Edit</button>
+  {{ with .viewMenuId }}
+    {{ partial "view-menu.html" (dict "id" .) }}
+  {{ else }}
+    <button type="button">View</button>
+  {{ end }}
+  <button type="button">Tools</button>
+  <button type="button">Help</button>
+</nav>

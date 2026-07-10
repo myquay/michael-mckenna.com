@@ -2,7 +2,9 @@
 publishDate: 2016-04-28T09:56:32+12:00
 title: 'GUIDs part 2: GUID as gold'
 summary: How are GUIDs unique with out a central watch dog?
-url: /guid-as-gold
+url: /blog/guid-as-gold
+aliases:
+  - /guid-as-gold
 tags:
     - guid
     - guide

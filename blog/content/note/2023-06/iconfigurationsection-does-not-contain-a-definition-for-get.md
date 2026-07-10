@@ -2,7 +2,10 @@
 date: 2023-06-22T10:00:00+12:00
 title: 'IConfigurationSection does not contain a definition for Get'
 summary: 'I ran into this issue when upgrading from Microsoft.Extensions.Configuration.Abstractions 3.1.10 to 7.0.0'
-slug: /iconfigurationsection-does-not-contain-a-definition-for-get
+url: /notes/iconfigurationsection-does-not-contain-a-definition-for-get
+aliases:
+  - /iconfigurationsection-does-not-contain-a-definition-for-get
+
 ---
 
 During maintenance I needed to upgrade some NuGet dependencies, one of them been Microsoft.Extensions.Configuration.Abstractions which was upgraded from 3.1.10 to 7.0.0. Which caused the following error

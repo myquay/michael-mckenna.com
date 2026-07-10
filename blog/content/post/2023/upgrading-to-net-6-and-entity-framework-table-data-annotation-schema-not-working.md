@@ -2,7 +2,9 @@
 date: 2023-06-23T10:00:00+12:00
 title: Upgrading to .NET 6 and Entity Framework table data annotation schema not working
 summary: After upgrading a .NET 3.1 ASP.NET Web Application to .NET 6 and Entity Framework from 3.1.1 to 7.0.8 the schema applied using the table data annotation was no longer respected
-url: /upgrading-to-net-6-and-entity-framework-table-data-annotation-schema-not-working
+url: /blog/upgrading-to-net-6-and-entity-framework-table-data-annotation-schema-not-working
+aliases:
+  - /upgrading-to-net-6-and-entity-framework-table-data-annotation-schema-not-working
 tags:
     - Entity Framework
     - Migration Stories

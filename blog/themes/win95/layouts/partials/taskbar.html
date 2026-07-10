@@ -1,0 +1,64 @@
+{{ $about := site.GetPage "/about" }}
+{{ $aboutFile := partial "file-metadata.html" (dict "page" $about "defaultType" "Application" "defaultApplication" "about" "defaultIcon" "/icons/about-me-64.png") }}
+<nav class="start-menu" id="start-menu" aria-label="Start menu">
+  <div class="start-rail">Windows 95</div>
+  <div class="start-items">
+    <div class="start-item" role="button" tabindex="0" data-menu-parent>
+      <img src="/images/win95-icons/w95_37.ico" alt="">
+      <span class="start-item-label">Programs</span>
+      <span class="start-arrow">&#9654;</span>
+      <span class="submenu" role="menu" aria-label="Programs submenu">
+        <a class="submenu-item" href="/blog/"><img src="/images/win95-icons/w95_4.ico" alt="">Posts</a>
+        <span class="submenu-item"><img src="/images/win95-icons/w95_4.ico" alt="">Notes</span>
+        <span class="submenu-item"><img src="/images/win95-icons/w95_4.ico" alt="">Activity</span>
+        <span class="submenu-item"><img src="/images/win95-icons/w95_4.ico" alt="">Projects</span>
+      </span>
+    </div>
+
+    <button class="start-item" type="button">
+      <img src="/images/win95-icons/w95_22.ico" alt="">
+      <span class="start-item-label">Settings</span>
+      <span class="start-arrow">&#9654;</span>
+    </button>
+
+    <button class="start-item" type="button">
+      <img src="/images/win95-icons/w95_23.ico" alt="">
+      <span class="start-item-label">Find</span>
+      <span class="start-arrow">&#9654;</span>
+    </button>
+
+    <button class="start-item" type="button" data-start-action="{{ $aboutFile.application }}">
+      <img src="{{ $aboutFile.icon }}" alt="">
+      <span class="start-item-label">{{ $aboutFile.name }}</span>
+      <span></span>
+    </button>
+
+    <button class="start-item" type="button">
+      <img src="/images/win95-icons/w95_25.ico" alt="">
+      <span class="start-item-label">Run...</span>
+      <span></span>
+    </button>
+
+    <div class="start-separator"></div>
+
+    <button class="start-item" type="button">
+      <img src="/images/win95-icons/w95_28.ico" alt="">
+      <span class="start-item-label">Shut Down...</span>
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<footer class="taskbar" aria-label="Taskbar">
+  <button class="start-button" id="start-button" type="button" aria-expanded="false" aria-controls="start-menu">
+    <img src="/images/win95-icons/w95_40.ico" alt="">
+    <span>Start</span>
+  </button>
+  <span class="taskbar-divider" aria-hidden="true"></span>
+  <div class="taskbar-apps" id="taskbar-apps" aria-label="Open windows"></div>
+  <span class="taskbar-spacer"></span>
+  <div class="tray" aria-label="System tray">
+    <img src="/images/win95-icons/w95_11.ico" alt="Muted volume">
+    <span class="tray-time" id="tray-time">8:25 PM</span>
+  </div>
+</footer>

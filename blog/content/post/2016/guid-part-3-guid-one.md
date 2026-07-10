@@ -2,7 +2,9 @@
 publishDate: 2016-05-24T09:56:32+12:00
 title: 'GUIDs Part 3: GUID one'
 summary: Then to make it all stick I implemented the spec
-url: /guid-part-3-guid-one
+url: /blog/guid-part-3-guid-one
+aliases:
+  - /guid-part-3-guid-one
 tags:
     - guid
     - guide

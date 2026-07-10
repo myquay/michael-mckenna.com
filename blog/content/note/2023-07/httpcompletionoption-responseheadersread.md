@@ -1,7 +1,10 @@
 ---
 date: 2023-07-07T9:00:00+12:00
 title: 'HttpCompletionOption.ResponseHeadersRead'
-slug: /httpcompletionoption-responseheadersread
+url: /notes/httpcompletionoption-responseheadersread
+aliases:
+  - /httpcompletionoption-responseheadersread
+
 ---
 
 By default the .NET HttpClient will download the entire respones into memory before returning control to the caller. Which means if you're processing data from the stream, your process won't start operating on the stream until the entire response has been buffered into memory.

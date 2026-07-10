@@ -2,7 +2,9 @@
 publishDate: 2016-06-07T22:40:32+12:00
 title: Func<T> vs. Expression<Func<T>> in LINQ
 summary: Don't worry if you haven't noticed the differences, you call them with the exact same syntax.
-url: /func-t-vs-expression-func-t-in-linq
+url: /blog/func-t-vs-expression-func-t-in-linq
+aliases:
+  - /func-t-vs-expression-func-t-in-linq
 tags:
     - csharp
     - linq

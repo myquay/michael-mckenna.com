@@ -1,0 +1,11 @@
+name = "Win95"
+license = "MIT"
+description = "A minimal Windows 95 inspired theme for michael-mckenna.com."
+homepage = "https://michael-mckenna.com"
+tags = ["personal", "retro", "win95"]
+features = ["homepage"]
+min_version = "0.120.0"
+
+[author]
+  name = "Michael McKenna"
+  homepage = "https://michael-mckenna.com"

@@ -2,7 +2,9 @@
 date: 2023-05-07T10:00:00+12:00
 title: Linking to the latest commit in the header of your Hugo site on GitHub
 summary: .GitInfo is linked to the current page, this is how we accessed the lastest commit information at build
-url: /linking-to-the-latest-commit-in-the-footer-of-your-hugo-static-site-on-github
+url: /blog/linking-to-the-latest-commit-in-the-footer-of-your-hugo-static-site-on-github
+aliases:
+  - /linking-to-the-latest-commit-in-the-footer-of-your-hugo-static-site-on-github
 tags:
     - GitHub Actions
     - Hugo

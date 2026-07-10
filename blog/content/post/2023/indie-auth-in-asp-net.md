@@ -2,9 +2,9 @@
 publishDate: 2023-09-27T20:13:11+12:00
 title: 'IndieAuth in ASP.NET'
 summary: This is a long form blog post about how I added support for IndieAuth as an authentication method for a .NET 6 application.
-url: /indieauth-in-asp-dot-net
+url: /blog/indieauth-in-asp-dot-net
 aliases:
-    - /indieauth-in-asp-dot-net-part-1-what-is-indieauth
+  - /indieauth-in-asp-dot-net-part-1-what-is-indieauth
 tags:
     - guide
     - dot net core

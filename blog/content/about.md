@@ -1,13 +1,26 @@
 ---
+title: About Me
 url: /about
+file:
+  name: about_me
+  extension: exe
+  type: Application
+  application: about
+  window: modal
+  icon: /icons/about-me-64.png
 menu:
   main:
     name: About
     weight: 5
 ---
 
-# About this site
+A study in imperfection; a collection of the intangible. Welcome to my website.
 
-This is a static site consisting of just HTML, CSS, and a little JavaScript. It's generated using a software solution called [Hugo](https://gohugo.io/) and hosted on Azure Blob Storage behind CloudFlare. There are no frameworks, all the HTML/ CSS are custom written to be as small as possible. [Websites are getting huge](https://danluu.com/web-bloat/) and it was important to me to make this site as accessable as possible no matter the data connection of the reader.
+I am Michael McKenna, a software developer in Hawke's Bay, New Zealand. I write here about whatever takes my interest. Most often that is tech related.
 
-[Both this website](https://github.com/myquay/michaelmckenna.com), and [the theme used](https://github.com/myquay/hugo-theme-peripheral) are open source. Please consider contributing if you come across any errors, omissions, or improvements.
+This is a personal website my views are my own. I write all my own words; everything you read on this site is my own.
+
+AI writes a lot of my code; most of what your computer reads was written by AI.
+
+- [GitHub profile](https://github.com/myquay)
+- [Website source](https://github.com/myquay/michael-mckenna.com)

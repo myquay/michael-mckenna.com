@@ -2,7 +2,9 @@
 publishDate: 2014-05-29T20:51:32+12:00
 title: Automatically marking required labels in ASP.NET MVC
 summary: I don't want to re-implement the label HTML helper but I would like a way to inspect the model and update the label text based on the presence of the [Required] attribute.
-url: /automatically-marking-required-labels-in-asp-net-mvc
+url: /blog/automatically-marking-required-labels-in-asp-net-mvc
+aliases:
+  - /automatically-marking-required-labels-in-asp-net-mvc
 tags:
     - asp dot net mvc
 ---

@@ -1,0 +1,8 @@
+<main class="desktop-shell" id="desktop" aria-label="Michael McKenna Windows 95 desktop">
+  {{ partial "desktop-shortcuts.html" . }}
+  {{ partial "desktop-explorer-window.html" (dict "page" . "kind" "computer") }}
+  {{ partial "desktop-explorer-window.html" (dict "page" . "kind" "documents") }}
+</main>
+
+{{ partial "rss-setup-window.html" . }}
+{{ partial "about-window.html" . }}

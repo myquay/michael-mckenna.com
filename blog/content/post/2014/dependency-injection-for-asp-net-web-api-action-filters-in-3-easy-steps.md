@@ -2,7 +2,9 @@
 publishDate: 2014-06-12T20:51:32+12:00
 title: Dependency injection for ASP.NET Web API action filters in 3 easy steps
 summary: This post looks at performing dependency injection on a WebAPI ActionFilter using Unity.
-url: /dependency-injection-for-asp-net-web-api-action-filters-in-3-easy-steps
+url: /blog/dependency-injection-for-asp-net-web-api-action-filters-in-3-easy-steps
+aliases:
+  - /dependency-injection-for-asp-net-web-api-action-filters-in-3-easy-steps
 tags:
     - asp dot net mvc
 ---

@@ -1,0 +1,19 @@
+{{ $id := .id }}
+<div class="window-menu-item">
+  <button class="window-menu-button" type="button" id="{{ $id }}-view-menu-button" data-view-menu-button aria-haspopup="true" aria-expanded="false" aria-controls="{{ $id }}-view-menu">View</button>
+  <div class="window-dropdown" id="{{ $id }}-view-menu" data-view-menu role="menu" aria-labelledby="{{ $id }}-view-menu-button">
+    <button class="window-dropdown-item" type="button" role="menuitemradio" data-view-option="icons" aria-checked="false"><span class="menu-check" aria-hidden="true"></span><span>Icons</span></button>
+    <button class="window-dropdown-item" type="button" role="menuitemradio" data-view-option="list" aria-checked="false"><span class="menu-check" aria-hidden="true"></span><span>List</span></button>
+    <button class="window-dropdown-item" type="button" role="menuitemradio" data-view-option="details" aria-checked="false"><span class="menu-check" aria-hidden="true"></span><span>Details</span></button>
+    <span class="window-dropdown-separator" aria-hidden="true"></span>
+    <div class="window-dropdown-parent">
+      <button class="window-dropdown-item has-submenu" type="button" role="menuitem" aria-haspopup="true"><span class="menu-check" aria-hidden="true"></span><span>Arrange Icons</span><span class="menu-arrow" aria-hidden="true">&#9654;</span></button>
+      <div class="window-dropdown submenu-dropdown" role="menu" aria-label="Arrange Icons">
+        <button class="window-dropdown-item" type="button" role="menuitem" data-arrange-icons="name"><span class="menu-check" aria-hidden="true"></span><span>by Name</span></button>
+        <button class="window-dropdown-item" type="button" role="menuitem" data-arrange-icons="type"><span class="menu-check" aria-hidden="true"></span><span>by Type</span></button>
+        <button class="window-dropdown-item" type="button" role="menuitem" data-arrange-icons="date"><span class="menu-check" aria-hidden="true"></span><span>by Date</span></button>
+      </div>
+    </div>
+    <button class="window-dropdown-item" type="button" role="menuitem" data-line-up-icons><span class="menu-check" aria-hidden="true"></span><span>Line Up Icons</span></button>
+  </div>
+</div>

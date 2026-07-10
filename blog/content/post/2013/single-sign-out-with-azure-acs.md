@@ -2,7 +2,9 @@
 publishDate: 2013-02-11T21:41:32+12:00
 title: 'Single sign out with Azure ACS'
 summary: 'ACS may not directly support single sign out but you can easily log the user out of their identity provider as well as your website using this technique.'
-url: /single-sign-out-with-azure-acs
+url: /blog/single-sign-out-with-azure-acs
+aliases:
+  - /single-sign-out-with-azure-acs
 tags:
     - asp dot net mvc
     - security

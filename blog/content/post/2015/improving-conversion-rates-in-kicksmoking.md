@@ -2,7 +2,9 @@
 publishDate: 2015-03-22T08:45:32+12:00
 title: Improving conversion rates in KickSmoking
 summary: People won't give you money if you treat them poorly.
-url: /improving-conversion-rates-in-kicksmoking
+url: /blog/improving-conversion-rates-in-kicksmoking
+aliases:
+  - /improving-conversion-rates-in-kicksmoking
 tags:
     - article
     - product

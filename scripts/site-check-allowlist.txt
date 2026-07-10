@@ -1,0 +1,3 @@
+# Known historical-content link debt. Keep this list temporary and remove an
+# entry when its source link is repaired.
+

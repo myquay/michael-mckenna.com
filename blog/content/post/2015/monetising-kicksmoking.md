@@ -2,7 +2,9 @@
 publishDate: 2015-03-03T08:51:32+12:00
 title: Monetising KickSmoking
 summary: Despite being on the back-burner it's still the number one quit smoking app on the Windows Phone app store.
-url: /monetising-kicksmoking
+url: /blog/monetising-kicksmoking
+aliases:
+  - /monetising-kicksmoking
 tags:
     - article
     - product

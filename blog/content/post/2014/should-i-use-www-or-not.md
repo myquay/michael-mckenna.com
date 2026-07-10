@@ -2,7 +2,9 @@
 publishDate: 2014-07-14T15:56:32+12:00
 title: Should I use www or not?
 summary: Is it still required? Or can we just use the "naked" domain?
-url: /should-i-use-www-or-not
+url: /blog/should-i-use-www-or-not
+aliases:
+  - /should-i-use-www-or-not
 tags:
     - article
 ---

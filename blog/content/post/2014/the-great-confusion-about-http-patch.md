@@ -2,7 +2,9 @@
 publishDate: 2014-06-20T20:51:32+12:00
 title: The great confusion about HTTP Patch
 summary: It's designed to allow an API to support partial updates.
-url: /the-great-confusion-about-http-patch
+url: /blog/the-great-confusion-about-http-patch
+aliases:
+  - /the-great-confusion-about-http-patch
 tags:
     - article
 ---

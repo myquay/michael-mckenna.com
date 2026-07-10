@@ -1,0 +1,308 @@
+.desktop-shell {
+  background: var(--desktop);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+  width: 100vw;
+}
+
+.desktop-shortcut {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: #fff;
+  cursor: default;
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  left: var(--x);
+  min-height: 72px;
+  padding: 3px 2px;
+  position: absolute;
+  text-align: center;
+  text-shadow: 1px 1px #000;
+  top: var(--y);
+  touch-action: none;
+  width: 82px;
+  z-index: 1;
+}
+
+.desktop-shortcut:hover .shortcut-label,
+.desktop-shortcut:focus-visible .shortcut-label,
+.desktop-shortcut.is-selected .shortcut-label {
+  background: var(--highlight);
+  color: var(--highlight-text);
+  outline: 1px dotted #ffff00;
+  outline-offset: -1px;
+}
+
+.desktop-shortcut.is-dragging {
+  opacity: 0.72;
+  z-index: 6;
+}
+
+.desktop-shortcut:focus-visible {
+  outline: 1px dotted #fff;
+  outline-offset: -2px;
+}
+
+.shortcut-icon {
+  height: 34px;
+  object-fit: contain;
+  pointer-events: none;
+  width: 34px;
+}
+
+.shortcut-label {
+  line-height: 1.12;
+  max-width: 82px;
+  padding: 1px 3px 2px;
+  pointer-events: none;
+}
+
+.taskbar {
+  align-items: center;
+  background: var(--surface);
+  bottom: 0;
+  box-shadow: inset 0 1px var(--surface-light), inset 0 2px var(--surface-mid);
+  display: flex;
+  gap: 4px;
+  height: var(--taskbar-height);
+  left: 0;
+  padding: 2px 3px calc(2px + var(--taskbar-safe-area));
+  position: fixed;
+  right: 0;
+  z-index: 20;
+}
+
+.start-button {
+  align-items: center;
+  background: var(--surface);
+  border: 0;
+  box-shadow: var(--bevel-raised);
+  display: inline-grid;
+  font-size: 11px;
+  font-weight: 700;
+  gap: 3px;
+  grid-template-columns: 18px auto;
+  height: 25px;
+  padding: 2px 8px 3px 5px;
+  text-align: left;
+}
+
+.start-button img {
+  height: 18px;
+  width: 18px;
+}
+
+.start-button[aria-expanded="true"] {
+  box-shadow: var(--bevel-sunken);
+  padding-left: 6px;
+  padding-top: 3px;
+}
+
+.taskbar-divider {
+  border-left: 1px solid var(--surface-shadow);
+  border-right: 1px solid var(--surface-light);
+  height: 23px;
+  margin: 0 2px;
+  width: 2px;
+}
+
+.taskbar-apps {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+}
+
+.taskbar-button {
+  align-items: center;
+  background: var(--surface);
+  border: 0;
+  box-shadow: var(--bevel-raised);
+  display: inline-grid;
+  gap: 5px;
+  grid-template-columns: 16px minmax(0, 1fr);
+  height: 24px;
+  max-width: 230px;
+  min-width: 120px;
+  padding: 2px 7px;
+  text-align: left;
+}
+
+.taskbar-button.is-active {
+  box-shadow: var(--bevel-sunken);
+  padding-left: 8px;
+  padding-top: 3px;
+}
+
+.taskbar-button.is-minimized {
+  box-shadow: var(--bevel-raised);
+}
+
+.taskbar-button img {
+  height: 16px;
+  width: 16px;
+}
+
+.taskbar-button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.taskbar-spacer {
+  flex: 0 0 auto;
+  min-width: 12px;
+}
+
+.tray {
+  align-items: center;
+  box-shadow: var(--bevel-sunken);
+  display: inline-grid;
+  gap: 5px;
+  grid-template-columns: 16px auto;
+  height: 24px;
+  min-width: 92px;
+  padding: 2px 7px 2px 5px;
+}
+
+.tray img {
+  height: 16px;
+  width: 16px;
+}
+
+.tray-time {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.start-menu {
+  background: var(--surface);
+  bottom: var(--taskbar-height);
+  box-shadow: var(--bevel-raised), 2px 2px 0 rgba(0, 0, 0, 0.4);
+  display: none;
+  grid-template-columns: 28px 220px;
+  left: 3px;
+  min-height: 230px;
+  padding: 3px;
+  position: fixed;
+  z-index: 30;
+}
+
+.start-menu.is-open {
+  display: grid;
+}
+
+.start-rail {
+  align-items: end;
+  background: linear-gradient(to top, var(--menu-blue), var(--menu-blue-2));
+  color: #fff;
+  display: flex;
+  font-size: 18px;
+  font-weight: 700;
+  justify-content: center;
+  letter-spacing: 0;
+  padding: 9px 0;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+}
+
+.start-items {
+  display: grid;
+  padding: 2px;
+}
+
+.start-item {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 28px minmax(0, 1fr) 10px;
+  min-height: 32px;
+  padding: 3px 7px;
+  position: relative;
+  text-align: left;
+  width: 100%;
+}
+
+.start-item:hover,
+.start-item:focus-visible,
+.start-item.is-active {
+  background: var(--highlight);
+  color: var(--highlight-text);
+  outline: 0;
+}
+
+.start-item img {
+  height: 24px;
+  width: 24px;
+}
+
+.start-item-label {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.start-item-label::first-letter {
+  text-decoration: underline;
+}
+
+.start-arrow {
+  font-size: 11px;
+  line-height: 1;
+  text-align: right;
+}
+
+.start-separator {
+  border-top: 1px solid var(--surface-shadow);
+  box-shadow: 0 1px var(--surface-light);
+  height: 2px;
+  margin: 3px 0;
+}
+
+.submenu {
+  background: var(--surface);
+  box-shadow: var(--bevel-raised), 2px 2px 0 rgba(0, 0, 0, 0.4);
+  display: none;
+  left: calc(100% - 2px);
+  min-width: 180px;
+  padding: 3px;
+  position: absolute;
+  top: 0;
+  z-index: 35;
+}
+
+.start-item:hover .submenu,
+.start-item:focus-within .submenu,
+.start-item.is-active .submenu {
+  display: block;
+}
+
+.submenu-item {
+  align-items: center;
+  color: inherit;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 22px minmax(0, 1fr);
+  min-height: 26px;
+  padding: 3px 7px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.submenu-item:hover {
+  background: var(--highlight);
+  color: var(--highlight-text);
+}
+
+.submenu-item img {
+  height: 20px;
+  width: 20px;
+}
+

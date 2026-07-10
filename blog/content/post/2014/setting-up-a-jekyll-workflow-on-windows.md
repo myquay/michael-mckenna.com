@@ -2,7 +2,9 @@
 publishDate: 2014-08-22T15:56:32+12:00
 title: Setting up a Jekyll workflow on windows
 summary: For sites that are read heavy but get updated quite infrequently (like a blog, or marketing site) a static site is ideal.
-url: /setting-up-a-jekyll-workflow-on-windows
+url: /blog/setting-up-a-jekyll-workflow-on-windows
+aliases:
+  - /setting-up-a-jekyll-workflow-on-windows
 tags:
     - static site generator
     - jekyll

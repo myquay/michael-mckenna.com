@@ -1,0 +1,120 @@
+{{ $current := .RelPermalink }}
+{{ $isHome := eq $current "/" }}
+{{ $sitePages := where site.RegularPages "Section" "" }}
+{{ $isSiteContent := not $isHome }}
+{{ $contentSections := where site.Sections "Section" "ne" "pages" }}
+{{ $contentSections = where $contentSections "Section" "ne" "photos" }}
+<ul class="tree-list" data-explorer-tree>
+  <li class="tree-node" data-tree-node-id="desktop">
+    <span class="tree-row{{ if $isHome }} is-selected{{ end }}">
+      <button class="tree-toggle" type="button" data-tree-toggle data-tree-default-expanded="true" aria-expanded="true" aria-controls="tree-desktop-children">-</button>
+      <img src="/images/win95-icons/w95_16.ico" alt="">
+      <a class="tree-link" href="/" data-open-kind="folder"{{ if $isHome }} aria-current="page"{{ end }}>Desktop</a>
+    </span>
+    <ul id="tree-desktop-children">
+      <li class="tree-node" data-tree-node-id="my-computer">
+        <span class="tree-row">
+          <button class="tree-toggle" type="button" data-tree-toggle data-tree-default-expanded="true" aria-expanded="true" aria-controls="tree-my-computer-children">-</button>
+          <img src="/images/win95-icons/w95_16.ico" alt="">
+          <a class="tree-link" href="/" data-open-kind="folder">My Computer</a>
+        </span>
+        <ul id="tree-my-computer-children">
+          <li class="tree-node" data-tree-node-id="site-drive">
+            <span class="tree-row">
+              <button class="tree-toggle" type="button" data-tree-toggle data-tree-default-expanded="true" aria-expanded="true" aria-controls="tree-site-drive-children">-</button>
+              <img src="/images/win95-icons/w95_6.ico" alt="">
+              <a class="tree-link" href="/" data-open-kind="folder">Michael95 (C:)</a>
+            </span>
+            <ul id="tree-site-drive-children">
+              <li class="tree-node" data-tree-node-id="blog-root">
+                <span class="tree-row{{ if $isSiteContent }} is-selected-parent{{ end }}">
+                  <button class="tree-toggle" type="button" data-tree-toggle data-tree-default-expanded="true" aria-expanded="true" aria-controls="tree-blog-root-children">-</button>
+                  <img src="/images/win95-icons/w95_4.ico" alt="">
+                  <span class="tree-label">Blog</span>
+                </span>
+                <ul id="tree-blog-root-children">
+                  {{ range $contentSections.ByTitle }}
+                    {{ $isCurrentSection := hasPrefix $current .RelPermalink }}
+                    {{ $windowId := partial "explorer-window-id.html" . }}
+                    <li>
+                      <span class="tree-row{{ if $isCurrentSection }} is-selected{{ end }}">
+                        <span class="tree-spacer"></span>
+                        <img src="/images/win95-icons/w95_4.ico" alt="">
+                        <a class="tree-link" href="{{ .RelPermalink }}" data-open-kind="folder" data-open-window-id="{{ $windowId }}" data-open-url="{{ .RelPermalink }}" data-name="{{ .Title }}"{{ if $isCurrentSection }} aria-current="page"{{ end }}>{{ .Title }}</a>
+                      </span>
+                    </li>
+                  {{ end }}
+                  {{ $photosSection := site.GetPage "/photos" }}
+                  {{ with $photosSection }}
+                    {{ $isCurrentSection := hasPrefix $current .RelPermalink }}
+                    {{ $windowId := partial "explorer-window-id.html" . }}
+                    <li>
+                      <span class="tree-row{{ if $isCurrentSection }} is-selected{{ end }}">
+                        <span class="tree-spacer"></span>
+                        <img src="/images/win95-icons/w95_4.ico" alt="">
+                        <a class="tree-link" href="{{ .RelPermalink }}" data-open-kind="folder" data-open-window-id="{{ $windowId }}" data-open-url="{{ .RelPermalink }}" data-name="{{ .Title }}"{{ if $isCurrentSection }} aria-current="page"{{ end }}>{{ .Title }}</a>
+                      </span>
+                    </li>
+                  {{ end }}
+                  {{ $pagesSection := site.GetPage "/pages" }}
+                  <li class="tree-node" data-tree-node-id="site-pages">
+                    <span class="tree-row{{ if eq $current $pagesSection.RelPermalink }} is-selected{{ else if and $isSiteContent (eq .Section "") }} is-selected-parent{{ end }}">
+                      <button class="tree-toggle" type="button" data-tree-toggle data-tree-default-expanded="true" aria-expanded="true" aria-controls="tree-site-pages-children">-</button>
+                      <img src="/images/win95-icons/w95_4.ico" alt="">
+                      <a class="tree-link" href="{{ $pagesSection.RelPermalink }}" data-open-kind="folder" data-open-window-id="explorer-pages" data-open-url="{{ $pagesSection.RelPermalink }}" data-name="Pages"{{ if eq $current $pagesSection.RelPermalink }} aria-current="page"{{ end }}>Pages</a>
+                    </span>
+                    <ul id="tree-site-pages-children">
+                      {{ range $sitePages.ByTitle }}
+                        {{ $isCurrentPage := eq $current .RelPermalink }}
+                        {{ $file := partial "file-metadata.html" (dict "page" . "defaultType" "Document") }}
+                        {{ $windowId := printf "document-%s" .File.UniqueID }}
+                        {{ if ne $file.application "document" }}{{ $windowId = $file.application }}{{ end }}
+                        <li>
+                          <span class="tree-row{{ if $isCurrentPage }} is-selected{{ end }}">
+                            <span class="tree-spacer"></span>
+                            <img src="{{ $file.icon }}" alt="">
+                            <a class="tree-link" href="{{ .RelPermalink }}" data-open-kind="{{ $file.application }}" data-open-window-kind="{{ $file.window }}" data-open-window-id="{{ $windowId }}" data-open-url="{{ .RelPermalink }}" data-name="{{ $file.name }}"{{ if $isCurrentPage }} aria-current="page"{{ end }}>{{ $file.name }}</a>
+                          </span>
+                        </li>
+                      {{ end }}
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li class="tree-node" data-tree-node-id="network-neighborhood">
+        <span class="tree-row">
+          <button class="tree-toggle" type="button" data-tree-toggle data-tree-default-expanded="false" aria-expanded="false" aria-controls="tree-network-neighborhood-children">+</button>
+          <img src="/images/win95-icons/w95_13.ico" alt="">
+          <span class="tree-label">Network Neighborhood</span>
+        </span>
+        <ul id="tree-network-neighborhood-children" hidden>
+          <li>
+            <span class="tree-row">
+              <span class="tree-spacer"></span>
+              <img src="/images/win95-icons/w95_13.ico" alt="">
+              <span class="tree-label">Entire Network</span>
+            </span>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="tree-row">
+          <span class="tree-spacer"></span>
+          <img src="/images/win95-icons/w95_33.ico" alt="">
+          <span class="tree-label">Recycle Bin</span>
+        </span>
+      </li>
+      <li>
+        <span class="tree-row">
+          <span class="tree-spacer"></span>
+          <img src="/images/win95-icons/w95_36.ico" alt="">
+          <span class="tree-label">Online Services</span>
+        </span>
+      </li>
+    </ul>
+  </li>
+</ul>

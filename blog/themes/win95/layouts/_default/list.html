@@ -1,0 +1,7 @@
+{{ define "main" }}
+<main class="desktop-shell has-maximized-window" id="desktop" aria-label="Michael McKenna Windows 95 desktop">
+  {{ partial "explorer-window.html" (dict "page" . "class" "is-maximized") }}
+</main>
+
+{{ partial "taskbar.html" . }}
+{{ end }}

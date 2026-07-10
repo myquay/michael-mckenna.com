@@ -2,11 +2,12 @@
 publishDate: 2013-03-11T02:09:32+12:00
 title: 'Error handling in ASP.NET MVC Part 2: Our implementation'
 summary: A simple exception handling strategy that enables detailed logging in MVC context but also provides support for general ASP.NET errors such as page not found exceptions.
-url: /error-handling-in-asp-net-mvc-part-2-our-implementation
+url: /blog/error-handling-in-asp-net-mvc-part-2-our-implementation
+aliases:
+  - /error-handling-in-asp-net-mvc-part-2-our-implementation
+  - /error-handling-in-asp-net-mvc-part-2-our-options
 tags:
     - asp dot net mvc
-aliases:
-    - /error-handling-in-asp-net-mvc-part-2-our-options
 series: error-handling
 concludeSeries: true
 ---

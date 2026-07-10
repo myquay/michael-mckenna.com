@@ -2,7 +2,9 @@
 publishDate: 2019-06-06T20:13:11+12:00
 title: 'Creating a multi-tenant .NET Core Application - Tenant containers'
 summary: This time we are looking at how we can configure services on a per-tenant basis which allows us to resolve a different service based on which tenant is active. An application isn't truly multi-tenant unless you can have a different services container for each tenant.
-url: /multi-tenant-asp-dot-net-core-application-tenant-containers
+url: /blog/multi-tenant-asp-dot-net-core-application-tenant-containers
+aliases:
+  - /multi-tenant-asp-dot-net-core-application-tenant-containers
 tags:
     - guide
     - azure

@@ -2,7 +2,9 @@
 publishDate: 2014-05-28T13:51:32+12:00
 title: Implementing XML-RPC services in ASP.NET MVC
 summary: We'll look at how we implemented XML-RPC services in ASP.NET MVC by creating a custom model binder.
-url: /implementing-xml-rpc-services-in-asp-net-mvc
+url: /blog/implementing-xml-rpc-services-in-asp-net-mvc
+aliases:
+  - /implementing-xml-rpc-services-in-asp-net-mvc
 tags:
     - asp dot net mvc
 ---

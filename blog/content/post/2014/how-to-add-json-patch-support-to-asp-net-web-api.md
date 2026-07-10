@@ -2,7 +2,9 @@
 publishDate: 2014-07-24T15:56:32+12:00
 title: How to add JSON Patch support to ASP.NET Web API
 summary: We’re going to create a formatter that understands JSON Patch.
-url: /how-to-add-json-patch-support-to-asp-net-web-api
+url: /blog/how-to-add-json-patch-support-to-asp-net-web-api
+aliases:
+  - /how-to-add-json-patch-support-to-asp-net-web-api
 tags:
     - asp dot net mvc
     - json patch

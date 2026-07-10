@@ -1,10 +1,10 @@
 ---
-title: Blog
+title: Posts
 url: /blog
 menu:
   main:
-    name: Blog
+    name: Posts
     weight: 2
 ---
 
-I've always wanted to have a blog; this is where I write about my adventures of the technical kind. Mostly.
+All my keystrokes that are Fit to Print.

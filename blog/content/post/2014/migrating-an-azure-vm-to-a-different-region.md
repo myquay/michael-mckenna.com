@@ -2,7 +2,9 @@
 publishDate: 2014-12-04T15:56:32+12:00
 title: Migrating an Azure VM to a different region
 summary: Even though you can't do it from the online interface it, it's actually pretty simple.
-url: /migrating-an-azure-vm-to-a-different-region
+url: /blog/migrating-an-azure-vm-to-a-different-region
+aliases:
+  - /migrating-an-azure-vm-to-a-different-region
 tags:
     - azure
     - guide

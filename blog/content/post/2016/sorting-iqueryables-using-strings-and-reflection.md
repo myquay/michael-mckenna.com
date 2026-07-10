@@ -2,7 +2,9 @@
 publishDate: 2016-05-10T09:56:32+12:00
 title: Sorting IQueryables using strings and reflection
 summary: Wouldn't it be great to be able to specify the property to order on at runtime for a LINQ query?
-url: /sorting-iqueryables-using-strings-and-reflection
+url: /blog/sorting-iqueryables-using-strings-and-reflection
+aliases:
+  - /sorting-iqueryables-using-strings-and-reflection
 tags:
     - linq
     - guide

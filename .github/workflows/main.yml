@@ -1,68 +1,87 @@
-name: Blob storage website CI
+name: Build and deploy website
 
 on:
-    workflow_dispatch:
-    push:
-        branches: [ main ]
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: production-website
+  cancel-in-progress: false
 
 permissions:
   id-token: write
   contents: read
 
+env:
+  HUGO_VERSION: 0.161.1
+
 jobs:
-  build:
-    name: Build Website
+  verify:
+    name: Verify and build
     runs-on: ubuntu-latest
     steps:
-    
-    - name: 📄 Checkout
-      uses: actions/checkout@v4
-      with:
-        submodules: true
-        
-    - name: 🔑 Log into Azure
-      uses: azure/login@v2
-      with:
-          client-id: ${{vars.AZURE_CLIENT_ID}}
-          tenant-id: ${{vars.AZURE_TENANT_ID}}
-          subscription-id: ${{vars.AZURE_SUBSCRIPTION_ID}}
-    
-    - name: ✨ Setup Hugo
-      env:
-        HUGO_VERSION: 0.111.3
-      run: |
-        mkdir ~/hugo
-        cd ~/hugo
-        curl -L "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz" --output hugo.tar.gz
-        tar -xvzf hugo.tar.gz
-        sudo mv hugo /usr/local/bin
-      
-    - name: ✍️ Set outputs
-      id: custom_outputs
-      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-        
-    - name: 🔎 Update GitHub References
-      run: | 
-        sed -i -e 's/{{AbbreviatedHash}}/${{steps.custom_outputs.outputs.sha_short}}/g' ${{github.workspace}}/blog/config/_default/config.toml
-        sed -i -e 's/{{Hash}}/${{github.sha}}/g' ${{github.workspace}}/blog/config/_default/config.toml
-        sed -i -e 's/{{Subject}}/${{github.event.commits[0].message}}/g' ${{github.workspace}}/blog/config/_default/config.toml
-      
-    - name: 🛠️ Build website
-      run: hugo -s ${{github.workspace}}/blog -d ${{github.workspace}}/dist --log -v
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - uses: azure/CLI@v2
-      name: 🧹 Clean destination
-      with:
-        inlineScript: |
-            az storage blob delete-batch --account-name ${{vars.AZURE_STORAGE_ACCOUNT}}  --auth-mode login -s '$web'
-            
-    - uses: azure/CLI@v2
-      name: 🚀 Deploy to Azure
-      with:
-        inlineScript: |
-            az storage blob upload-batch --account-name ${{vars.AZURE_STORAGE_ACCOUNT}}  --auth-mode login -d '$web' -s ${{github.workspace}}/dist --overwrite --no-progress
-            
-    - name: ♻️ Purge Cloudflare Cache
-      run: |
-        curl -sS "https://api.cloudflare.com/client/v4/zones/${{vars.CLOUDFLARE_ZONE}}/purge_cache" -H "Content-Type: application/json" -H "Authorization: Bearer ${{secrets.CLOUDFLARE_TOKEN}}" --data "{\"purge_everything\":true}"
-        
+      - name: Install Hugo
+        run: |
+          curl --fail --location --silent --show-error \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz" \
+            --output /tmp/hugo.tar.gz
+          tar --extract --gzip --file /tmp/hugo.tar.gz --directory /tmp hugo
+          sudo install /tmp/hugo /usr/local/bin/hugo
+
+      - name: Verify site
+        run: ./scripts/verify-site.sh
+
+      - name: Build production artifact
+        run: hugo --source blog --destination "${{ github.workspace }}/dist" --cleanDestinationDir
+
+      - name: Upload production artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: website
+          path: dist
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy:
+    name: Deploy
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Download production artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: website
+          path: dist
+
+      - name: Log into Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Sync website to Azure
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az storage blob sync \
+              --account-name "${{ vars.AZURE_STORAGE_ACCOUNT }}" \
+              --auth-mode login \
+              --container '$web' \
+              --source "${{ github.workspace }}/dist" \
+              --delete-destination true \
+              --only-show-errors
+
+      - name: Purge Cloudflare cache
+        run: |
+          curl --fail --silent --show-error \
+            "https://api.cloudflare.com/client/v4/zones/${{ vars.CLOUDFLARE_ZONE }}/purge_cache" \
+            --header "Authorization: Bearer ${{ secrets.CLOUDFLARE_TOKEN }}" \
+            --header "Content-Type: application/json" \
+            --data '{"purge_everything":true}'

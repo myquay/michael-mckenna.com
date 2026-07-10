@@ -2,7 +2,9 @@
 publishDate: 2016-07-01T10:33:32+12:00
 title: Getting started with Go on Windows
 summary: I'm giving this Go-lang thing a whirl, turns out it's dead easy to set up on Windows.
-url: /getting-started-with-go-on-windows
+url: /blog/getting-started-with-go-on-windows
+aliases:
+  - /getting-started-with-go-on-windows
 tags:
     - go
     - guide

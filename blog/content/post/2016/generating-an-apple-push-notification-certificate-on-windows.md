@@ -2,7 +2,9 @@
 publishDate: 2016-04-23T09:56:32+12:00
 title: Generating an Apple Push Notification Certificate on Windows
 summary: Following most instructions Apple seemed to think my IIS generated CSR was invalud.
-url: /generating-an-apple-push-notification-certificate-on-windows
+url: /blog/generating-an-apple-push-notification-certificate-on-windows
+aliases:
+  - /generating-an-apple-push-notification-certificate-on-windows
 tags:
     - ios
     - guide

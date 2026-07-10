@@ -1,0 +1,11 @@
+{{- $location := .Section -}}
+{{- if eq $location "post" -}}
+  {{- $location = "blog" -}}
+{{- else if eq $location "note" -}}
+  {{- $location = "notes" -}}
+{{- else if eq $location "project" -}}
+  {{- $location = "projects" -}}
+{{- else if eq $location "photos" -}}
+  {{- $location = "photos" -}}
+{{- end -}}
+{{- printf "explorer-%s" ($location | urlize) -}}

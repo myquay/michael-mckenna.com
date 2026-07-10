@@ -2,7 +2,9 @@
 publishDate: 2016-07-03T20:52:32+12:00
 title: Running Go on Azure App Services
 summary: It turns out Azure App Services have added native Go support.
-url: /running-go-on-azure-websites
+url: /blog/running-go-on-azure-websites
+aliases:
+  - /running-go-on-azure-websites
 tags:
     - go
     - guide

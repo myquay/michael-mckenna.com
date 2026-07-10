@@ -2,7 +2,9 @@
 publishDate: 2013-03-04T09:13:32+12:00
 title: 'Error handling in ASP.NET MVC Part 1: Our options'
 summary: This is the first post in a two part series, in this part we will look at the options available to us in ASP.NET MVC for Error Handling.
-url: /error-handling-in-asp-net-mvc-part-1-our-options
+url: /blog/error-handling-in-asp-net-mvc-part-1-our-options
+aliases:
+  - /error-handling-in-asp-net-mvc-part-1-our-options
 tags:
     - asp dot net mvc
 series: error-handling

@@ -2,7 +2,9 @@
 publishDate: 2016-11-17T20:52:32+12:00
 title: Update multiple Git repositories on Windows at once using Powershell
 summary: Let's write the script - it's super simple. It's designed to be placed in the parent folder of your Git repositories.
-url: /update-multiple-git-repositories-on-windows-at-once-using-powershell
+url: /blog/update-multiple-git-repositories-on-windows-at-once-using-powershell
+aliases:
+  - /update-multiple-git-repositories-on-windows-at-once-using-powershell
 tags:
     - guide
     - powershell

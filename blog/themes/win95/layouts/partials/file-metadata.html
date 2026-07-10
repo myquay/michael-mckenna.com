@@ -1,0 +1,27 @@
+{{- $page := .page -}}
+{{- $name := $page.Title -}}
+{{- $extension := "" -}}
+{{- $fileType := .defaultType | default ($page.Section | title) -}}
+{{- $application := .defaultApplication | default "document" -}}
+{{- $window := .defaultWindow | default "normal" -}}
+{{- $icon := .defaultIcon | default "/images/win95-icons/w95_20.ico" -}}
+{{- if eq $page.Section "post" -}}
+  {{- $icon = "/images/win95-icons/w95_2.ico" -}}
+{{- end -}}
+{{- if eq $page.Params.activity_type "photo" -}}
+  {{- $fileType = "Photo" -}}
+  {{- $icon = "/images/win95-icons/w95_1.ico" -}}
+{{- else if eq $page.Params.activity_type "thought" -}}
+  {{- $fileType = "Thought" -}}
+{{- end -}}
+{{- with $page.Params.file -}}
+  {{- with .name }}{{ $name = . }}{{ end -}}
+  {{- with .extension }}{{ $extension = strings.TrimPrefix "." . }}{{ end -}}
+  {{- with .type }}{{ $fileType = . }}{{ end -}}
+  {{- with .application }}{{ $application = . }}{{ end -}}
+  {{- with .window }}{{ $window = . }}{{ end -}}
+  {{- with .icon }}{{ $icon = . }}{{ end -}}
+{{- end -}}
+{{- $fileName := $name -}}
+{{- with $extension }}{{ $fileName = printf "%s.%s" $name . }}{{ end -}}
+{{- return (dict "name" $fileName "extension" $extension "type" $fileType "application" $application "window" $window "icon" $icon) -}}

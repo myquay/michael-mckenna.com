@@ -2,7 +2,9 @@
 publishDate: 2024-06-23T13:12:11+12:00
 title: Debouncing input change event in Vue 3; wait until user stops typing
 summary: Ever needed to create an auto-complete that's powered by an auto-complete API, or have a search field you want to automatically run without forcing the user to hit enter? Use this technique to avoid excessive traffic to your endpoints.
-url: /debouncing-input-change-event-wait-until-user-stops-typing
+url: /blog/debouncing-input-change-event-wait-until-user-stops-typing
+aliases:
+  - /debouncing-input-change-event-wait-until-user-stops-typing
 tags:
     - csharp
     - vuejs

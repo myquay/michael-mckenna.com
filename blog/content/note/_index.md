@@ -9,4 +9,4 @@ menu:
     weight: 3
 ---
 
-Just a fun exploratory slice of commentary on whatever I'm thinking about. Possibly off-topic.
+Notes, snippets, and observations.

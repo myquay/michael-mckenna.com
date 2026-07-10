@@ -1,0 +1,75 @@
+{{ $about := site.GetPage "/about" }}
+{{ if not $about }}
+  {{ $about = . }}
+{{ end }}
+{{ $aboutFile := partial "file-metadata.html" (dict "page" $about "defaultType" "Application" "defaultApplication" "about" "defaultIcon" "/icons/about-me-64.png") }}
+{{ $isAboutRoute := eq .RelPermalink "/about/" }}
+{{ $isModal := eq $aboutFile.window "modal" }}
+{{ $buttonOne := "/88x31/web-button-02.png" }}
+{{ $buttonTwo := "/88x31/web-button-01.png" }}
+{{ $siteUrl := "https://michael-mckenna.com" }}
+{{ $buttonOneUrl := printf "%s%s" $siteUrl $buttonOne }}
+{{ $buttonTwoUrl := printf "%s%s" $siteUrl $buttonTwo }}
+{{ $buttonOneCode := printf "<a href=\"%s\"><img src=\"%s\" width=\"88\" height=\"31\" alt=\"Michael McKenna\"></a>" $siteUrl $buttonOneUrl }}
+{{ $buttonTwoCode := printf "<a href=\"%s\"><img src=\"%s\" width=\"88\" height=\"31\" alt=\"Michael McKenna\"></a>" $siteUrl $buttonTwoUrl }}
+<section class="app-window about-window{{ if $isAboutRoute }} is-normal{{ end }}" id="about-window" data-window-id="about" data-window-kind="{{ $aboutFile.window }}" data-window-url="/about/" data-window-title="{{ $aboutFile.name }}" data-window-icon="{{ $aboutFile.icon }}" data-window-default-x="148" data-window-default-y="54" data-window-default-width="672" data-window-default-height="560" data-window-min-width="360" data-window-min-height="320" data-window-fixed-size="{{ if $isModal }}true{{ else }}false{{ end }}" data-window-taskbar="{{ if $isModal }}false{{ else }}true{{ end }}"{{ if not $isAboutRoute }} hidden{{ end }} role="{{ if $isModal }}dialog{{ else }}article{{ end }}" aria-labelledby="about-window-title" tabindex="-1">
+  <div class="window-titlebar">
+    <div class="window-title about-title">
+      <span id="about-window-title">{{ $aboutFile.name }}</span>
+    </div>
+    <div class="window-controls" aria-label="Window controls">
+      {{ if not $isModal }}
+        <button class="window-control" type="button" data-window-action="minimize" aria-label="Minimize">_</button>
+        <button class="window-control" type="button" data-window-action="maximize" aria-label="Maximize">□</button>
+      {{ end }}
+      <a class="window-control" id="about-window-close" href="/" data-window-action="close" aria-label="Close">x</a>
+    </div>
+  </div>
+
+  <div class="about-body">
+    <div class="about-tabs" role="tablist" aria-label="About Me tabs">
+      <button class="about-tab is-active" id="about-tab-about" type="button" role="tab" aria-selected="true" aria-controls="about-panel-about" data-about-tab="about">About</button>
+      <button class="about-tab" id="about-tab-buttons" type="button" role="tab" aria-selected="false" aria-controls="about-panel-buttons" data-about-tab="buttons">Web Buttons</button>
+    </div>
+
+    <div class="about-panel-shell">
+      <section class="about-panel is-active" id="about-panel-about" role="tabpanel" aria-labelledby="about-tab-about" data-about-panel="about">
+        <div class="about-profile">
+          <img class="about-profile-image" src="/newspaper.png" alt="Newspaper">
+          <div class="about-copy">
+            {{ with $about }}
+              {{ .Content }}
+            {{ end }}
+          </div>
+        </div>
+      </section>
+
+      <section class="about-panel" id="about-panel-buttons" role="tabpanel" aria-labelledby="about-tab-buttons" data-about-panel="buttons" hidden>
+        <div class="web-button-list">
+          <article class="web-button-item">
+            <div class="web-button-preview">
+              <img src="{{ $buttonOne }}" width="88" height="31" alt="Michael McKenna web button 1">
+              <p>Here's a web button if you want to link to my blog</p>
+            </div>
+            <label for="web-button-code-1">Link code</label>
+            <textarea id="web-button-code-1" readonly rows="3">{{ $buttonOneCode }}</textarea>
+          </article>
+
+          <article class="web-button-item">
+            <div class="web-button-preview">
+              <img src="{{ $buttonTwo }}" width="88" height="31" alt="Michael McKenna web button 2">
+              <p>Here's an alternate button with more rad</p>
+            </div>
+            <label for="web-button-code-2">Link code</label>
+            <textarea id="web-button-code-2" readonly rows="3">{{ $buttonTwoCode }}</textarea>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <div class="about-button-row">
+      <button class="setup-button is-default" id="about-window-ok" type="button" data-about-close>OK</button>
+      <button class="setup-button" id="about-window-cancel" type="button" data-about-close>Cancel</button>
+    </div>
+  </div>
+</section>

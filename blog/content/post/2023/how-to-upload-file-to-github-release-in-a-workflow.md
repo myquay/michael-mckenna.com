@@ -2,7 +2,9 @@
 date: 2023-07-05T10:00:00+12:00
 title: 'How to upload a file to a GitHub release in a workflow'
 summary: "Spoiler alert: you don't need an Action contributed by a third party."
-url: /how-to-upload-file-to-github-release-in-a-workflow
+url: /blog/how-to-upload-file-to-github-release-in-a-workflow
+aliases:
+  - /how-to-upload-file-to-github-release-in-a-workflow
 tags:
     - GitHub Actions
     - Hugo

@@ -1,0 +1,15 @@
+{{ define "main" }}
+  {{ if eq .RelPermalink "/about/" }}
+    <main class="desktop-shell" id="desktop" aria-label="Michael McKenna Windows 95 desktop">
+      {{ partial "about-window.html" . }}
+    </main>
+
+    {{ partial "taskbar.html" . }}
+  {{ else }}
+    <main class="desktop-shell has-maximized-window" id="desktop" aria-label="Michael McKenna Windows 95 desktop">
+      {{ partial "document-window.html" (dict "page" . "class" "is-maximized" "titleId" (printf "document-%s-title" .File.UniqueID)) }}
+    </main>
+
+    {{ partial "taskbar.html" . }}
+  {{ end }}
+{{ end }}

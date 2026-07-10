@@ -2,7 +2,9 @@
 publishDate: 2016-04-19T11:58:32+12:00
 title: 'GUIDs part 1: What the GUID?'
 summary: I asked myself some questions and ended up learning a lot about the humble GUID - they really are quite cool.
-url: /what-the-guid
+url: /blog/what-the-guid
+aliases:
+  - /what-the-guid
 tags:
     - guid
     - guide

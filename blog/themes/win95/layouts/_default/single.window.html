@@ -1,0 +1,5 @@
+{{ if eq .RelPermalink "/about/" }}
+  {{ partial "about-window.html" . }}
+{{ else }}
+  {{ partial "document-window.html" (dict "page" . "titleId" (printf "document-%s-title" .File.UniqueID)) }}
+{{ end }}

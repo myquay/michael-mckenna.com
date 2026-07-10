@@ -2,7 +2,9 @@
 publishDate: 2019-05-25T20:13:11+12:00
 title: 'Creating a multi-tenant .NET Core Application - Tenant resolution'
 summary: This series of blog posts is an exploration of how to achieve multi-tenancy in an ASP.NET Core web application. In this part of the series we resolve a request to a tenant and introduce the ability to access information about that tenant.
-url: /multi-tenant-asp-dot-net-core-application-tenant-resolution
+url: /blog/multi-tenant-asp-dot-net-core-application-tenant-resolution
+aliases:
+  - /multi-tenant-asp-dot-net-core-application-tenant-resolution
 tags:
     - guide
     - azure

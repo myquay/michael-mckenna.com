@@ -1,7 +1,10 @@
 ---
 date: 2023-07-06T10:00:00+12:00
 title: 'Remember to have fun on the internet'
-slug: /remember-to-have-fun-on-the-internet
+url: /notes/remember-to-have-fun-on-the-internet
+aliases:
+  - /remember-to-have-fun-on-the-internet
+
 ---
 
 > I want you to know that you too can make new programs which create new fun ways of using computers and using the Internet. 

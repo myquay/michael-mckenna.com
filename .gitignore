@@ -1,3 +1,14 @@
+# Generated site output and Hugo caches
 blog/public/
-.vs/*
-.idea/*
+blog/resources/
+blog/.hugo_build.lock
+
+# Operating-system and editor metadata
+.DS_Store
+.vs/
+.idea/
+
+# Local design source files and generated tooling output
+design/
+__pycache__/
+*.py[cod]

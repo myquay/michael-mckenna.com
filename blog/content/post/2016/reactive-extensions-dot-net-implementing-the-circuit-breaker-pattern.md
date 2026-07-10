@@ -2,7 +2,9 @@
 publishDate: 2016-05-02T09:56:32+12:00
 title: 'Reactive Extensions .NET: Implementing the circuit breaker pattern'
 summary: We create an observable that either emits values from the source or the alternate source based on the status of the circuit breaker.
-url: /reactive-extensions-dot-net-implementing-the-circuit-breaker-pattern
+url: /blog/reactive-extensions-dot-net-implementing-the-circuit-breaker-pattern
+aliases:
+  - /reactive-extensions-dot-net-implementing-the-circuit-breaker-pattern
 tags:
     - csharp
     - rx

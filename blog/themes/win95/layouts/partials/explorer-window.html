@@ -1,0 +1,43 @@
+{{ $page := .page }}
+{{ $folderName := $page.Title }}
+{{ $folderPath := printf "C:\\MICHAEL\\BLOG\\%s" (upper $page.Title) }}
+{{ $folderIcon := "/images/win95-icons/w95_4.ico" }}
+{{ $windowId := partial "explorer-window-id.html" $page }}
+{{ $titleId := printf "%s-title" $windowId }}
+{{ $contents := $page.Pages.ByDate.Reverse }}
+{{ if eq $page.Section "pages" }}
+  {{ $contents = (where site.RegularPages "Section" "").ByTitle }}
+{{ else if eq $page.Section "photos" }}
+  {{ $contents = (where (where site.RegularPages "Section" "activity") "Params.activity_type" "photo").ByDate.Reverse }}
+{{ end }}
+<section class="app-window explorer-window{{ with .class }} {{ . }}{{ end }}" data-window-id="{{ $windowId }}" data-window-url="{{ $page.RelPermalink }}" data-window-title="{{ $folderName }}" data-window-icon="{{ $folderIcon }}" data-window-default-x="118" data-window-default-y="52" data-window-default-width="760" data-window-default-height="520" data-window-taskbar="true"{{ if .hidden }} hidden{{ end }} role="region" aria-labelledby="{{ $titleId }}">
+  {{ partial "window-titlebar.html" (dict "icon" $folderIcon "titleId" $titleId "title" (printf "Exploring - %s" $folderPath)) }}
+  {{ partial "window-menu.html" (dict "label" "Explorer menu" "viewMenuId" $windowId) }}
+
+  <div class="explorer-panes">
+    {{ partial "explorer-tree-pane.html" $page }}
+
+    <section class="explorer-contents" aria-label="Contents of {{ $folderName }}">
+      <h2>Contents of '{{ $folderPath }}'</h2>
+      <div class="file-list" data-explorer-list data-view="details" data-sort="date">
+        {{ partial "file-list-header.html" . }}
+        {{ range $contents }}
+          {{ $defaultType := cond (eq .Section "") "Document" (cond (eq .Section "post") "Post" (title .Section)) }}
+          {{ $file := partial "file-metadata.html" (dict "page" . "defaultType" $defaultType) }}
+          {{ $windowId := printf "document-%s" .File.UniqueID }}
+          {{ if ne $file.application "document" }}{{ $windowId = $file.application }}{{ end }}
+          <a class="file-item" href="{{ .RelPermalink }}" data-open-kind="{{ $file.application }}" data-open-window-kind="{{ $file.window }}" data-open-window-id="{{ $windowId }}" data-open-url="{{ .RelPermalink }}" data-file-item data-file-id="{{ .File.UniqueID }}" data-name="{{ $file.name }}" data-type="{{ $file.type }}" data-date="{{ .Date.Format "2006-01-02" }}" draggable="false">
+            <span class="file-icon-wrap"><img src="{{ $file.icon }}" alt=""></span>
+            <span class="file-name">{{ $file.name }}</span>
+            <span class="file-type">{{ $file.type }}</span>
+            <time class="file-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 Jan 2006" }}</time>
+          </a>
+        {{ end }}
+      </div>
+    </section>
+  </div>
+
+  {{ $status := "Ready" }}
+  {{ with $page.Date }}{{ $status = .Format "02 Jan 2006" }}{{ end }}
+  {{ partial "window-statusbar.html" (dict "primary" (printf "%d object(s)" (len $contents)) "secondary" $status) }}
+</section>

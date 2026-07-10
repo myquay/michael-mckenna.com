@@ -1,0 +1,40 @@
+{{ $about := site.GetPage "/about" }}
+{{ $aboutFile := partial "file-metadata.html" (dict "page" $about "defaultType" "Application" "defaultApplication" "about" "defaultIcon" "/icons/about-me-64.png") }}
+{{ $aiPolicy := site.GetPage "/ai-policy" }}
+{{ $aiPolicyFile := partial "file-metadata.html" (dict "page" $aiPolicy "defaultType" "Policy" "defaultApplication" "ai-policy" "defaultIcon" "/images/win95-icons/w95_2.ico") }}
+{{ $posts := site.GetPage "/post" }}
+{{ $photos := site.GetPage "/photos" }}
+<button class="desktop-shortcut" type="button" data-shortcut-id="my-computer" data-shortcut-window-id="my-computer" data-shortcut-url="/" data-shortcut-restore="normal" data-default-x="18" data-default-y="14" style="--x:18px;--y:14px" aria-label="My Computer">
+  <img class="shortcut-icon" src="/images/win95-icons/w95_16.ico" alt="">
+  <span class="shortcut-label">My Computer</span>
+</button>
+
+<button class="desktop-shortcut" type="button" data-shortcut-id="my-documents" data-shortcut-window-id="my-documents" data-shortcut-url="/" data-shortcut-restore="normal" data-default-x="18" data-default-y="116" style="--x:18px;--y:116px" aria-label="My Documents">
+  <img class="shortcut-icon" src="/images/win95-icons/w95_4.ico" alt="">
+  <span class="shortcut-label">My Documents</span>
+</button>
+
+<button class="desktop-shortcut" type="button" data-shortcut-id="posts" data-shortcut-window-id="{{ partial "explorer-window-id.html" $posts }}" data-shortcut-url="{{ $posts.RelPermalink }}" data-shortcut-restore="previous" data-default-x="18" data-default-y="218" style="--x:18px;--y:218px" aria-label="Posts">
+  <img class="shortcut-icon" src="/images/win95-icons/w95_4.ico" alt="">
+  <span class="shortcut-label">Posts</span>
+</button>
+
+<button class="desktop-shortcut" type="button" data-shortcut-id="photos" data-shortcut-window-id="{{ partial "explorer-window-id.html" $photos }}" data-shortcut-url="{{ $photos.RelPermalink }}" data-shortcut-restore="previous" data-default-x="18" data-default-y="320" style="--x:18px;--y:320px" aria-label="Photos">
+  <img class="shortcut-icon" src="/images/win95-icons/w95_4.ico" alt="">
+  <span class="shortcut-label">Photos</span>
+</button>
+
+<button class="desktop-shortcut" type="button" data-shortcut-id="rss-feed" data-default-x="18" data-default-y="422" style="--x:18px;--y:422px" aria-label="RSS Feed">
+  <img class="shortcut-icon" src="/images/rss-icons-95/rss-modern-orange.png" alt="">
+  <span class="shortcut-label">RSS Feed</span>
+</button>
+
+<button class="desktop-shortcut" type="button" data-shortcut-id="about-me" data-default-x="18" data-default-y="524" style="--x:18px;--y:524px" aria-label="Open {{ $aboutFile.name }}">
+  <img class="shortcut-icon" src="{{ $aboutFile.icon }}" alt="">
+  <span class="shortcut-label">{{ $aboutFile.name }}</span>
+</button>
+
+<button class="desktop-shortcut" type="button" data-shortcut-id="ai-policy" data-shortcut-window-id="{{ $aiPolicyFile.application }}" data-shortcut-url="{{ $aiPolicy.RelPermalink }}" data-shortcut-restore="previous" data-default-x="18" data-default-y="626" style="--x:18px;--y:626px" aria-label="Open {{ $aiPolicyFile.name }}">
+  <img class="shortcut-icon" src="{{ $aiPolicyFile.icon }}" alt="">
+  <span class="shortcut-label">{{ $aiPolicyFile.name }}</span>
+</button>

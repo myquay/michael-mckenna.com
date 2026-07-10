@@ -2,7 +2,9 @@
 publishDate: 2016-11-03T20:52:32+12:00
 title: How to import Python extension modules in Azure Functions
 summary: I just needed to quickly run a few Python methods... in Azure
-url: /how-to-import-python-extension-modules-in-azure-functions
+url: /blog/how-to-import-python-extension-modules-in-azure-functions
+aliases:
+  - /how-to-import-python-extension-modules-in-azure-functions
 tags:
     - azure
     - python
@@ -27,7 +29,7 @@ However, because local tooling is required for compiling and installing extensio
 
 You precompile it, Python supports a concept called "Wheels". A Wheel is a precompiled extension module which can be uploaded along with the package - if a package doesn't have a Wheel, you can create one yourself on your local machine so your Azure Function instance doesn't have to. 
 
-There's nothing better than a concrete example so I will show you how to get a function from [_eidtools.py_ script](https://github.com/google/eddystone/blob/master/eddystone-eid/tools/eidtools.py) running on Azure Functions. It relies on the popular _[pycrypto](pycrypto.org)_ extension module, so we'll also need to get that installed for the script to run.
+There's nothing better than a concrete example so I will show you how to get a function from [_eidtools.py_ script](https://github.com/google/eddystone/blob/master/eddystone-eid/tools/eidtools.py) running on Azure Functions. It relies on the popular _[pycrypto](https://www.pycrypto.org/)_ extension module, so we'll also need to get that installed for the script to run.
 
 #### How to run eidtools.py using pycrypto on Azure Functions
 

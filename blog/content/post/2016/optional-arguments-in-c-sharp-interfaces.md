@@ -2,7 +2,9 @@
 publishDate: 2016-08-15T20:52:32+12:00
 title: Optional arguments in C# interfaces
 summary: In the interest of code-safety I don't put default values on implementing classes any more.
-url: /optional-arguments-in-c-sharp-interfaces
+url: /blog/optional-arguments-in-c-sharp-interfaces
+aliases:
+  - /optional-arguments-in-c-sharp-interfaces
 tags:
     - csharp
 ---

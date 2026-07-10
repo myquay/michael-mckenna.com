@@ -1,10 +1,11 @@
 ---
 publishDate: 2016-11-28T20:52:32+12:00
 title: Could not load file or assembly 'Microsoft.VisualStudio.Web.PageInspector.Loader...
-slug: /could-not-load-file-or-assembly-microsoft-visualstudio-web-pageinspector-loader
+url: /notes/could-not-load-file-or-assembly-microsoft-visualstudio-web-pageinspector-loader
+aliases:
+  - /could-not-load-file-or-assembly-microsoft-visualstudio-web-pageinspector-loader
 summary: It looks like it's an assembly that VS 2012 adds which is why it's no longer available after uninstall.
-aliases: 
-    - /could-not-load-file-or-assembly-microsoft-visualstudio-web-pageinspector-loader
+
 ---
 
 [VS 2017 RC is out](https://www.visualstudio.com/vs/visual-studio-2017-rc/), no better time to go remove any old versions of Visual Studio I have lying around. However, when I uninstalled an old version of VS 2012 Express - boom, all my local sites stopped working with the following missing assembly error.

@@ -2,7 +2,9 @@
 publishDate: 2014-07-07T15:56:32+12:00
 title: Setting up an elasticsearch cluster in azure
 summary: In this blog post we'll investigate how to set up an elasticsearch cluster on Windows Azure.
-url: /setting-up-an-elasticsearch-cluster-in-azure
+url: /blog/setting-up-an-elasticsearch-cluster-in-azure
+aliases:
+  - /setting-up-an-elasticsearch-cluster-in-azure
 tags:
     - azure
     - guide

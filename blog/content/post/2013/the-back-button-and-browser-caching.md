@@ -2,7 +2,9 @@
 publishDate: 2013-04-24T11:40:32+12:00
 title: The back button and browser caching
 summary: If the user navigated away then used the back button they would be shown the original page with the original data. They'd then think the fancy JavaScript was completely broken.
-url: /the-back-button-and-browser-caching
+url: /blog/the-back-button-and-browser-caching
+aliases:
+  - /the-back-button-and-browser-caching
 tags:
     - browser
 ---

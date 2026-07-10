@@ -2,7 +2,9 @@
 publishDate: 2013-02-17T20:31:32+12:00
 title: Simple pluralisation in ASP.NET MVC
 summary: If you don't bother with correct pluralisation your users will be less likely to appreciate the care you put into the rest of your application.
-url: /simple-pluralisation-in-asp-net-mvc
+url: /blog/simple-pluralisation-in-asp-net-mvc
+aliases:
+  - /simple-pluralisation-in-asp-net-mvc
 tags:
     - asp dot net mvc
 ---

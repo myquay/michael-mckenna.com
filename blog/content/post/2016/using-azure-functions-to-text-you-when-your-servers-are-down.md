@@ -2,7 +2,9 @@
 publishDate: 2016-12-06T20:52:32+12:00
 title: Using Azure Functions to text you when your servers are down
 summary: The thing I like most about it is that it's serverless so no infrastructure to maintain and worry about.
-url: /using-azure-functions-to-text-you-when-your-servers-are-down
+url: /blog/using-azure-functions-to-text-you-when-your-servers-are-down
+aliases:
+  - /using-azure-functions-to-text-you-when-your-servers-are-down
 tags:
     - guide
     - azure

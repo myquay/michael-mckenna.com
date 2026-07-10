@@ -2,7 +2,9 @@
 publishDate: 2024-04-13T23:29:12+12:00
 title: Multi-tenancy in ASP.NET Core 8 - Dependency Injection & Tenant Specific Services
 summary: In this post we look at how to have tenant specific services in a multi-tenant application in ASP.NET Core 8.
-url: /multi-tenant-asp-dot-net-8-tenant-services
+url: /blog/multi-tenant-asp-dot-net-8-tenant-services
+aliases:
+  - /multi-tenant-asp-dot-net-8-tenant-services
 tags:
     - guide
     - azure

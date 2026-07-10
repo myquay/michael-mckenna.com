@@ -2,7 +2,9 @@
 publishDate: 2024-03-04T23:29:12+12:00
 title: The One Billion Row Challenge in .NET
 summary: I just saw the one billion row challenge. I'm a bit late as the challenge was back in January but I thought it would be a fun exercise to try and solve it in .NET.
-url: /csharp-dot-net-1brc
+url: /blog/csharp-dot-net-1brc
+aliases:
+  - /csharp-dot-net-1brc
 tags:
     - 1brc
 ---

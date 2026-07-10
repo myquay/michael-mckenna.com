@@ -2,7 +2,9 @@
 publishDate: 2019-10-02T13:11:12+12:00
 title: Migrating multi-tenancy to .NET Core 3.1 (LTS)
 summary: .NET Core 3.1 is out and it's a LTS release. Our 4 part multi-tenancy series is already out of date! Here we'll cover off the breaking changes and the updates we need to make.
-url: /multi-tenancy-compatibility-dot-net-core-three
+url: /blog/multi-tenancy-compatibility-dot-net-core-three
+aliases:
+  - /multi-tenancy-compatibility-dot-net-core-three
 tags:
     - guide
     - azure

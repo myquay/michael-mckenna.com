@@ -1,0 +1,16 @@
+{{ $controlClass := .controlClass | default "" }}
+<div class="window-titlebar">
+  <div class="window-title">
+    {{ with .icon }}<img src="{{ . }}" alt="">{{ end }}
+    <span id="{{ .titleId }}">{{ .title }}</span>
+  </div>
+  <div class="window-controls" aria-label="Window controls">
+    {{ if .modal }}
+      <a class="window-control{{ with $controlClass }} {{ . }}{{ end }}" href="{{ .closeHref | default "/" }}" data-window-action="close" aria-label="Close">x</a>
+    {{ else }}
+      <button class="window-control{{ with $controlClass }} {{ . }}{{ end }}" type="button" data-window-action="minimize" aria-label="Minimize">_</button>
+      <button class="window-control{{ with $controlClass }} {{ . }}{{ end }}" type="button" data-window-action="maximize" aria-label="Maximize">□</button>
+      <button class="window-control{{ with $controlClass }} {{ . }}{{ end }}" type="button" data-window-action="close" aria-label="Close">x</button>
+    {{ end }}
+  </div>
+</div>

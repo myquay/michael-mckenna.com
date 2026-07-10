@@ -2,7 +2,9 @@
 publishDate: 2019-01-03T20:13:11+12:00
 title: 'Host your Hugo site on Azure Storage'
 summary: Host your Hugo SSG using Azure Storage and KeyCDN.
-url: /host-your-hugo-site-on-azure-storage-deployed-with-vsts
+url: /blog/host-your-hugo-site-on-azure-storage-deployed-with-vsts
+aliases:
+  - /host-your-hugo-site-on-azure-storage-deployed-with-vsts
 tags:
     - guide
     - azure

@@ -2,7 +2,9 @@
 publishDate: 2013-08-14T11:51:32+12:00
 title: You probably don't want your development team to share a single database
 summary: If you're currently working on a project where all developers are using the same centralized development database, then chances are that's the way the project has been run since the beginning.
-url: /you-probably-dont-want-your-development-team-to-share-a-single-database
+url: /blog/you-probably-dont-want-your-development-team-to-share-a-single-database
+aliases:
+  - /you-probably-dont-want-your-development-team-to-share-a-single-database
 tags:
     - article
 ---

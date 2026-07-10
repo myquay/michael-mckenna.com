@@ -2,7 +2,9 @@
 date: 2023-06-14T10:00:00+12:00
 title: 'Peripheral: The great blog refresh of 2023'
 subtitle: 'My methodology and design behind the new template for my blob'
-url: /introducing-peripheral
+url: /blog/introducing-peripheral
+aliases:
+  - /introducing-peripheral
 summary: This blog just turned 10! It's a strange milestone; so inconsequnetial for everyone in the world bar me. Instead of going down a rabbit hole of irrelevance a better use of my time is to give this blog yet another refresh. 
 tags:
     - Design

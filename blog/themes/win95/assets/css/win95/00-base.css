@@ -1,0 +1,73 @@
+:root {
+  --color-desktop: #008080;
+  --color-desktop-dark: #005555;
+  --color-button-face: #c0c0c0;
+  --color-button-highlight: #ffffff;
+  --color-button-light: #dfdfdf;
+  --color-button-shadow: #808080;
+  --color-button-dk-shadow: #000000;
+  --color-active-title: #000080;
+  --color-active-title-gradient: #1084d0;
+  --color-window: #ffffff;
+  --color-highlight: #000080;
+  --color-highlight-text: #ffffff;
+  --color-tooltip: #ffffe1;
+  --desktop: var(--color-desktop);
+  --surface: var(--color-button-face);
+  --surface-light: var(--color-button-highlight);
+  --surface-mid: var(--color-button-light);
+  --surface-shadow: var(--color-button-shadow);
+  --surface-dark: var(--color-button-dk-shadow);
+  --menu-blue: var(--color-active-title);
+  --menu-blue-2: var(--color-active-title-gradient);
+  --highlight: var(--color-highlight);
+  --highlight-text: var(--color-highlight-text);
+  --taskbar-safe-area: env(safe-area-inset-bottom, 0px);
+  --taskbar-height: calc(30px + var(--taskbar-safe-area));
+  --font-ui: "MS Sans Serif", "Microsoft Sans Serif", Arial, sans-serif;
+  --font-title: "System", "MS Sans Serif", "Microsoft Sans Serif", Arial, sans-serif;
+  --font-document: Georgia, "Times New Roman", serif;
+  --font-monospace: "Courier New", Courier, monospace;
+  --font-system: var(--font-ui);
+  --bevel-raised:
+    inset -1px -1px var(--surface-dark),
+    inset 1px 1px var(--surface-light),
+    inset -2px -2px var(--surface-shadow),
+    inset 2px 2px var(--surface-mid);
+  --bevel-sunken:
+    inset -1px -1px var(--surface-light),
+    inset 1px 1px var(--surface-dark),
+    inset -2px -2px var(--surface-mid),
+    inset 2px 2px var(--surface-shadow);
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--desktop);
+  color: #000;
+  cursor: default;
+  font-family: var(--font-system);
+  font-size: 11px;
+  margin: 0;
+  overflow: hidden;
+}
+
+button {
+  color: inherit;
+  font: inherit;
+}
+
+img {
+  display: block;
+  image-rendering: pixelated;
+}
+

@@ -2,7 +2,9 @@
 publishDate: 2025-05-18T13:12:11+12:00
 title: Authentication failed when copying files to Azure Blob Storage in DevOps with auto-provisioned service connection
 summary: I needed to configure a pipeline to copy some build artefacts to Azure Blob storage, however after setting up the AzureBlob File Copy task I kept getting an Authentication Failed error.
-url: /azureblob-file-devops-copy-info-authentication-failed
+url: /blog/azureblob-file-devops-copy-info-authentication-failed
+aliases:
+  - /azureblob-file-devops-copy-info-authentication-failed
 tags:
     - devops
     - azure
