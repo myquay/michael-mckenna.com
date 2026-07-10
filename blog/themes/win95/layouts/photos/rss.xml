@@ -1,0 +1,21 @@
+{{- $photos := (where (where site.RegularPages "Section" "activity") "Params.activity_type" "photo").ByDate.Reverse -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ .Title }} on {{ site.Title }}</title>
+    <link>{{ .Permalink }}</link>
+    <description>{{ .Content | plainify }}</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>{{ site.Language.Locale | default site.Language.Lang }}</language>
+    <atom:link href="{{ (.OutputFormats.Get "RSS").Permalink }}" rel="self" type="application/rss+xml" />
+    {{ range $photos }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <pubDate>{{ .PublishDate.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate>
+      <guid>{{ .Permalink }}</guid>
+      <description>{{ .Summary | transform.XMLEscape | safeHTML }}</description>
+    </item>
+    {{ end }}
+  </channel>
+</rss>

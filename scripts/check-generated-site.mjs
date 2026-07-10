@@ -103,4 +103,18 @@ if (uniqueFailures.length > 0) {
   process.exit(1);
 }
 
+const photoFeedPath = path.join(buildRoot, "photos", "rss.xml");
+const desktopContextPath = path.join(buildRoot, "window.html");
+
+if (!fs.existsSync(photoFeedPath) || !/<item>/.test(fs.readFileSync(photoFeedPath, "utf8"))) {
+  console.error("The generated Photos RSS feed is missing or empty.");
+  process.exit(1);
+}
+
+if (!fs.existsSync(desktopContextPath)
+  || !/data-feed-label="Photos"[^>]+data-feed-url="[^"]*\/photos\/rss\.xml"/.test(fs.readFileSync(desktopContextPath, "utf8"))) {
+  console.error("RSS Setup does not reference the generated Photos RSS feed.");
+  process.exit(1);
+}
+
 console.log(`Checked ${sourceFiles.length} generated documents and stylesheets.`);

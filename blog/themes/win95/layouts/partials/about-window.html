@@ -7,7 +7,7 @@
 {{ $isModal := eq $aboutFile.window "modal" }}
 {{ $buttonOne := "/88x31/web-button-02.png" }}
 {{ $buttonTwo := "/88x31/web-button-01.png" }}
-{{ $siteUrl := "https://michael-mckenna.com" }}
+{{ $siteUrl := strings.TrimSuffix "/" site.BaseURL }}
 {{ $buttonOneUrl := printf "%s%s" $siteUrl $buttonOne }}
 {{ $buttonTwoUrl := printf "%s%s" $siteUrl $buttonTwo }}
 {{ $buttonOneCode := printf "<a href=\"%s\"><img src=\"%s\" width=\"88\" height=\"31\" alt=\"Michael McKenna\"></a>" $siteUrl $buttonOneUrl }}

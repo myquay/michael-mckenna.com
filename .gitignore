@@ -2,6 +2,7 @@
 blog/public/
 blog/resources/
 blog/.hugo_build.lock
+blog/assets/jsconfig.json
 
 # Operating-system and editor metadata
 .DS_Store

@@ -1,3 +1,10 @@
+{{ $posts := site.GetPage "/post" }}
+{{ $activity := site.GetPage "/activity" }}
+{{ $photos := site.GetPage "/photos" }}
+{{ $postsFeed := $posts.OutputFormats.Get "RSS" }}
+{{ $activityFeed := $activity.OutputFormats.Get "RSS" }}
+{{ $photosFeed := $photos.OutputFormats.Get "RSS" }}
+{{ $everythingFeed := site.Home.OutputFormats.Get "RSS" }}
 <section class="setup-window" id="rss-setup-window" data-modal-window="rss-setup" role="dialog" aria-modal="true" aria-labelledby="rss-setup-title" aria-describedby="rss-setup-description">
   <div class="setup-titlebar" data-modal-titlebar>
     <span>RSS Setup</span>
@@ -21,10 +28,10 @@
         <h1>Choose Feeds</h1>
         <p>Select the content you would like to subscribe to.</p>
         <div class="feed-choice-list">
-          <label class="feed-choice"><input type="checkbox" data-feed-choice value="articles" checked> Posts</label>
-          <label class="feed-choice"><input type="checkbox" data-feed-choice value="activity" checked> Activity</label>
-          <label class="feed-choice"><input type="checkbox" data-feed-choice value="photos"> Photos</label>
-          <label class="feed-choice"><input type="checkbox" data-feed-choice value="everything"> Everything</label>
+          <label class="feed-choice"><input type="checkbox" data-feed-choice data-feed-label="Posts" data-feed-url="{{ $postsFeed.Permalink }}" checked> Posts</label>
+          <label class="feed-choice"><input type="checkbox" data-feed-choice data-feed-label="Activity" data-feed-url="{{ $activityFeed.Permalink }}" checked> Activity</label>
+          <label class="feed-choice"><input type="checkbox" data-feed-choice data-feed-label="Photos" data-feed-url="{{ $photosFeed.Permalink }}"> Photos</label>
+          <label class="feed-choice"><input type="checkbox" data-feed-choice data-feed-label="Everything" data-feed-url="{{ $everythingFeed.Permalink }}"> Everything</label>
         </div>
       </section>
 

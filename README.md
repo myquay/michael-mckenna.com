@@ -42,13 +42,13 @@ The contract between Hugo and the Win95 JavaScript bundle is carried by `data-wi
 
 The home `WINDOW` output is assembled by `desktop-context.html`. It supplies desktop shortcuts, shell-owned Explorer windows, RSS Setup, and About for on-demand hydration; the full-page layouts remain responsible for rendering the single taskbar.
 
-Window layout, taskbar ordering, Explorer view preferences, and desktop shortcut positions are persisted in local storage under `michael95.osState`. Changes to that state shape should include a migration in `assets/js/win95/10-state.js`.
+Window layout, taskbar ordering, Explorer view preferences, and desktop shortcut positions are persisted in local storage under `michael95.osState`. Changes to that state shape should include a migration in `assets/js/win95/core/state.mjs` and a corresponding unit test.
 
 ## Assets
 
 Only files required by the published site belong under `blog/static/`. Reusable source assets, contact sheets, and generation scripts belong under `design/`. The complete Windows 95 icon catalogue is retained under `design/win95-icons/`; selected runtime icons are copied into `blog/static/images/win95-icons/`.
 
-The theme's JavaScript and CSS are split into responsibility-focused files under `assets/js/win95/` and `assets/css/win95/`. Hugo concatenates, minifies, and fingerprints each group into one production JavaScript bundle and one production stylesheet.
+The theme's JavaScript has an ES-module entry at `assets/js/win95.mjs`, with independently testable routing, state, and geometry modules under `assets/js/win95/core/`. Hugo bundles, minifies, and fingerprints the module graph into one production script. CSS remains split by responsibility under `assets/css/win95/` and is concatenated into one fingerprinted stylesheet.
 
 The RSS generators write their complete, ignored design output to `design/rss-icons-95/generated/` and copy only the assets used by the theme into `blog/static/images/rss-icons-95/`:
 
@@ -65,7 +65,7 @@ Run the complete repository check from the repository root:
 ./scripts/verify-site.sh
 ```
 
-The command performs a clean Hugo build, validates the generated JavaScript bundle, checks generated local links and assets, and fails if generated operating-system or cache files are tracked.
+The command runs the JavaScript unit tests, performs a clean Hugo build, validates the generated JavaScript bundle, checks generated local links and assets, and fails if ignored artifacts are tracked or verification changes tracked files. An optional destination argument selects the build directory; CI uses this to verify and deploy the same artifact.
 
 The build currently reports known Goldmark warnings for raw HTML in several historical posts. These warnings do not fail verification, but they remain content cleanup work.
 

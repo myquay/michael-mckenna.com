@@ -8,10 +8,13 @@
       <span class="start-item-label">Programs</span>
       <span class="start-arrow">&#9654;</span>
       <span class="submenu" role="menu" aria-label="Programs submenu">
-        <a class="submenu-item" href="/blog/"><img src="/images/win95-icons/w95_4.ico" alt="">Posts</a>
-        <span class="submenu-item"><img src="/images/win95-icons/w95_4.ico" alt="">Notes</span>
-        <span class="submenu-item"><img src="/images/win95-icons/w95_4.ico" alt="">Activity</span>
-        <span class="submenu-item"><img src="/images/win95-icons/w95_4.ico" alt="">Projects</span>
+        {{ range site.Menus.main }}
+          {{ with .Page }}
+            {{ if .IsSection }}
+              <a class="submenu-item" href="{{ .RelPermalink }}" data-open-kind="folder" data-open-window-id="{{ partial "explorer-window-id.html" . }}" data-open-url="{{ .RelPermalink }}"><img src="/images/win95-icons/w95_4.ico" alt="">{{ .Title }}</a>
+            {{ end }}
+          {{ end }}
+        {{ end }}
       </span>
     </div>
 

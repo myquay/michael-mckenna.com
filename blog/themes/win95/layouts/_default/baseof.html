@@ -17,18 +17,14 @@
   {{ end }}
 {{ end }}
 <body data-page-url="{{ .RelPermalink }}" data-page-window-id="{{ $pageWindowId }}" data-page-window-kind="{{ $pageWindowKind }}" data-page-kind="{{ if .IsHome }}desktop{{ else if .IsSection }}explorer{{ else }}document{{ end }}" data-page-title="{{ .Title }}">
+  <div id="explorer-route-map" hidden>
+    {{ range site.Sections }}
+      <span data-explorer-route="{{ .RelPermalink }}" data-explorer-window-id="{{ partial "explorer-window-id.html" . }}"></span>
+    {{ end }}
+  </div>
   {{ block "main" . }}{{ end }}
-  {{ $jsParts := slice
-    (resources.Get "js/win95/00-bootstrap.js")
-    (resources.Get "js/win95/10-state.js")
-    (resources.Get "js/win95/20-windows.js")
-    (resources.Get "js/win95/30-taskbar.js")
-    (resources.Get "js/win95/40-explorer.js")
-    (resources.Get "js/win95/50-ui.js")
-    (resources.Get "js/win95/60-interactions.js")
-    (resources.Get "js/win95/70-bindings.js")
-  }}
-  {{ $js := $jsParts | resources.Concat "js/win95.js" | minify | fingerprint }}
+  {{ $jsOptions := dict "targetPath" "js/win95.js" "format" "iife" "target" "es2019" "minify" true }}
+  {{ $js := resources.Get "js/win95.mjs" | js.Build $jsOptions | fingerprint }}
   <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
 </body>
 </html>
