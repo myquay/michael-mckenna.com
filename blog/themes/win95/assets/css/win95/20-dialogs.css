@@ -262,6 +262,8 @@
   border: 0;
   border-radius: 4px 4px 0 0;
   box-shadow:
+    inset 0 -1px var(--surface-dark),
+    inset 0 -2px var(--surface-shadow),
     inset -1px 0 var(--surface-dark),
     inset 1px 1px var(--surface-light),
     inset -2px 0 var(--surface-shadow),
@@ -284,13 +286,28 @@
   z-index: 3;
 }
 
+.about-tab.is-active::after {
+  background: var(--surface);
+  bottom: -2px;
+  content: "";
+  height: 3px;
+  left: 2px;
+  position: absolute;
+  right: 2px;
+}
+
 .about-tab:focus-visible {
   outline: 1px dotted #000;
   outline-offset: -5px;
 }
 
 .about-panel-shell {
-  box-shadow: var(--bevel-raised);
+  border: 2px solid;
+  border-color: var(--surface-light) var(--surface-dark) var(--surface-dark) var(--surface-light);
+  box-shadow:
+    inset -1px -1px var(--surface-shadow),
+    inset 1px 1px var(--surface-mid);
+  box-sizing: border-box;
   flex: 1;
   min-height: 360px;
   overflow: auto;
@@ -305,16 +322,20 @@
 }
 
 .about-profile {
-  align-items: start;
+  align-items: center;
   display: grid;
-  gap: 26px;
-  grid-template-columns: minmax(158px, 211px) minmax(0, 1fr);
+  gap: clamp(26px, 4vw, 48px);
+  grid-template-columns: minmax(180px, 30%) minmax(0, 620px);
+  justify-content: center;
+  min-height: 310px;
+  padding: 10px 0 18px;
 }
 
 .about-profile-image {
   height: auto;
   image-rendering: pixelated;
-  max-width: 211px;
+  justify-self: center;
+  max-width: 280px;
   width: 100%;
 }
 
@@ -325,7 +346,20 @@
 }
 
 .about-copy p {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
+}
+
+.about-copy > :last-child {
+  margin-bottom: 0;
+}
+
+.about-copy ul {
+  margin: 4px 0 0;
+  padding-left: 28px;
+}
+
+.about-copy li + li {
+  margin-top: 3px;
 }
 
 .about-copy a,
@@ -386,4 +420,3 @@
   justify-content: flex-end;
   padding-top: 13px;
 }
-

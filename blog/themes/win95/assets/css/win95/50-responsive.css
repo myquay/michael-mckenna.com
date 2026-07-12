@@ -251,15 +251,29 @@
   }
 
   .about-tabs {
-    overflow-x: auto;
+    overflow: visible;
   }
 
   .about-tab {
     min-height: 32px;
     min-width: max-content;
+    padding-bottom: 4px;
     padding-left: 12px;
     padding-right: 12px;
     touch-action: manipulation;
+  }
+
+  .about-tab.is-active {
+    margin-bottom: -2px;
+    min-height: 34px;
+    padding-bottom: 6px;
+  }
+
+  .about-tab.is-active::after {
+    bottom: -4px;
+    height: 5px;
+    left: 1px;
+    right: 1px;
   }
 
   .about-panel-shell {
@@ -273,11 +287,28 @@
   }
 
   .about-profile {
-    gap: 12px;
+    align-items: start;
+    gap: 18px;
+    min-height: 0;
+    padding: 10px 4px 18px;
   }
 
   .about-profile-image {
-    max-width: 128px;
+    justify-self: center;
+    max-width: 180px;
+    width: min(55vw, 180px);
+  }
+
+  .about-copy {
+    width: 100%;
+  }
+
+  .about-copy p {
+    margin-bottom: 16px;
+  }
+
+  .about-copy ul {
+    margin-top: 2px;
   }
 
   .web-button-preview {
