@@ -1,5 +1,6 @@
 <main class="desktop-shell" id="desktop" aria-label="Michael McKenna Windows 95 desktop">
   {{ partial "desktop-shortcuts.html" . }}
+  {{ partial "indieweb-profile.html" (dict "class" "visually-hidden") }}
 </main>
 
 {{ partial "taskbar.html" . }}

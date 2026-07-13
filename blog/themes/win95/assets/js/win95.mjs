@@ -1,4 +1,10 @@
 import { clamp, constrainWindowBounds } from "./win95/core/geometry.mjs";
+import {
+  createExplorerSession,
+  createExplorerTreeState,
+  navigateExplorerSession,
+  navigateExplorerWindow
+} from "./win95/core/explorer.mjs";
 import { normalizePath, readExplorerRouteIndex, resolveExplorerWindowId } from "./win95/core/routing.mjs";
 import {
   isVisibleNonModalWindow,
@@ -19,6 +25,7 @@ import {
   let feedChoices = Array.from(document.querySelectorAll("[data-feed-choice]"));
   let wizardSteps = Array.from(document.querySelectorAll("[data-wizard-step]"));
   const aboutWindow = document.getElementById("about-window");
+  const deviceErrorDialog = document.getElementById("floppy-not-ready-dialog");
   const startAboutButtons = Array.from(document.querySelectorAll("[data-start-action='about']"));
   const appWindows = Array.from(document.querySelectorAll("[data-window-id]"));
   const modalWindows = Array.from(document.querySelectorAll("[data-modal-window]"));
@@ -47,6 +54,7 @@ import {
   const taskbarHeight = () => document.querySelector(".taskbar")?.offsetHeight || 30;
   const dragThreshold = 4;
   const desktopUrl = "/";
+  const explorerTreeVersion = 2;
   const modalWindowKind = "modal";
   const defaultCapabilities = {
     move: true,
@@ -60,10 +68,11 @@ import {
   // fragments, avoiding a second hand-maintained catalogue in JavaScript.
   const applications = {};
   let osState = {
-    version: 3,
+    version: 4,
     shortcuts: {},
     windows: {},
     explorers: {},
+    explorerTree: { expanded: {}, version: explorerTreeVersion },
     modals: {},
     taskbarOrder: [],
     activeWindowId: null
@@ -77,8 +86,10 @@ import {
     ? document.body?.dataset.pageWindowId || null
     : null;
   let overlayRouteOwnerId = null;
-  let latestWindowActivation = 0;
+  const latestWindowActivations = new Map();
+  const latestExplorerNavigations = new Map();
   let wizardStep = 0;
+  let deviceErrorDrive = "floppy-a";
 
   const explorerWindowIdsByPath = readExplorerRouteIndex(document);
   const explorerWindowIdForUrl = (url) => resolveExplorerWindowId(
@@ -101,7 +112,7 @@ import {
     try {
       osState = { ...osState, ...(JSON.parse(window.localStorage.getItem(osStorageKey) || "{}") || {}) };
     } catch {
-      osState = { version: 3, shortcuts: {}, windows: {}, explorers: {}, modals: {}, taskbarOrder: [], activeWindowId: null };
+      osState = { version: 4, shortcuts: {}, windows: {}, explorers: {}, explorerTree: { expanded: {}, version: explorerTreeVersion }, modals: {}, taskbarOrder: [], activeWindowId: null };
     }
 
     if (!osState.shortcuts) {
@@ -114,6 +125,10 @@ import {
 
     if (!osState.explorers) {
       osState.explorers = {};
+    }
+
+    if (!osState.explorerTree) {
+      osState.explorerTree = { expanded: {}, version: explorerTreeVersion };
     }
 
     if (!osState.modals) {
@@ -146,12 +161,16 @@ import {
       .filter(([, item]) => !isModalApplication(item)));
     const nextState = {
       ...osState,
-      version: 3,
+      version: 4,
       windows: persistedWindows,
       activeWindowId: isModalApplication(osState.windows[osState.activeWindowId]) ? null : osState.activeWindowId
     };
 
-    window.localStorage.setItem(osStorageKey, JSON.stringify(nextState));
+    try {
+      window.localStorage.setItem(osStorageKey, JSON.stringify(nextState));
+    } catch {
+      // Keep the desktop usable when storage is unavailable or blocked.
+    }
   };
 
   const rememberTaskbarOrder = (appId) => {
@@ -170,26 +189,45 @@ import {
 
   const explorerId = (context) => context?.windowEl?.dataset.windowId || "explorer-blog";
 
+  const ensureExplorerTreeState = () => {
+    if (!osState.explorerTree || typeof osState.explorerTree !== "object") {
+      osState.explorerTree = createExplorerTreeState(null, explorerTreeVersion);
+    }
+
+    if (osState.explorerTree.version !== explorerTreeVersion) {
+      const migratedExpanded = {};
+
+      Object.values(osState.explorers || {}).forEach((explorer) => {
+        Object.entries(explorer?.tree?.expanded || {}).forEach(([nodeId, expanded]) => {
+          if (typeof expanded === "boolean") {
+            migratedExpanded[nodeId] = expanded;
+          }
+        });
+      });
+
+      osState.explorerTree = createExplorerTreeState({ expanded: migratedExpanded }, explorerTreeVersion);
+    }
+
+    if (!osState.explorerTree.expanded) {
+      osState.explorerTree.expanded = {};
+    }
+
+    osState.explorerTree = createExplorerTreeState(osState.explorerTree, explorerTreeVersion);
+    return osState.explorerTree;
+  };
+
   const ensureExplorerState = (context) => {
     const id = explorerId(context);
-    osState.explorers[id] = {
+    const location = normalizePath(context?.windowEl?.dataset.windowUrl || osState.windows[id]?.url || desktopUrl);
+    osState.explorers[id] = createExplorerSession({
       view: context?.list?.dataset.view || "details",
       sort: context?.list?.dataset.sort || "date",
       icons: {},
-      tree: { expanded: {} },
       ...osState.explorers[id]
-    };
+    }, location);
 
     if (!osState.explorers[id].icons) {
       osState.explorers[id].icons = {};
-    }
-
-    if (!osState.explorers[id].tree) {
-      osState.explorers[id].tree = { expanded: {} };
-    }
-
-    if (!osState.explorers[id].tree.expanded) {
-      osState.explorers[id].tree.expanded = {};
     }
 
     return osState.explorers[id];
@@ -208,6 +246,7 @@ import {
 
     return {
       id: appId,
+      contentWindowId: appWindow.dataset.windowContentId || appId,
       title: appWindow.dataset.windowTitle || applications[appId]?.title || appId,
       url: normalizePath(appWindow.dataset.windowUrl || applications[appId]?.url || window.location.pathname),
       icon: appWindow.dataset.windowIcon || applications[appId]?.icon || "/images/win95-icons/w95_16.ico",
@@ -664,6 +703,23 @@ import {
       return;
     }
 
+    if (document.body?.dataset.pageKind === "explorer") {
+      const routeInstance = [
+        osState.windows[window.history.state?.windowId],
+        osState.windows[osState.activeWindowId]
+      ].find((item) => item && normalizePath(item.url) === pageUrl);
+
+      if (routeInstance && routeInstance.id !== app.id) {
+        const routeWindow = appWindows.find((windowEl) => windowEl.dataset.windowId === app.id);
+        rekeyWindowDom(routeWindow, routeInstance.id, app.id);
+        const instanceApp = { ...app, id: routeInstance.id, contentWindowId: app.id };
+        applications[routeInstance.id] = instanceApp;
+        presentRouteWindow(instanceApp);
+        syncUrlToWindowStack({ mode: "replace" });
+        return;
+      }
+    }
+
     if (isModalApplication(app)) {
       overlayRouteOwnerId = resolveRouteOwner()?.id || null;
       directModalRouteId = app.id;
@@ -741,6 +797,38 @@ import {
     return osContextPromise;
   };
 
+  const rekeyWindowDom = (appWindow, instanceId, contentWindowId) => {
+    if (!appWindow || !instanceId || !contentWindowId) {
+      return appWindow;
+    }
+
+    const replaceReference = (value) => value
+      .split(/\s+/)
+      .map((token) => token === contentWindowId || token.startsWith(`${contentWindowId}-`)
+        ? `${instanceId}${token.slice(contentWindowId.length)}`
+        : token)
+      .join(" ");
+
+    appWindow.dataset.windowId = instanceId;
+    appWindow.dataset.windowContentId = contentWindowId;
+
+    [appWindow, ...appWindow.querySelectorAll("[id], [aria-controls], [aria-labelledby]")].forEach((element) => {
+      if (element.id && (element.id === contentWindowId || element.id.startsWith(`${contentWindowId}-`))) {
+        element.id = `${instanceId}${element.id.slice(contentWindowId.length)}`;
+      }
+
+      ["aria-controls", "aria-labelledby"].forEach((attribute) => {
+        const value = element.getAttribute(attribute);
+
+        if (value) {
+          element.setAttribute(attribute, replaceReference(value));
+        }
+      });
+    });
+
+    return appWindow;
+  };
+
   const hydrateWindowDom = async (item, { apply = true } = {}) => {
     if (!item?.id || !item.url || item.state === "minimized") {
       return null;
@@ -752,15 +840,17 @@ import {
       return existing;
     }
 
+    const contentWindowId = item.contentWindowId || item.id;
     const fragmentDocument = await fetchWindowFragment(item.url);
     const sourceWindow = Array.from(fragmentDocument.querySelectorAll("[data-window-id]"))
-      .find((windowEl) => windowEl.dataset.windowId === item.id);
+      .find((windowEl) => windowEl.dataset.windowId === contentWindowId);
 
     if (!sourceWindow) {
-      throw new Error(`Window ${item.id} was not found at ${item.url}`);
+      throw new Error(`Window content ${contentWindowId} was not found at ${item.url}`);
     }
 
     const imported = document.importNode(sourceWindow, true);
+    rekeyWindowDom(imported, item.id, contentWindowId);
     imported.hidden = !apply;
 
     if (existing) {
@@ -828,7 +918,8 @@ import {
   };
 
   const activateWindow = (appId, { requestedState, historyMode = "push", directModal = false } = {}) => {
-    const activationId = ++latestWindowActivation;
+    const activationId = (latestWindowActivations.get(appId) || 0) + 1;
+    latestWindowActivations.set(appId, activationId);
     const activation = (async () => {
       const proposed = proposedWindowState(appId, requestedState);
 
@@ -843,14 +934,14 @@ import {
       try {
         root = await hydrateWindowDom(proposed, { apply: false });
       } catch (error) {
-        if (activationId !== latestWindowActivation) {
+        if (activationId !== latestWindowActivations.get(appId)) {
           return null;
         }
 
         throw error;
       }
 
-      if (activationId !== latestWindowActivation) {
+      if (activationId !== latestWindowActivations.get(appId)) {
         return root;
       }
 
@@ -1198,7 +1289,7 @@ import {
   const setTreeNodeExpanded = (toggle, expanded, { save = false } = {}) => {
     const context = explorerContexts.find((item) => item.tree?.contains(toggle));
     const node = toggle.closest("[data-tree-node-id]");
-    const childList = document.getElementById(toggle.getAttribute("aria-controls"));
+    const childList = node?.querySelector(":scope > ul");
 
     if (!node || !childList) {
       return;
@@ -1210,7 +1301,7 @@ import {
     node.classList.toggle("is-collapsed", !expanded);
 
     if (save) {
-      ensureExplorerState(context).tree.expanded[node.dataset.treeNodeId] = expanded;
+      ensureExplorerTreeState().expanded[node.dataset.treeNodeId] = expanded;
       saveOsState();
     }
   };
@@ -1222,7 +1313,7 @@ import {
 
     const targetWindowId = trigger?.dataset.openWindowId;
 
-    if (!targetWindowId || !context?.windowEl || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+    if (!targetWindowId || !context?.windowEl || (typeof event.button === "number" && event.button !== 0) || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
       return false;
     }
 
@@ -1289,13 +1380,13 @@ import {
       return false;
     }
 
-    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+    if ((typeof event.button === "number" && event.button !== 0) || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
       return false;
     }
 
     const destination = new URL(trigger.href || trigger.dataset.openUrl || desktopUrl, window.location.href);
 
-    if (destination.origin !== window.location.origin || normalizePath(destination.pathname) === desktopUrl) {
+    if (destination.origin !== window.location.origin || (normalizePath(destination.pathname) === desktopUrl && !trigger.dataset.openWindowId)) {
       return false;
     }
 
@@ -1312,25 +1403,19 @@ import {
     closeStartMenu();
     closeViewMenu();
 
-    const existingTarget = osState.windows[targetWindowId];
-
-    if (existingTarget) {
-      if (sourceWindowId === targetWindowId && normalizePath(existingTarget.url) === normalizePath(destination.pathname)) {
-        focusWindowState(targetWindowId);
-        return true;
-      }
-
-      const requestedState = existingTarget.state === "minimized"
-        ? existingTarget.previousState === "maximized" ? "maximized" : "normal"
-        : existingTarget.state;
-      const proposed = proposedWindowState(targetWindowId, requestedState);
-
-      activateWindow(targetWindowId, { requestedState })
-        .catch(() => fallbackWindowNavigation(proposed));
+    if (sourceWindowId === targetWindowId && normalizePath(sourceWindow.url) === normalizePath(destination.pathname)) {
+      focusWindowState(targetWindowId);
       return true;
     }
 
-    fetchWindowFragment(destination.pathname).then((fragmentDocument) => {
+    const navigationId = (latestExplorerNavigations.get(sourceWindowId) || 0) + 1;
+    latestExplorerNavigations.set(sourceWindowId, navigationId);
+
+    fetchWindowFragment(destination.pathname).then(async (fragmentDocument) => {
+      if (navigationId !== latestExplorerNavigations.get(sourceWindowId)) {
+        return;
+      }
+
       const sourceTargetWindow = Array.from(fragmentDocument.querySelectorAll("[data-window-id]"))
         .find((windowEl) => windowEl.dataset.windowId === targetWindowId);
       const targetApp = readWindowMetadata(sourceTargetWindow);
@@ -1339,29 +1424,43 @@ import {
         throw new Error(`Explorer window ${targetWindowId} was not found at ${destination.pathname}`);
       }
 
-      applications[targetWindowId] = { ...applications[targetWindowId], ...targetApp };
-      delete osState.windows[sourceWindowId];
-      osState.windows[targetWindowId] = {
-        ...sourceWindow,
-        ...applications[targetWindowId],
-        id: targetWindowId,
-        state: sourceWindow.state,
-        previousState: sourceWindow.previousState || "normal",
-        restoreBounds: sourceWindow.restoreBounds || {
-          x: sourceWindow.x,
-          y: sourceWindow.y,
-          width: sourceWindow.width,
-          height: sourceWindow.height
-        },
-        z: nextWindowZ()
+      const instanceApp = {
+        ...targetApp,
+        id: sourceWindowId,
+        contentWindowId: targetWindowId,
+        url: normalizePath(destination.pathname)
       };
-      osState.activeWindowId = targetWindowId;
-      rememberTaskbarOrder(targetWindowId);
+      const nextWindow = navigateExplorerWindow(sourceWindow, instanceApp, {
+        instanceId: sourceWindowId,
+        contentWindowId: targetWindowId,
+        z: nextWindowZ()
+      });
+
+      if (!nextWindow) {
+        throw new Error(`Explorer window ${sourceWindowId} could not navigate to ${destination.pathname}`);
+      }
+
+      applications[sourceWindowId] = { ...applications[sourceWindowId], ...instanceApp };
+      osState.windows[sourceWindowId] = nextWindow;
+      osState.explorers[sourceWindowId] = navigateExplorerSession(
+        ensureExplorerState(context),
+        normalizePath(destination.pathname)
+      );
+      osState.activeWindowId = sourceWindowId;
       saveOsState();
+      await hydrateWindowDom(nextWindow);
+
+      if (navigationId !== latestExplorerNavigations.get(sourceWindowId)) {
+        return;
+      }
+
       applyWindowState();
       syncUrlToWindowStack();
-      return hydrateWindowDom(osState.windows[targetWindowId]);
-    }).catch(() => window.location.assign(destination.href));
+    }).catch(() => {
+      if (sourceWindow.state === "maximized") {
+        window.location.assign(destination.href);
+      }
+    });
     return true;
   };
 
@@ -1370,16 +1469,19 @@ import {
       return;
     }
 
-    const state = ensureExplorerState(context);
+    if (context.tree.dataset.treeBound === "true") {
+      return;
+    }
+
+    const state = ensureExplorerTreeState();
     const toggles = Array.from(context.tree.querySelectorAll("[data-tree-toggle]"));
 
     toggles.forEach((toggle) => {
       const node = toggle.closest("[data-tree-node-id]");
       const id = node?.dataset.treeNodeId;
-      const saved = id ? state.tree.expanded[id] : undefined;
-      const containsSelected = Boolean(node?.querySelector(".tree-row.is-selected, .tree-link[aria-current='page']"));
+      const saved = id ? state.expanded[id] : undefined;
       const defaultExpanded = toggle.dataset.treeDefaultExpanded === "true";
-      const expanded = containsSelected || (typeof saved === "boolean" ? saved : defaultExpanded);
+      const expanded = typeof saved === "boolean" ? saved : defaultExpanded;
 
       setTreeNodeExpanded(toggle, expanded);
 
@@ -1401,6 +1503,25 @@ import {
         openExplorerItemInWindow(event, link, context);
       });
     });
+
+    context.tree.querySelectorAll("[data-drive-alert]").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openDeviceErrorDialog(button.dataset.driveAlert);
+      });
+    });
+
+    context.tree.querySelectorAll("[data-tree-select]").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        context.tree.querySelectorAll(".tree-row.is-selected").forEach((row) => row.classList.remove("is-selected"));
+        button.closest(".tree-row")?.classList.add("is-selected");
+      });
+    });
+
+    context.tree.dataset.treeBound = "true";
   };
 
   const bindExplorerView = (context) => {
@@ -1476,6 +1597,16 @@ import {
         finishActiveFileDrag();
       });
 
+      const selectItem = () => {
+        context.fileItems.forEach((candidate) => candidate.classList.toggle("is-selected", candidate === item));
+      };
+
+      const openItem = (event) => {
+        if (navigateExplorerToFolder(event, item, context) || openExplorerItemInWindow(event, item, context)) {
+          event.stopImmediatePropagation();
+        }
+      };
+
       item.addEventListener("click", (event) => {
         if (item.dataset.wasDragged === "true") {
           event.preventDefault();
@@ -1484,10 +1615,41 @@ import {
           return;
         }
 
-        if (navigateExplorerToFolder(event, item, context) || openExplorerItemInWindow(event, item, context)) {
-          event.stopImmediatePropagation();
-        }
+        event.preventDefault();
+        selectItem();
       });
+
+      if (!item.dataset.driveAlert) {
+        item.addEventListener("dblclick", openItem);
+        item.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            openItem(event);
+            return;
+          }
+
+          if (event.key === " ") {
+            event.preventDefault();
+            selectItem();
+          }
+        });
+      }
+
+      if (item.dataset.driveAlert) {
+        item.addEventListener("dblclick", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          openDeviceErrorDialog(item.dataset.driveAlert);
+        });
+
+        item.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter") {
+            return;
+          }
+
+          event.preventDefault();
+          openDeviceErrorDialog(item.dataset.driveAlert);
+        });
+      }
     });
   };
 
@@ -1767,6 +1929,39 @@ import {
   const closeRssSetup = () => {
     rssSetupWindow?.classList.remove("is-open");
     rssSetupWindow?.classList.remove("is-active");
+  };
+
+  const openDeviceErrorDialog = (drive = "floppy-a") => {
+    if (!deviceErrorDialog) {
+      return;
+    }
+
+    deviceErrorDrive = drive;
+    const title = deviceErrorDialog.querySelector("[data-floppy-dialog-title]");
+    const driveLabel = deviceErrorDialog.querySelector("[data-floppy-dialog-drive]");
+    const defaultButton = deviceErrorDialog.querySelector(".setup-button.is-default");
+
+    finishActiveDrag();
+    closeStartMenu();
+    closeViewMenu();
+
+    if (title) {
+      title.textContent = "Removable Disk (A:)";
+    }
+
+    if (driveLabel) {
+      driveLabel.textContent = "A:\\";
+    }
+
+    deviceErrorDialog.classList.add("is-open");
+    applyModalState();
+    focusModal(deviceErrorDialog);
+    defaultButton?.focus();
+  };
+
+  const closeDeviceErrorDialog = () => {
+    deviceErrorDialog?.classList.remove("is-open");
+    deviceErrorDialog?.classList.remove("is-active");
   };
 
   const setAboutTab = (tabId, root = aboutWindow) => {
@@ -2514,6 +2709,13 @@ import {
     bindExplorerView(context);
   });
   bindAboutWindow();
+  deviceErrorDialog?.querySelectorAll("[data-floppy-dialog-close]").forEach((button) => {
+    button.addEventListener("click", closeDeviceErrorDialog);
+  });
+  deviceErrorDialog?.querySelector("[data-floppy-dialog-retry]")?.addEventListener("click", () => {
+    closeDeviceErrorDialog();
+    window.setTimeout(() => openDeviceErrorDialog(deviceErrorDrive), 80);
+  });
   hydratePersistedWindows();
   ensureOsContext().catch(() => {
     // The normal route remains usable; individual actions retain hard-navigation fallbacks.
@@ -2582,6 +2784,7 @@ import {
       closeViewMenu();
       closeRssSetup();
       closeAboutWindow();
+      closeDeviceErrorDialog();
     }
   });
 

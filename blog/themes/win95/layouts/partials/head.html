@@ -3,6 +3,15 @@
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
 <meta name="description" content="{{ site.Params.Win95.subtitle | default site.Title }}">
 <link rel="alternate" type="application/rss+xml" title="{{ site.Title }} RSS" href="{{ "rss.xml" | absURL }}">
+{{ with site.Params.IndieWeb.metadataEndpoint }}
+<link rel="indieauth-metadata" href="{{ . }}">
+{{ end }}
+{{ with site.Params.IndieWeb.authorizationEndpoint }}
+<link rel="authorization_endpoint" href="{{ . }}">
+{{ end }}
+{{ with site.Params.IndieWeb.tokenEndpoint }}
+<link rel="token_endpoint" href="{{ . }}">
+{{ end }}
 {{ with site.Params.Win95.favicon }}
 <link rel="icon" href="{{ . | absURL }}">
 {{ end }}

@@ -231,6 +231,85 @@
   outline-offset: -5px;
 }
 
+.device-error-dialog {
+  background: var(--surface);
+  box-shadow: var(--bevel-raised), 2px 2px 0 rgba(0, 0, 0, 0.35);
+  display: none;
+  left: 50%;
+  padding: 3px;
+  position: fixed;
+  top: calc(50% - 18px);
+  transform: translate(-50%, -50%);
+  width: 333px;
+  z-index: 18;
+}
+
+.device-error-dialog.is-open {
+  display: block;
+}
+
+.device-error-dialog.is-positioned {
+  transform: none;
+}
+
+.device-error-body {
+  align-items: start;
+  display: grid;
+  gap: 33px;
+  grid-template-columns: 42px minmax(0, 1fr);
+  padding: 19px 25px 8px 34px;
+}
+
+.device-error-icon {
+  background: #f00;
+  border-radius: 50%;
+  box-shadow: inset -2px -2px #800000, inset 2px 2px #ff8080;
+  display: block;
+  height: 42px;
+  position: relative;
+  width: 42px;
+}
+
+.device-error-icon::before,
+.device-error-icon::after {
+  background: #fff;
+  content: "";
+  height: 10px;
+  left: 8px;
+  position: absolute;
+  top: 16px;
+  width: 26px;
+}
+
+.device-error-icon::before {
+  transform: rotate(45deg);
+}
+
+.device-error-icon::after {
+  transform: rotate(-45deg);
+}
+
+.device-error-message {
+  font-size: 12px;
+  line-height: 1.25;
+  padding-top: 2px;
+}
+
+.device-error-message p {
+  margin: 0 0 20px;
+}
+
+.device-error-buttons {
+  display: flex;
+  gap: 11px;
+  justify-content: center;
+  padding: 0 0 17px;
+}
+
+.device-error-buttons .setup-button {
+  min-width: 130px;
+}
+
 .about-window {
   max-width: 100vw;
 }

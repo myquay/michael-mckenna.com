@@ -36,6 +36,7 @@
       <section class="about-panel is-active" id="about-panel-about" role="tabpanel" aria-labelledby="about-tab-about" data-about-panel="about">
         <div class="about-profile">
           <img class="about-profile-image" src="/newspaper.png" alt="Newspaper">
+          {{ partial "indieweb-profile.html" (dict "class" "visually-hidden") }}
           <div class="about-copy">
             {{ with $about }}
               {{ .Content }}

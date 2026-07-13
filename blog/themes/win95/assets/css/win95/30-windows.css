@@ -250,6 +250,41 @@
   font-size: 12px;
 }
 
+.document-date {
+  text-decoration: none;
+}
+
+.document-author {
+  align-items: center;
+  color: #555;
+  display: flex;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.document-author .u-photo {
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+}
+
+.document-author .u-url {
+  color: inherit;
+}
+
+.visually-hidden {
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+  clip: rect(0, 0, 0, 0);
+}
+
 .document-body {
   margin: 0 auto;
   max-width: 860px;
@@ -435,4 +470,3 @@
   left: calc(100% - 2px);
   top: -3px;
 }
-

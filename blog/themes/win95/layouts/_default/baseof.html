@@ -23,6 +23,7 @@
     {{ end }}
   </div>
   {{ block "main" . }}{{ end }}
+  {{ partial "floppy-not-ready-dialog.html" . }}
   {{ $jsOptions := dict "targetPath" "js/win95.js" "format" "iife" "target" "es2019" "minify" true }}
   {{ $js := resources.Get "js/win95.mjs" | js.Build $jsOptions | fingerprint }}
   <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>

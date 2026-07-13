@@ -1,15 +1,18 @@
 {{ $page := .page }}
 {{ $isComputer := eq .kind "computer" }}
 {{ $windowId := cond $isComputer "my-computer" "my-documents" }}
-{{ $windowTitle := cond $isComputer "My Computer" "My Documents" }}
+{{ $windowTitle := cond $isComputer "My Computer" "Win95 (C:)" }}
 {{ $windowIcon := cond $isComputer "/images/win95-icons/w95_16.ico" "/images/win95-icons/w95_4.ico" }}
-{{ $title := cond $isComputer "Exploring - My Computer" "Exploring - C:\\MICHAEL" }}
-{{ $contentsTitle := cond $isComputer "Contents of My Computer" "Contents of 'C:\\MICHAEL'" }}
+{{ $title := cond $isComputer "Exploring - My Computer" "Exploring - Win95 (C:)" }}
+{{ $contentsTitle := cond $isComputer "Contents of My Computer" "Contents of Win95 (C:)" }}
 {{ $defaultX := cond $isComputer "126" "196" }}
 {{ $defaultY := cond $isComputer "38" "88" }}
 {{ $defaultWidth := cond $isComputer "760" "700" }}
-{{ $objectCount := cond $isComputer "5 object(s)" (printf "%d object(s)" (add (len site.Sections) (len (where site.RegularPages "Section" "")))) }}
-{{ $status := cond $isComputer "My Computer" "C:\\MICHAEL" }}
+{{ $driveSections := where site.Sections "Section" "ne" "pages" }}
+{{ $driveSections = where $driveSections "Section" "ne" "post" }}
+{{ $driveSections = where $driveSections "Section" "ne" "photos" }}
+{{ $objectCount := cond $isComputer "3 object(s)" (printf "%d object(s)" (len $driveSections)) }}
+{{ $status := cond $isComputer "My Computer" "Win95 (C:)" }}
 <section class="app-window explorer-window desktop-explorer-window" data-window-id="{{ $windowId }}" data-window-url="/" data-window-title="{{ $windowTitle }}" data-window-icon="{{ $windowIcon }}" data-window-default-x="{{ $defaultX }}" data-window-default-y="{{ $defaultY }}" data-window-default-width="{{ $defaultWidth }}" data-window-default-height="430" data-window-taskbar="true" hidden role="region" aria-labelledby="{{ $windowId }}-title">
   {{ partial "window-titlebar.html" (dict "icon" $windowIcon "titleId" (printf "%s-title" $windowId) "title" $title) }}
   {{ partial "window-menu.html" (dict "label" (printf "%s menu" $windowTitle) "viewMenuId" $windowId) }}
@@ -22,21 +25,13 @@
       <div class="file-list desktop-file-list" data-explorer-list data-view="list" data-sort="name">
         {{ partial "file-list-header.html" . }}
         {{ if $isComputer }}
-          <span class="file-item desktop-file-item" data-file-item data-file-id="my-computer-floppy-a" data-name="3½ Floppy (A:)" data-type="Drive" data-date=""><span class="file-icon-wrap"><img src="/images/win95-icons/w95_8.ico" alt=""></span><span class="file-name">3½ Floppy (A:)</span><span class="file-type">Drive</span><span class="file-date">-</span></span>
-          <span class="file-item desktop-file-item" data-file-item data-file-id="my-computer-floppy-b" data-name="5¼ Floppy (B:)" data-type="Drive" data-date=""><span class="file-icon-wrap"><img src="/images/win95-icons/w95_10.ico" alt=""></span><span class="file-name">5¼ Floppy (B:)</span><span class="file-type">Drive</span><span class="file-date">-</span></span>
-          <span class="file-item desktop-file-item" data-file-item data-file-id="my-computer-hard-disk" data-name="Hard Disk (C:)" data-type="Drive" data-date=""><span class="file-icon-wrap"><img src="/images/win95-icons/w95_9.ico" alt=""></span><span class="file-name">Hard Disk (C:)</span><span class="file-type">Drive</span><span class="file-date">-</span></span>
+          <span class="file-item desktop-file-item" tabindex="0" data-drive-alert="floppy-a" data-file-item data-file-id="my-computer-floppy-a" data-name="3½ Floppy (A:)" data-type="Drive" data-date=""><span class="file-icon-wrap"><img src="/images/win95-icons/w95_8.ico" alt=""></span><span class="file-name">3½ Floppy (A:)</span><span class="file-type">Drive</span><span class="file-date">-</span></span>
+          <a class="file-item desktop-file-item" href="/" data-open-kind="folder" data-open-window-id="my-documents" data-open-url="/" data-file-item data-file-id="my-computer-hard-disk" data-name="Win95 (C:)" data-type="Drive" data-date=""><span class="file-icon-wrap"><img src="/images/win95-icons/w95_9.ico" alt=""></span><span class="file-name">Win95 (C:)</span><span class="file-type">Drive</span><span class="file-date">-</span></a>
           <span class="file-item desktop-file-item" data-file-item data-file-id="my-computer-control-panel" data-name="Control Panel" data-type="System Folder" data-date=""><span class="file-icon-wrap"><img src="/images/win95-icons/w95_20.ico" alt=""></span><span class="file-name">Control Panel</span><span class="file-type">System Folder</span><span class="file-date">-</span></span>
-          <span class="file-item desktop-file-item" data-file-item data-file-id="my-computer-printers" data-name="Printers" data-type="System Folder" data-date=""><span class="file-icon-wrap"><img src="/images/win95-icons/w95_48.ico" alt=""></span><span class="file-name">Printers</span><span class="file-type">System Folder</span><span class="file-date">-</span></span>
         {{ else }}
-          {{ range site.Sections.ByTitle }}
+          {{ range $driveSections.ByTitle }}
             {{ $targetWindowId := partial "explorer-window-id.html" . }}
             <a class="file-item desktop-file-item" href="{{ .RelPermalink }}" data-open-kind="folder" data-open-window-id="{{ $targetWindowId }}" data-open-url="{{ .RelPermalink }}" data-file-item data-file-id="my-documents-{{ .Section }}" data-name="{{ .Title }}" data-type="Folder" data-date=""><span class="file-icon-wrap"><img src="/images/win95-icons/w95_4.ico" alt=""></span><span class="file-name">{{ .Title }}</span><span class="file-type">Folder</span><span class="file-date">-</span></a>
-          {{ end }}
-          {{ range (where site.RegularPages "Section" "").ByTitle }}
-            {{ $file := partial "file-metadata.html" (dict "page" . "defaultType" "Document") }}
-            {{ $targetWindowId := printf "document-%s" .File.UniqueID }}
-            {{ if ne $file.application "document" }}{{ $targetWindowId = $file.application }}{{ end }}
-            <a class="file-item desktop-file-item" href="{{ .RelPermalink }}" data-open-kind="{{ $file.application }}" data-open-window-kind="{{ $file.window }}" data-open-window-id="{{ $targetWindowId }}" data-open-url="{{ .RelPermalink }}" data-file-item data-file-id="my-documents-page-{{ .File.UniqueID }}" data-name="{{ $file.name }}" data-type="{{ $file.type }}" data-date=""><span class="file-icon-wrap"><img src="{{ $file.icon }}" alt=""></span><span class="file-name">{{ $file.name }}</span><span class="file-type">{{ $file.type }}</span><span class="file-date">-</span></a>
           {{ end }}
         {{ end }}
       </div>

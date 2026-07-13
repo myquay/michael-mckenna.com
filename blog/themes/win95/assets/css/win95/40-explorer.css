@@ -59,12 +59,12 @@
   box-shadow: var(--bevel-sunken);
   flex: 1;
   overflow: auto;
-  padding: 7px 8px 12px 10px;
+  padding: 7px 8px 12px 6px;
 }
 
 .tree-list ul {
   margin-left: 7px;
-  padding-left: 15px;
+  padding-left: 22px;
 }
 
 .tree-list li {
@@ -76,17 +76,17 @@
   border-left: 1px dotted var(--surface-shadow);
   content: "";
   height: 12px;
-  left: -15px;
+  left: -22px;
   position: absolute;
   top: -1px;
-  width: 14px;
+  width: 21px;
 }
 
 .tree-list ul > li:not(:last-child)::after {
   border-left: 1px dotted var(--surface-shadow);
   bottom: -1px;
   content: "";
-  left: -15px;
+  left: -22px;
   position: absolute;
   top: 11px;
 }
@@ -96,7 +96,7 @@
   display: inline-grid;
   font-size: 15px;
   gap: 4px;
-  grid-template-columns: 13px 20px auto;
+  grid-template-columns: 13px 24px auto;
   line-height: 1.2;
   min-height: 23px;
   padding: 0 2px 0 0;
@@ -108,6 +108,21 @@
 .tree-row img {
   height: 20px;
   width: 20px;
+}
+
+.tree-row--desktop {
+  grid-template-columns: 28px auto;
+  min-height: 30px;
+}
+
+.tree-row--desktop img {
+  height: 28px;
+  image-rendering: pixelated;
+  width: 28px;
+}
+
+.tree-row--root {
+  margin-left: 0;
 }
 
 .tree-toggle {
@@ -123,7 +138,9 @@
   line-height: 10px;
   margin: 0;
   padding: 0;
+  position: relative;
   text-align: center;
+  transform: translateX(-28px);
   width: 13px;
 }
 
@@ -145,7 +162,7 @@
   left: 0;
   position: absolute;
   top: 6px;
-  width: 13px;
+  width: 18px;
 }
 
 .tree-link,
@@ -156,20 +173,33 @@
   text-decoration: none;
 }
 
-.tree-link:focus-visible {
+.tree-button {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: default;
+  font: inherit;
+  margin: 0;
+  text-align: left;
+}
+
+.tree-link:focus-visible,
+.tree-button:focus-visible {
   outline: 1px dotted currentColor;
   outline-offset: 1px;
 }
 
 .tree-row.is-selected .tree-link,
-.tree-row.is-selected .tree-label {
+.tree-row.is-selected .tree-label,
+.tree-row.is-selected .tree-button {
   background: var(--highlight);
   color: var(--highlight-text);
   outline: 1px dotted #fff;
   outline-offset: -1px;
 }
 
-.tree-row.is-selected .tree-link {
+.tree-row.is-selected .tree-link,
+.tree-row.is-selected .tree-button {
   color: var(--highlight-text);
 }
 
@@ -361,4 +391,3 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-

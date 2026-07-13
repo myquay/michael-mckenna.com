@@ -105,6 +105,7 @@ if (uniqueFailures.length > 0) {
 
 const photoFeedPath = path.join(buildRoot, "photos", "rss.xml");
 const desktopContextPath = path.join(buildRoot, "window.html");
+const homePagePath = path.join(buildRoot, "index.html");
 
 if (!fs.existsSync(photoFeedPath) || !/<item>/.test(fs.readFileSync(photoFeedPath, "utf8"))) {
   console.error("The generated Photos RSS feed is missing or empty.");
@@ -114,6 +115,38 @@ if (!fs.existsSync(photoFeedPath) || !/<item>/.test(fs.readFileSync(photoFeedPat
 if (!fs.existsSync(desktopContextPath)
   || !/data-feed-label="Photos"[^>]+data-feed-url="[^"]*\/photos\/rss\.xml"/.test(fs.readFileSync(desktopContextPath, "utf8"))) {
   console.error("RSS Setup does not reference the generated Photos RSS feed.");
+  process.exit(1);
+}
+
+const homePage = fs.existsSync(homePagePath) ? fs.readFileSync(homePagePath, "utf8") : "";
+const requiredHomePatterns = [
+  /rel="indieauth-metadata" href="https:\/\/talos\.michael-mckenna\.com\/\.well-known\/oauth-authorization-server"/,
+  /rel="authorization_endpoint" href="https:\/\/talos\.michael-mckenna\.com\/auth"/,
+  /rel="token_endpoint" href="https:\/\/talos\.michael-mckenna\.com\/token"/,
+  /class="indieweb-profile h-card visually-hidden"/,
+  /href="https:\/\/github\.com\/myquay" rel="me authn"/
+];
+
+if (requiredHomePatterns.some((pattern) => !pattern.test(homePage))) {
+  console.error("The generated homepage is missing required IndieAuth or h-card metadata.");
+  process.exit(1);
+}
+
+const entryPage = outputFiles.find((file) => {
+  const relativePath = path.relative(buildRoot, file);
+  return /^(?:blog|notes)\/[^/]+\/index\.html$/.test(relativePath);
+});
+const entryHtml = entryPage ? fs.readFileSync(entryPage, "utf8") : "";
+const requiredEntryPatterns = [
+  /class="document-content h-entry"/,
+  /class="p-name"/,
+  /class="document-author h-card u-author"/,
+  /class="dt-published"/,
+  /class="document-body e-content"/
+];
+
+if (!entryPage || requiredEntryPatterns.some((pattern) => !pattern.test(entryHtml))) {
+  console.error("A generated article or note is missing required h-entry metadata.");
   process.exit(1);
 }
 

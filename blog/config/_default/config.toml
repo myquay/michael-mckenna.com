@@ -35,6 +35,20 @@ disableKinds = ["term", "taxonomy"]
     favicon = "favicon.png"
     subtitle = "All my Keystrokes That's Fit to Print"
 
+[Params.IndieWeb]
+    name = "Michael McKenna"
+    url = "https://michael-mckenna.com/"
+    photo = "/images/site/45eb93e3-6a59-4a2e-a16a-4dbfafc1a531.jpg"
+    note = "A study in imperfection; a collection of the intangible."
+    authorizationEndpoint = "https://talos.michael-mckenna.com/auth"
+    tokenEndpoint = "https://talos.michael-mckenna.com/token"
+    metadataEndpoint = "https://talos.michael-mckenna.com/.well-known/oauth-authorization-server"
+
+[[Params.IndieWeb.identities]]
+    name = "GitHub"
+    url = "https://github.com/myquay"
+    authentication = true
+
 [outputFormats.RSS]
     mediaType = "application/rss+xml"
     baseName = "rss"

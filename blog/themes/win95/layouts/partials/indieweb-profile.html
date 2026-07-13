@@ -1,0 +1,12 @@
+{{ $indieWeb := site.Params.IndieWeb }}
+{{ with $indieWeb.name }}
+  <div class="indieweb-profile h-card{{ with $.class }} {{ . }}{{ end }}">
+    <span class="p-name">{{ . }}</span>
+    {{ with $indieWeb.photo }}<img class="u-photo" src="{{ . | absURL }}" alt="">{{ end }}
+    {{ with $indieWeb.url }}<a class="u-url" href="{{ . }}" rel="me">{{ . }}</a>{{ end }}
+    {{ range $indieWeb.identities }}
+      <a class="u-url" href="{{ .url }}" rel="me{{ if .authentication }} authn{{ end }}">{{ .name }}</a>
+    {{ end }}
+    {{ with $indieWeb.note }}<span class="p-note">{{ . }}</span>{{ end }}
+  </div>
+{{ end }}

@@ -1,6 +1,7 @@
 import { resolveExplorerWindowId } from "./routing.mjs";
+import { createExplorerSession, isExplorerWindowId } from "./explorer.mjs";
 
-export const migrateOsState = (state, { routeIndex = {}, currentVersion = 3, baseUrl } = {}) => {
+export const migrateOsState = (state, { routeIndex = {}, currentVersion = 4, baseUrl } = {}) => {
   if (Number(state.version) >= currentVersion) {
     return state;
   }
@@ -34,6 +35,17 @@ export const migrateOsState = (state, { routeIndex = {}, currentVersion = 3, bas
   }
 
   state.taskbarOrder = Array.from(new Set(state.taskbarOrder));
+
+  Object.entries(state.windows).forEach(([id, windowState]) => {
+    if (!isExplorerWindowId(id)) {
+      return;
+    }
+
+    const contentWindowId = resolveExplorerWindowId(windowState.url, routeIndex, baseUrl) || id;
+    state.windows[id] = { ...windowState, id, contentWindowId };
+    state.explorers[id] = createExplorerSession(state.explorers[id], windowState.url || "/");
+  });
+
   state.version = currentVersion;
   return state;
 };

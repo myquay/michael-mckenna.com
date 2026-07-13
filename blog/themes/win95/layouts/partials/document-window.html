@@ -5,19 +5,27 @@
 {{ if ne $file.application "document" }}{{ $windowId = $file.application }}{{ end }}
 {{ $isModal := eq $file.window "modal" }}
 {{ $windowClass := .class }}
+{{ $indieWeb := site.Params.IndieWeb }}
 {{ if and $isModal $windowClass }}{{ $windowClass = "is-normal" }}{{ end }}
 <section class="app-window document-window{{ with $windowClass }} {{ . }}{{ end }}" data-window-id="{{ $windowId }}" data-window-kind="{{ $file.window }}" data-window-url="{{ $page.RelPermalink }}" data-window-title="{{ $file.name }}" data-window-icon="{{ $file.icon }}" data-window-default-x="124" data-window-default-y="46" data-window-default-width="820" data-window-default-height="560" data-window-min-width="360" data-window-min-height="260" data-window-fixed-size="{{ if $isModal }}true{{ else }}false{{ end }}" data-window-taskbar="{{ if $isModal }}false{{ else }}true{{ end }}" {{ if .hidden }}hidden{{ end }} role="{{ if $isModal }}dialog{{ else }}article{{ end }}" aria-labelledby="{{ .titleId }}"{{ if $isModal }} tabindex="-1"{{ end }}>
   {{ partial "window-titlebar.html" (dict "icon" $file.icon "titleId" .titleId "title" $file.name "modal" $isModal "controlClass" "document-window-control") }}
   {{ partial "window-menu.html" (dict "label" "Document menu") }}
 
-  <article class="document-content">
+  <article class="document-content h-entry">
     <header class="document-header">
-      <h1>{{ $page.Title }}</h1>
-      {{ with $page.Date }}
-        <time datetime="{{ .Format "2006-01-02" }}">{{ .Format "02 Jan 2006" }}</time>
+      <h1 class="p-name">{{ $page.Title }}</h1>
+      {{ with $indieWeb.name }}
+        <span class="document-author h-card u-author">
+          {{ with $indieWeb.photo }}<img class="u-photo" src="{{ . | absURL }}" alt="">{{ end }}
+          <a class="u-url p-name" href="{{ $indieWeb.url | default site.BaseURL }}" rel="author">{{ . }}</a>
+        </span>
       {{ end }}
+      {{ with $page.Date }}
+        <a class="u-url document-date" href="{{ $page.Permalink }}"><time class="dt-published" datetime="{{ .Format "2006-01-02T15:04:05Z07:00" }}">{{ .Format "02 Jan 2006" }}</time></a>
+      {{ end }}
+      {{ if gt $page.Lastmod $page.Date }}<time class="visually-hidden dt-updated" datetime="{{ $page.Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ $page.Lastmod.Format "02 Jan 2006" }}</time>{{ end }}
     </header>
-    <div class="document-body">
+    <div class="document-body e-content">
       {{ with $page.Params.photo }}
         <figure class="document-photo">
           <img src="{{ . }}" alt="{{ $page.Params.alt | default $page.Title }}">
