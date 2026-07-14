@@ -912,6 +912,29 @@ import {
     );
   };
 
+  const scopeExplorerTreeIds = (tree, instanceId) => {
+    if (!tree || !instanceId || tree.dataset.treeIdsScoped === instanceId) {
+      return;
+    }
+
+    const idMap = new Map();
+    tree.querySelectorAll("[id]").forEach((element) => {
+      const originalId = element.id;
+      const scopedId = `${instanceId}--${originalId}`;
+      idMap.set(originalId, scopedId);
+      element.id = scopedId;
+    });
+
+    tree.querySelectorAll("[aria-controls]").forEach((element) => {
+      const targetId = idMap.get(element.getAttribute("aria-controls"));
+      if (targetId) {
+        element.setAttribute("aria-controls", targetId);
+      }
+    });
+
+    tree.dataset.treeIdsScoped = instanceId;
+  };
+
   const hydrateExplorerWindowDom = (item, sourceWindow, existing) => {
     const sourceContents = sourceWindow?.querySelector(".explorer-contents");
     const existingContents = existing?.querySelector(".explorer-contents");
@@ -1610,6 +1633,7 @@ import {
       return;
     }
 
+    scopeExplorerTreeIds(context.tree, explorerId(context));
     const state = ensureExplorerTreeState();
     const toggles = Array.from(context.tree.querySelectorAll("[data-tree-toggle]"));
 
@@ -2213,9 +2237,9 @@ import {
     const time = dateTimeDialog.querySelector("[data-date-time-value]");
     const angles = getClockHandAngles(parts);
 
-    if (month) month.textContent = monthName;
-    if (year) year.textContent = String(parts.year);
-    if (time) time.textContent = formatDialogTime(parts);
+    if (month) month.value = monthName;
+    if (year) year.value = String(parts.year);
+    if (time) time.value = formatDialogTime(parts);
 
     dateTimeDialog.querySelector("[data-clock-hour]")?.setAttribute("transform", `rotate(${angles.hour} 100 100)`);
     dateTimeDialog.querySelector("[data-clock-minute]")?.setAttribute("transform", `rotate(${angles.minute} 100 100)`);
@@ -2242,7 +2266,7 @@ import {
     syncClock();
     applyModalState();
     focusModal(dateTimeDialog);
-    dateTimeDialog.querySelector("[data-date-time-close]")?.focus();
+    dateTimeDialog.querySelector("[data-date-time-default]")?.focus();
   };
 
   const closeDateTimeProperties = () => {
@@ -2970,9 +2994,6 @@ import {
   trayTimeButton?.addEventListener("click", openDateTimeProperties);
   dateTimeDialog?.querySelectorAll("[data-date-time-close]").forEach((button) => {
     button.addEventListener("click", closeDateTimeProperties);
-  });
-  dateTimeDialog?.querySelector("[data-date-time-help]")?.addEventListener("click", () => {
-    dateTimeDialog.querySelector("#date-time-zone")?.focus();
   });
   hydratePersistedWindows();
   ensureOsContext().catch(() => {

@@ -336,22 +336,18 @@
   transform: none;
 }
 
-.date-time-title-controls {
-  display: flex;
-  gap: 2px;
-}
-
 .date-time-title-button {
   flex: 0 0 14px;
 }
 
 .date-time-content {
-  padding: 14px 12px 12px;
+  padding: 8px 8px 10px;
 }
 
 .date-time-tabs {
   display: flex;
-  padding-left: 3px;
+  margin-bottom: -2px;
+  padding-left: 4px;
   position: relative;
   z-index: 2;
 }
@@ -403,14 +399,23 @@
 .date-time-group legend {
   font-size: 15px;
   padding: 0 4px;
-  text-decoration: underline;
+}
+
+.date-time-group legend u {
   text-underline-offset: 2px;
 }
 
 .date-time-date-fields {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 22px minmax(92px, 0.8fr) 22px;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) minmax(114px, 0.8fr);
   margin: 0 4px 17px;
+}
+
+.date-time-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22px;
+  min-width: 0;
 }
 
 .date-time-readout,
@@ -425,6 +430,17 @@
   padding: 3px 7px;
 }
 
+.date-time-readout {
+  border: 0;
+  border-radius: 0;
+  color: var(--surface-shadow);
+  font: inherit;
+  font-size: 15px;
+  opacity: 1;
+  width: 100%;
+  -webkit-text-fill-color: var(--surface-shadow);
+}
+
 .date-time-picker-arrow,
 .date-time-spinner {
   background: var(--surface);
@@ -437,7 +453,7 @@
 .date-time-picker-arrow::after {
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 6px solid #000;
+  border-top: 6px solid var(--surface-shadow);
   content: "";
   justify-self: center;
   margin-top: 12px;
@@ -461,12 +477,12 @@
 }
 
 .date-time-spinner i:first-child::after {
-  border-bottom: 5px solid #000;
+  border-bottom: 5px solid var(--surface-shadow);
   top: 5px;
 }
 
 .date-time-spinner i:last-child::after {
-  border-top: 5px solid #000;
+  border-top: 5px solid var(--surface-shadow);
   bottom: 4px;
 }
 
@@ -532,13 +548,18 @@
   stroke: none;
 }
 
-.date-time-clock-ticks line {
+.date-time-clock-minute-ring {
+  fill: none;
   stroke: #fff;
-  stroke-width: 4;
+  stroke-dasharray: 0.28 0.72;
+  stroke-linecap: square;
+  stroke-width: 2.2;
 }
 
-.date-time-clock-ticks line:nth-child(3n + 1) {
+.date-time-clock-major-ticks line {
   stroke: #008080;
+  stroke-linecap: square;
+  stroke-width: 2.6;
 }
 
 .date-time-hour-hand,
@@ -572,9 +593,18 @@
   width: 152px;
 }
 
-.date-time-time-field output {
+.date-time-time-field input {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--surface-shadow);
   font-size: 18px;
+  min-width: 0;
+  opacity: 1;
+  padding: 0;
   user-select: text;
+  width: 100%;
+  -webkit-text-fill-color: var(--surface-shadow);
 }
 
 .date-time-zone {
