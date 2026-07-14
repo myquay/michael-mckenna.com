@@ -2,6 +2,8 @@ import { clamp, constrainWindowBounds } from "./win95/core/geometry.mjs";
 import {
   createExplorerSession,
   createExplorerTreeState,
+  isExplorerWindowId,
+  isWindowContractCompatible,
   navigateExplorerSession,
   navigateExplorerWindow
 } from "./win95/core/explorer.mjs";
@@ -10,12 +12,22 @@ import {
   isVisibleNonModalWindow,
   migrateOsState as migrateStoredOsState
 } from "./win95/core/state.mjs";
+import {
+  buildMonthCalendar,
+  formatDialogTime,
+  formatNewZealandTaskbarTime,
+  getClockHandAngles,
+  getMonthName,
+  getNewZealandDateTime
+} from "./win95/core/time.mjs";
 
   const desktop = document.getElementById("desktop");
   let shortcuts = Array.from(document.querySelectorAll(".desktop-shortcut"));
   const startButton = document.getElementById("start-button");
   const startMenu = document.getElementById("start-menu");
   const trayTime = document.getElementById("tray-time");
+  const trayTimeButton = document.getElementById("tray-time-button");
+  const dateTimeDialog = document.getElementById("date-time-properties");
   let rssSetupWindow = document.getElementById("rss-setup-window");
   let rssSetupClose = document.getElementById("rss-setup-close");
   let rssSetupBack = document.getElementById("rss-setup-back");
@@ -55,6 +67,7 @@ import {
   const dragThreshold = 4;
   const desktopUrl = "/";
   const explorerTreeVersion = 2;
+  const windowContractVersion = document.body?.dataset.windowContractVersion || "";
   const modalWindowKind = "modal";
   const defaultCapabilities = {
     move: true,
@@ -90,6 +103,8 @@ import {
   const latestExplorerNavigations = new Map();
   let wizardStep = 0;
   let deviceErrorDrive = "floppy-a";
+  let dateTimeReturnFocus = null;
+  let renderedCalendarKey = "";
 
   const explorerWindowIdsByPath = readExplorerRouteIndex(document);
   const explorerWindowIdForUrl = (url) => resolveExplorerWindowId(
@@ -377,6 +392,14 @@ import {
     modalWindows.forEach((modal) => {
       const id = modal.dataset.modalWindow;
       const item = osState.modals[id];
+
+      if (modal === dateTimeDialog && isCompactMode()) {
+        modal.classList.remove("is-positioned");
+        modal.style.removeProperty("left");
+        modal.style.removeProperty("top");
+        modal.style.removeProperty("transform");
+        return;
+      }
 
       if (item?.position) {
         setModalPosition(modal, item.position);
@@ -743,12 +766,35 @@ import {
     const routeUrl = normalizePath(url);
 
     if (!windowFragmentCache.has(routeUrl)) {
-      const request = fetch(fragmentUrlForRoute(routeUrl), { credentials: "same-origin" }).then(async (response) => {
+      const loadFragment = async ({ cache = "no-cache", cacheBuster = false } = {}) => {
+        const fragmentUrl = fragmentUrlForRoute(routeUrl);
+        const requestUrl = cacheBuster
+          ? `${fragmentUrl}${fragmentUrl.includes("?") ? "&" : "?"}window-contract=${encodeURIComponent(windowContractVersion)}`
+          : fragmentUrl;
+        const response = await fetch(requestUrl, { credentials: "same-origin", cache });
+
         if (!response.ok) {
           throw new Error(`Unable to load the window fragment for ${routeUrl}`);
         }
 
-        return new DOMParser().parseFromString(await response.text(), "text/html");
+        const fragmentDocument = new DOMParser().parseFromString(await response.text(), "text/html");
+        const fragmentVersion = fragmentDocument.querySelector("[data-window-contract-version]")?.dataset.windowContractVersion;
+
+        return { fragmentDocument, fragmentVersion };
+      };
+
+      const request = loadFragment().then(async ({ fragmentDocument, fragmentVersion }) => {
+        if (isWindowContractCompatible(windowContractVersion, fragmentVersion)) {
+          return fragmentDocument;
+        }
+
+        const refreshed = await loadFragment({ cache: "reload", cacheBuster: true });
+
+        if (!isWindowContractCompatible(windowContractVersion, refreshed.fragmentVersion)) {
+          throw new Error(`Window fragment contract mismatch for ${routeUrl}`);
+        }
+
+        return refreshed.fragmentDocument;
       }).catch((error) => {
         windowFragmentCache.delete(routeUrl);
         throw error;
@@ -829,6 +875,85 @@ import {
     return appWindow;
   };
 
+  const syncExplorerTreeLocation = (tree, location, contentWindowId) => {
+    if (!tree) {
+      return;
+    }
+
+    const targetPath = normalizePath(location);
+    let selectedRow = null;
+
+    tree.querySelectorAll("[data-open-kind='folder']").forEach((link) => {
+      const row = link.closest(".tree-row");
+      const linkPath = normalizePath(new URL(link.href || link.dataset.openUrl || desktopUrl, window.location.href).pathname);
+      const linkWindowId = link.dataset.openWindowId || null;
+      const selected = linkPath === targetPath
+        && (!contentWindowId || linkWindowId === contentWindowId || (!linkWindowId && contentWindowId === "desktop"));
+
+      row?.classList.toggle("is-selected", selected);
+      if (selected) {
+        link.setAttribute("aria-current", "page");
+        selectedRow = row;
+      } else {
+        link.removeAttribute("aria-current");
+      }
+
+      const icon = row?.querySelector("[data-tree-folder-icon]");
+      if (icon) {
+        icon.src = selected ? icon.dataset.openIcon : icon.dataset.closedIcon;
+      }
+    });
+
+    const siteDrive = tree.querySelector("[data-tree-node-id='site-drive']");
+    const siteDriveRow = siteDrive?.querySelector(":scope > .tree-row");
+    siteDriveRow?.classList.toggle(
+      "is-selected-parent",
+      Boolean(selectedRow && selectedRow !== siteDriveRow && siteDrive?.contains(selectedRow))
+    );
+  };
+
+  const hydrateExplorerWindowDom = (item, sourceWindow, existing) => {
+    const sourceContents = sourceWindow?.querySelector(".explorer-contents");
+    const existingContents = existing?.querySelector(".explorer-contents");
+    const context = explorerContexts.find((candidate) => candidate.windowEl === existing);
+
+    if (!sourceContents || !existingContents || !context) {
+      return null;
+    }
+
+    const importedContents = document.importNode(sourceContents, true);
+    const sourceStatus = sourceWindow.querySelector(".explorer-statusbar");
+    const existingStatus = existing.querySelector(".explorer-statusbar");
+    const sourceTitle = sourceWindow.querySelector(".window-title span");
+    const existingTitle = existing.querySelector(".window-title span");
+    const sourceTitleIcon = sourceWindow.querySelector(".window-title img");
+    const existingTitleIcon = existing.querySelector(".window-title img");
+
+    existing.dataset.windowContentId = item.contentWindowId || item.id;
+    existing.dataset.windowUrl = item.url;
+    existing.dataset.windowTitle = item.title;
+    existing.dataset.windowIcon = item.icon;
+    existing.dataset.windowContractVersion = sourceWindow.dataset.windowContractVersion;
+
+    if (sourceTitle && existingTitle) {
+      existingTitle.textContent = sourceTitle.textContent;
+    }
+
+    if (sourceTitleIcon && existingTitleIcon) {
+      existingTitleIcon.src = sourceTitleIcon.getAttribute("src");
+    }
+
+    if (sourceStatus && existingStatus) {
+      existingStatus.replaceChildren(...Array.from(sourceStatus.childNodes).map((node) => document.importNode(node, true)));
+    }
+
+    existingContents.replaceWith(importedContents);
+    Object.assign(context, createExplorerContext(importedContents.querySelector("[data-explorer-list]")));
+    syncExplorerTreeLocation(context.tree, item.url, item.contentWindowId || item.id);
+    bindExplorerView(context);
+    return existing;
+  };
+
   const hydrateWindowDom = async (item, { apply = true } = {}) => {
     if (!item?.id || !item.url || item.state === "minimized") {
       return null;
@@ -847,6 +972,18 @@ import {
 
     if (!sourceWindow) {
       throw new Error(`Window content ${contentWindowId} was not found at ${item.url}`);
+    }
+
+    if (existing && isExplorerWindowId(item.id) && sourceWindow.querySelector("[data-explorer-list]")) {
+      const hydratedExplorer = hydrateExplorerWindowDom(item, sourceWindow, existing);
+
+      if (hydratedExplorer) {
+        if (apply) {
+          applyWindowState();
+        }
+
+        return hydratedExplorer;
+      }
     }
 
     const imported = document.importNode(sourceWindow, true);
@@ -1533,34 +1670,43 @@ import {
     sortExplorerItems(context, state.sort || "date");
     setExplorerView(context, isCompactMode() ? "list" : state.view || context.list.dataset.view || "details", { persist: false });
 
-    context.viewMenuButton?.addEventListener("click", (event) => {
-      event.stopPropagation();
-      toggleViewMenu(context);
-    });
+    if (context.windowEl?.dataset.explorerMenuBound !== "true") {
+      context.viewMenuButton?.addEventListener("click", (event) => {
+        event.stopPropagation();
+        toggleViewMenu(context);
+      });
 
-    context.viewOptionButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        setExplorerView(context, button.dataset.viewOption, { save: true });
+      context.viewOptionButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          setExplorerView(context, button.dataset.viewOption, { save: true });
+          closeViewMenu(context);
+        });
+      });
+
+      context.arrangeIconButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          sortExplorerItems(context, button.dataset.arrangeIcons, { save: true, lineUp: context.list.dataset.view === "icons" });
+          closeViewMenu(context);
+        });
+      });
+
+      context.lineUpIconsButton?.addEventListener("click", () => {
+        if (context.list.dataset.view === "icons") {
+          lineUpExplorerIcons(context, { save: true });
+        }
+
         closeViewMenu(context);
       });
-    });
 
-    context.arrangeIconButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        sortExplorerItems(context, button.dataset.arrangeIcons, { save: true, lineUp: context.list.dataset.view === "icons" });
-        closeViewMenu(context);
-      });
-    });
-
-    context.lineUpIconsButton?.addEventListener("click", () => {
-      if (context.list.dataset.view === "icons") {
-        lineUpExplorerIcons(context, { save: true });
-      }
-
-      closeViewMenu(context);
-    });
+      context.windowEl.dataset.explorerMenuBound = "true";
+    }
 
     context.fileItems.forEach((item) => {
+      if (item.dataset.explorerItemBound === "true") {
+        return;
+      }
+
+      item.dataset.explorerItemBound = "true";
       item.addEventListener("pointerdown", (event) => {
         if (event.button !== 0 || isCompactMode() || context.list.dataset.view !== "icons") {
           return;
@@ -1617,6 +1763,16 @@ import {
 
         event.preventDefault();
         selectItem();
+
+        if (isCompactMode()) {
+          if (item.dataset.driveAlert) {
+            event.stopPropagation();
+            openDeviceErrorDialog(item.dataset.driveAlert);
+            return;
+          }
+
+          openItem(event);
+        }
       });
 
       if (!item.dataset.driveAlert) {
@@ -1999,13 +2155,108 @@ import {
     removeWindowState("about");
   };
 
+  const renderDateTimeCalendar = (parts) => {
+    const calendar = dateTimeDialog?.querySelector("[data-date-time-calendar]");
+    const key = `${parts.year}-${parts.month}-${parts.day}`;
+
+    if (!calendar || renderedCalendarKey === key) {
+      return;
+    }
+
+    renderedCalendarKey = key;
+    const cells = buildMonthCalendar(parts.year, parts.month).map((day) => {
+      const cell = document.createElement("span");
+      cell.className = "date-time-day";
+      cell.setAttribute("role", "gridcell");
+
+      if (day === null) {
+        cell.setAttribute("aria-hidden", "true");
+        return cell;
+      }
+
+      const label = document.createElement("span");
+      label.textContent = String(day);
+      cell.append(label);
+
+      if (day === parts.day) {
+        cell.classList.add("is-today");
+        cell.setAttribute("aria-current", "date");
+      }
+
+      return cell;
+    });
+
+    calendar.replaceChildren(...cells);
+    calendar.setAttribute("aria-label", `${getMonthName(parts.month)} ${parts.year}; ${parts.day} selected`);
+  };
+
   const syncClock = () => {
     if (!trayTime) {
       return;
     }
 
     const now = new Date();
-    trayTime.textContent = now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", hour12: true }).toUpperCase();
+    const parts = getNewZealandDateTime(now);
+    const taskbarTime = formatNewZealandTaskbarTime(now);
+    const monthName = getMonthName(parts.month);
+
+    trayTime.textContent = taskbarTime;
+    trayTime.dateTime = now.toISOString();
+    trayTimeButton?.setAttribute("aria-label", `${taskbarTime}, ${parts.day} ${monthName} ${parts.year}, New Zealand time`);
+
+    if (!dateTimeDialog) {
+      return;
+    }
+
+    const month = dateTimeDialog.querySelector("[data-date-time-month]");
+    const year = dateTimeDialog.querySelector("[data-date-time-year]");
+    const time = dateTimeDialog.querySelector("[data-date-time-value]");
+    const angles = getClockHandAngles(parts);
+
+    if (month) month.textContent = monthName;
+    if (year) year.textContent = String(parts.year);
+    if (time) time.textContent = formatDialogTime(parts);
+
+    dateTimeDialog.querySelector("[data-clock-hour]")?.setAttribute("transform", `rotate(${angles.hour} 100 100)`);
+    dateTimeDialog.querySelector("[data-clock-minute]")?.setAttribute("transform", `rotate(${angles.minute} 100 100)`);
+    dateTimeDialog.querySelector("[data-clock-second]")?.setAttribute("transform", `rotate(${angles.second} 100 100)`);
+    renderDateTimeCalendar(parts);
+  };
+
+  const openDateTimeProperties = () => {
+    if (!dateTimeDialog) {
+      return;
+    }
+
+    finishActiveDrag();
+    closeStartMenu();
+    closeViewMenu();
+
+    if (!dateTimeDialog.classList.contains("is-open")) {
+      dateTimeReturnFocus = document.activeElement;
+      dateTimeDialog.hidden = false;
+      dateTimeDialog.classList.add("is-open");
+      trayTimeButton?.setAttribute("aria-expanded", "true");
+    }
+
+    syncClock();
+    applyModalState();
+    focusModal(dateTimeDialog);
+    dateTimeDialog.querySelector("[data-date-time-close]")?.focus();
+  };
+
+  const closeDateTimeProperties = () => {
+    if (!dateTimeDialog?.classList.contains("is-open")) {
+      return;
+    }
+
+    dateTimeDialog.classList.remove("is-open", "is-active");
+    dateTimeDialog.hidden = true;
+    trayTimeButton?.setAttribute("aria-expanded", "false");
+
+    const focusTarget = dateTimeReturnFocus?.isConnected ? dateTimeReturnFocus : trayTimeButton;
+    dateTimeReturnFocus = null;
+    focusTarget?.focus();
   };
 
   const moveActiveDrag = (clientX, clientY) => {
@@ -2716,6 +2967,13 @@ import {
     closeDeviceErrorDialog();
     window.setTimeout(() => openDeviceErrorDialog(deviceErrorDrive), 80);
   });
+  trayTimeButton?.addEventListener("click", openDateTimeProperties);
+  dateTimeDialog?.querySelectorAll("[data-date-time-close]").forEach((button) => {
+    button.addEventListener("click", closeDateTimeProperties);
+  });
+  dateTimeDialog?.querySelector("[data-date-time-help]")?.addEventListener("click", () => {
+    dateTimeDialog.querySelector("#date-time-zone")?.focus();
+  });
   hydratePersistedWindows();
   ensureOsContext().catch(() => {
     // The normal route remains usable; individual actions retain hard-navigation fallbacks.
@@ -2779,12 +3037,27 @@ import {
   });
 
   document.addEventListener("keydown", (event) => {
+    if (event.key === "Tab" && dateTimeDialog?.classList.contains("is-open")) {
+      const focusable = Array.from(dateTimeDialog.querySelectorAll("button:not(:disabled), [tabindex='0']"));
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    }
+
     if (event.key === "Escape") {
       closeStartMenu();
       closeViewMenu();
       closeRssSetup();
       closeAboutWindow();
       closeDeviceErrorDialog();
+      closeDateTimeProperties();
     }
   });
 
@@ -2850,4 +3123,4 @@ import {
   });
 
   syncClock();
-  window.setInterval(syncClock, 30000);
+  window.setInterval(syncClock, 1000);

@@ -314,6 +314,288 @@
   max-width: 100vw;
 }
 
+.date-time-dialog {
+  background: var(--surface);
+  box-shadow: var(--bevel-raised), 2px 2px 0 rgba(0, 0, 0, 0.35);
+  display: none;
+  left: 50%;
+  max-width: calc(100vw - 16px);
+  padding: 3px;
+  position: fixed;
+  top: calc(50% - 18px);
+  transform: translate(-50%, -50%);
+  width: 640px;
+  z-index: 18;
+}
+
+.date-time-dialog.is-open {
+  display: block;
+}
+
+.date-time-dialog.is-positioned {
+  transform: none;
+}
+
+.date-time-title-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.date-time-title-button {
+  flex: 0 0 14px;
+}
+
+.date-time-content {
+  padding: 14px 12px 12px;
+}
+
+.date-time-tabs {
+  display: flex;
+  padding-left: 3px;
+  position: relative;
+  z-index: 2;
+}
+
+.date-time-tab {
+  background: var(--surface);
+  border: 0;
+  border-radius: 3px 3px 0 0;
+  box-shadow:
+    inset -1px 0 var(--surface-dark),
+    inset 1px 1px var(--surface-light),
+    inset -2px 0 var(--surface-shadow),
+    inset 2px 2px var(--surface-mid);
+  min-height: 27px;
+  padding: 4px 12px 7px;
+  position: relative;
+}
+
+.date-time-tab::after {
+  background: var(--surface);
+  bottom: -2px;
+  content: "";
+  height: 3px;
+  left: 2px;
+  position: absolute;
+  right: 2px;
+}
+
+.date-time-panel {
+  border: 2px solid;
+  border-color: var(--surface-light) var(--surface-dark) var(--surface-dark) var(--surface-light);
+  box-shadow: inset -1px -1px var(--surface-shadow), inset 1px 1px var(--surface-mid);
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 350px;
+  padding: 16px 14px 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.date-time-group {
+  border: 2px groove var(--surface-light);
+  margin: 0;
+  min-width: 0;
+  padding: 18px 14px 14px;
+}
+
+.date-time-group legend {
+  font-size: 15px;
+  padding: 0 4px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.date-time-date-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22px minmax(92px, 0.8fr) 22px;
+  margin: 0 4px 17px;
+}
+
+.date-time-readout,
+.date-time-time-field {
+  align-items: center;
+  background: #fff;
+  box-shadow: var(--bevel-sunken);
+  display: flex;
+  font-size: 15px;
+  height: 30px;
+  min-width: 0;
+  padding: 3px 7px;
+}
+
+.date-time-picker-arrow,
+.date-time-spinner {
+  background: var(--surface);
+  box-shadow: var(--bevel-raised);
+  display: grid;
+  height: 30px;
+  width: 22px;
+}
+
+.date-time-picker-arrow::after {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #000;
+  content: "";
+  justify-self: center;
+  margin-top: 12px;
+}
+
+.date-time-spinner {
+  grid-template-rows: 1fr 1fr;
+}
+
+.date-time-spinner i {
+  box-shadow: var(--bevel-raised);
+  position: relative;
+}
+
+.date-time-spinner i::after {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  content: "";
+  left: 7px;
+  position: absolute;
+}
+
+.date-time-spinner i:first-child::after {
+  border-bottom: 5px solid #000;
+  top: 5px;
+}
+
+.date-time-spinner i:last-child::after {
+  border-top: 5px solid #000;
+  bottom: 4px;
+}
+
+.date-time-calendar {
+  background: #fff;
+  box-shadow: var(--bevel-sunken);
+  min-height: 236px;
+  padding: 2px;
+}
+
+.date-time-weekdays,
+.date-time-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.date-time-weekdays {
+  background: var(--surface-shadow);
+  color: var(--surface-mid);
+  font-size: 14px;
+  padding: 7px 5px 6px;
+  text-align: center;
+}
+
+.date-time-days {
+  align-content: start;
+  font-size: 16px;
+  gap: 5px 1px;
+  padding: 9px 6px;
+  text-align: center;
+}
+
+.date-time-day {
+  align-items: center;
+  display: flex;
+  height: 24px;
+  justify-content: center;
+}
+
+.date-time-day.is-today span {
+  background: var(--highlight);
+  color: var(--highlight-text);
+  outline: 1px dotted var(--surface-light);
+  outline-offset: -2px;
+  padding: 2px 4px;
+}
+
+.date-time-clock-group {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.date-time-clock {
+  display: block;
+  height: 244px;
+  margin: 0 auto 13px;
+  width: 244px;
+}
+
+.date-time-clock-face {
+  fill: var(--surface);
+  stroke: none;
+}
+
+.date-time-clock-ticks line {
+  stroke: #fff;
+  stroke-width: 4;
+}
+
+.date-time-clock-ticks line:nth-child(3n + 1) {
+  stroke: #008080;
+}
+
+.date-time-hour-hand,
+.date-time-minute-hand {
+  stroke: #008080;
+  stroke-linecap: square;
+}
+
+.date-time-hour-hand {
+  stroke-width: 8;
+}
+
+.date-time-minute-hand {
+  stroke-width: 6;
+}
+
+.date-time-second-hand {
+  stroke: var(--surface-shadow);
+  stroke-width: 2;
+}
+
+.date-time-clock-pin {
+  fill: #f00;
+}
+
+.date-time-time-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22px;
+  height: 31px;
+  padding: 0 0 0 6px;
+  width: 152px;
+}
+
+.date-time-time-field output {
+  font-size: 18px;
+  user-select: text;
+}
+
+.date-time-zone {
+  font-size: 14px;
+  margin: 15px 10px 18px;
+}
+
+.date-time-zone:focus-visible {
+  outline: 1px dotted #000;
+}
+
+.date-time-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.date-time-buttons .setup-button {
+  min-width: 112px;
+}
+
 .about-title {
   display: block;
   grid-template-columns: minmax(0, 1fr);

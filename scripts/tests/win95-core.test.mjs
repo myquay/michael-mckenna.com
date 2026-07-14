@@ -5,6 +5,7 @@ import { constrainWindowBounds } from "../../blog/themes/win95/assets/js/win95/c
 import {
   createExplorerSession,
   createExplorerTreeState,
+  isWindowContractCompatible,
   navigateExplorerSession,
   navigateExplorerWindow
 } from "../../blog/themes/win95/assets/js/win95/core/explorer.mjs";
@@ -13,6 +14,14 @@ import {
   isVisibleNonModalWindow,
   migrateOsState
 } from "../../blog/themes/win95/assets/js/win95/core/state.mjs";
+import {
+  buildMonthCalendar,
+  formatDialogTime,
+  formatNewZealandTaskbarTime,
+  getClockHandAngles,
+  getMonthName,
+  getNewZealandDateTime
+} from "../../blog/themes/win95/assets/js/win95/core/time.mjs";
 
 test("normalizes route paths consistently", () => {
   assert.equal(normalizePath(""), "/");
@@ -130,6 +139,13 @@ test("folder navigation preserves the explorer window instance", () => {
   assert.deepEqual(navigated.restoreBounds, source.restoreBounds);
 });
 
+test("requires window fragments to match the active shell contract", () => {
+  assert.equal(isWindowContractCompatible("2", "2"), true);
+  assert.equal(isWindowContractCompatible(2, "2"), true);
+  assert.equal(isWindowContractCompatible("2", "1"), false);
+  assert.equal(isWindowContractCompatible("2", undefined), false);
+});
+
 test("does not treat a missing window as a visible route owner", () => {
   assert.equal(isVisibleNonModalWindow(undefined), false);
   assert.equal(isVisibleNonModalWindow(null), false);
@@ -149,5 +165,42 @@ test("constrains window size and position to the viewport", () => {
     y: 0,
     width: 784,
     height: 584
+  });
+});
+
+test("New Zealand time is independent of the runtime timezone", () => {
+  const winter = new Date("2026-07-14T12:05:09Z");
+  const summer = new Date("2026-01-01T10:05:09Z");
+
+  assert.deepEqual(getNewZealandDateTime(winter), {
+    year: 2026,
+    month: 7,
+    day: 15,
+    hour: 0,
+    minute: 5,
+    second: 9
+  });
+  assert.deepEqual(getNewZealandDateTime(summer), {
+    year: 2026,
+    month: 1,
+    day: 1,
+    hour: 23,
+    minute: 5,
+    second: 9
+  });
+  assert.equal(formatNewZealandTaskbarTime(winter), "12:05 AM");
+  assert.equal(formatDialogTime(getNewZealandDateTime(winter)), "00:05:09");
+});
+
+test("calendar helpers build a Sunday-first month and clock angles", () => {
+  const february = buildMonthCalendar(2024, 2);
+
+  assert.equal(getMonthName(2), "February");
+  assert.equal(february.indexOf(1), 4);
+  assert.equal(february.filter(Boolean).length, 29);
+  assert.deepEqual(getClockHandAngles({ hour: 3, minute: 30, second: 30 }), {
+    hour: 105.25,
+    minute: 183,
+    second: 180
   });
 });

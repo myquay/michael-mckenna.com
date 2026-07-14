@@ -6,7 +6,7 @@
     <div class="start-item" role="button" tabindex="0" data-menu-parent>
       <img src="/images/win95-icons/w95_37.ico" alt="">
       <span class="start-item-label">Programs</span>
-      <span class="start-arrow">&#9654;</span>
+      <span class="start-arrow" aria-hidden="true"></span>
       <span class="submenu" role="menu" aria-label="Programs submenu">
         {{ range site.Menus.main }}
           {{ with .Page }}
@@ -21,13 +21,13 @@
     <button class="start-item" type="button">
       <img src="/images/win95-icons/w95_22.ico" alt="">
       <span class="start-item-label">Settings</span>
-      <span class="start-arrow">&#9654;</span>
+      <span class="start-arrow" aria-hidden="true"></span>
     </button>
 
     <button class="start-item" type="button">
       <img src="/images/win95-icons/w95_23.ico" alt="">
       <span class="start-item-label">Find</span>
-      <span class="start-arrow">&#9654;</span>
+      <span class="start-arrow" aria-hidden="true"></span>
     </button>
 
     <button class="start-item" type="button" data-start-action="{{ $aboutFile.application }}">
@@ -62,6 +62,8 @@
   <span class="taskbar-spacer"></span>
   <div class="tray" aria-label="System tray">
     <img src="/images/win95-icons/w95_11.ico" alt="Muted volume">
-    <span class="tray-time" id="tray-time">8:25 PM</span>
+    <button class="tray-time" id="tray-time-button" type="button" aria-haspopup="dialog" aria-controls="date-time-properties" aria-expanded="false">
+      <time id="tray-time">8:25 PM</time>
+    </button>
   </div>
 </footer>

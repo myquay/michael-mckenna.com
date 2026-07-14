@@ -96,7 +96,7 @@
   display: inline-grid;
   font-size: 15px;
   gap: 4px;
-  grid-template-columns: 13px 24px auto;
+  grid-template-columns: 24px auto;
   line-height: 1.2;
   min-height: 23px;
   padding: 0 2px 0 0;
@@ -138,9 +138,11 @@
   line-height: 10px;
   margin: 0;
   padding: 0;
-  position: relative;
+  left: -28px;
+  position: absolute;
+  top: 50%;
   text-align: center;
-  transform: translateX(-28px);
+  transform: translateY(-50%);
   width: 13px;
 }
 
@@ -150,19 +152,7 @@
 }
 
 .tree-spacer {
-  display: inline-block;
-  height: 13px;
-  position: relative;
-  width: 13px;
-}
-
-.tree-spacer::before {
-  border-top: 1px dotted var(--surface-shadow);
-  content: "";
-  left: 0;
-  position: absolute;
-  top: 6px;
-  width: 18px;
+  display: none;
 }
 
 .tree-link,

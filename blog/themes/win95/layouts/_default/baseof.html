@@ -16,13 +16,14 @@
     {{ with .File }}{{ $pageWindowId = printf "document-%s" .UniqueID }}{{ end }}
   {{ end }}
 {{ end }}
-<body data-page-url="{{ .RelPermalink }}" data-page-window-id="{{ $pageWindowId }}" data-page-window-kind="{{ $pageWindowKind }}" data-page-kind="{{ if .IsHome }}desktop{{ else if .IsSection }}explorer{{ else }}document{{ end }}" data-page-title="{{ .Title }}">
+<body data-page-url="{{ .RelPermalink }}" data-page-window-id="{{ $pageWindowId }}" data-page-window-kind="{{ $pageWindowKind }}" data-page-kind="{{ if .IsHome }}desktop{{ else if .IsSection }}explorer{{ else }}document{{ end }}" data-page-title="{{ .Title }}" data-window-contract-version="{{ partial "window-contract-version.html" . }}">
   <div id="explorer-route-map" hidden>
     {{ range site.Sections }}
       <span data-explorer-route="{{ .RelPermalink }}" data-explorer-window-id="{{ partial "explorer-window-id.html" . }}"></span>
     {{ end }}
   </div>
   {{ block "main" . }}{{ end }}
+  {{ partial "date-time-properties.html" . }}
   {{ partial "floppy-not-ready-dialog.html" . }}
   {{ $jsOptions := dict "targetPath" "js/win95.js" "format" "iife" "target" "es2019" "minify" true }}
   {{ $js := resources.Get "js/win95.mjs" | js.Build $jsOptions | fingerprint }}

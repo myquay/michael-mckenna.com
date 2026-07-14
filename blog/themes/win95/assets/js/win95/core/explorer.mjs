@@ -78,3 +78,9 @@ export const isExplorerWindowId = (id) => Boolean(
   || id === "my-documents"
   || id?.startsWith("explorer-")
 );
+
+export const isWindowContractCompatible = (expectedVersion, fragmentVersion) => Boolean(
+  expectedVersion
+  && fragmentVersion
+  && String(expectedVersion) === String(fragmentVersion)
+);

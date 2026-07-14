@@ -1,0 +1,70 @@
+<section class="date-time-dialog" id="date-time-properties" data-modal-window="date-time-properties" role="dialog" aria-modal="true" aria-labelledby="date-time-title" aria-describedby="date-time-zone" hidden>
+  <div class="setup-titlebar date-time-titlebar" data-modal-titlebar>
+    <span id="date-time-title">Date/Time Properties</span>
+    <span class="date-time-title-controls">
+      <button class="setup-close date-time-title-button" type="button" data-date-time-help aria-label="Help" title="This clock always shows the current time in New Zealand.">?</button>
+      <button class="setup-close date-time-title-button" type="button" data-date-time-close aria-label="Close">x</button>
+    </span>
+  </div>
+
+  <div class="date-time-content">
+    <div class="date-time-tabs" role="tablist" aria-label="Date and time settings">
+      <button class="date-time-tab is-active" type="button" role="tab" aria-selected="true" tabindex="-1">Date &amp; Time</button>
+    </div>
+
+    <div class="date-time-panel" role="tabpanel">
+      <fieldset class="date-time-group date-time-date-group">
+        <legend>Date</legend>
+        <div class="date-time-date-fields" aria-label="Current New Zealand month and year">
+          <div class="date-time-readout date-time-month" data-date-time-month></div>
+          <span class="date-time-picker-arrow" aria-hidden="true"></span>
+          <div class="date-time-readout date-time-year" data-date-time-year></div>
+          <span class="date-time-spinner" aria-hidden="true"><i></i><i></i></span>
+        </div>
+        <div class="date-time-calendar" aria-label="Current New Zealand calendar month">
+          <div class="date-time-weekdays" aria-hidden="true">
+            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+          </div>
+          <div class="date-time-days" data-date-time-calendar role="grid" aria-readonly="true"></div>
+        </div>
+      </fieldset>
+
+      <fieldset class="date-time-group date-time-clock-group">
+        <legend>Time</legend>
+        <svg class="date-time-clock" viewBox="0 0 200 200" aria-hidden="true">
+          <circle class="date-time-clock-face" cx="100" cy="100" r="78"></circle>
+          <g class="date-time-clock-ticks">
+            <line x1="100" y1="18" x2="100" y2="25"></line>
+            <line x1="100" y1="18" x2="100" y2="25" transform="rotate(30 100 100)"></line>
+            <line x1="100" y1="18" x2="100" y2="25" transform="rotate(60 100 100)"></line>
+            <line x1="100" y1="18" x2="100" y2="25" transform="rotate(90 100 100)"></line>
+            <line x1="100" y1="18" x2="100" y2="25" transform="rotate(120 100 100)"></line>
+            <line x1="100" y1="18" x2="100" y2="25" transform="rotate(150 100 100)"></line>
+            <line x1="100" y1="18" x2="100" y2="25" transform="rotate(180 100 100)"></line>
+            <line x1="100" y1="18" x2="100" y2="25" transform="rotate(210 100 100)"></line>
+            <line x1="100" y1="18" x2="100" y2="25" transform="rotate(240 100 100)"></line>
+            <line x1="100" y1="18" x2="100" y2="25" transform="rotate(270 100 100)"></line>
+            <line x1="100" y1="18" x2="100" y2="25" transform="rotate(300 100 100)"></line>
+            <line x1="100" y1="18" x2="100" y2="25" transform="rotate(330 100 100)"></line>
+          </g>
+          <line class="date-time-hour-hand" data-clock-hour x1="100" y1="108" x2="100" y2="62"></line>
+          <line class="date-time-minute-hand" data-clock-minute x1="100" y1="110" x2="100" y2="44"></line>
+          <line class="date-time-second-hand" data-clock-second x1="100" y1="112" x2="100" y2="39"></line>
+          <circle class="date-time-clock-pin" cx="100" cy="100" r="4"></circle>
+        </svg>
+        <div class="date-time-time-field">
+          <output data-date-time-value aria-live="off">00:00:00</output>
+          <span class="date-time-spinner" aria-hidden="true"><i></i><i></i></span>
+        </div>
+      </fieldset>
+    </div>
+
+    <p class="date-time-zone" id="date-time-zone" tabindex="-1">Current time zone: New Zealand Standard Time</p>
+
+    <div class="date-time-buttons">
+      <button class="setup-button is-default" type="button" data-date-time-close>OK</button>
+      <button class="setup-button" type="button" data-date-time-close>Cancel</button>
+      <button class="setup-button" type="button" disabled>Apply</button>
+    </div>
+  </div>
+</section>

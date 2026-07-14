@@ -27,24 +27,14 @@
         <ul id="tree-my-computer-children" class="tree-children" hidden>
           <li class="tree-node" data-tree-node-id="floppy-a">
             <span class="tree-row">
-              <button class="tree-toggle" type="button" data-tree-toggle data-tree-default-expanded="false" aria-expanded="false" aria-controls="tree-floppy-a-children">+</button>
               <img src="/images/win95-icons/w95_8.ico" alt="">
               <button class="tree-link tree-button" type="button" data-drive-alert="floppy-a">3½ Floppy (A:)</button>
             </span>
-            <ul id="tree-floppy-a-children" class="tree-children" hidden>
-              <li>
-                <span class="tree-row">
-                  <span class="tree-spacer"></span>
-                  <img src="/images/win95-icons/w95_8.ico" alt="">
-                  <button class="tree-link tree-button" type="button" data-drive-alert="floppy-a">A:\</button>
-                </span>
-              </li>
-            </ul>
           </li>
           <li class="tree-node" data-tree-node-id="site-drive">
             <span class="tree-row{{ if $isDriveContent }} is-selected-parent{{ end }}">
               <button class="tree-toggle" type="button" data-tree-toggle data-tree-default-expanded="false" aria-expanded="false" aria-controls="tree-site-drive-children">+</button>
-              <img src="/images/win95-icons/w95_6.ico" alt="">
+              <img src="/images/win95-icons/w95_9.ico" alt="">
               <a class="tree-link" href="/" data-open-kind="folder" data-open-window-id="my-documents" data-open-url="/" data-name="Win95 (C:)">Win95 (C:)</a>
             </span>
             <ul id="tree-site-drive-children" class="tree-children" hidden>
@@ -54,7 +44,7 @@
                 <li>
                   <span class="tree-row{{ if $isCurrentSection }} is-selected{{ end }}">
                     <span class="tree-spacer"></span>
-                    <img src="/images/win95-icons/w95_4.ico" alt="">
+                    <img src="{{ if $isCurrentSection }}/images/win95-icons/w95_5.ico{{ else }}/images/win95-icons/w95_4.ico{{ end }}" data-tree-folder-icon data-closed-icon="/images/win95-icons/w95_4.ico" data-open-icon="/images/win95-icons/w95_5.ico" alt="">
                     <a class="tree-link" href="{{ .RelPermalink }}" data-open-kind="folder" data-open-window-id="{{ $windowId }}" data-open-url="{{ .RelPermalink }}" data-name="{{ .Title }}"{{ if $isCurrentSection }} aria-current="page"{{ end }}>{{ .Title }}</a>
                   </span>
                 </li>
@@ -69,7 +59,7 @@
         <li>
           <span class="tree-row{{ if $isCurrentSection }} is-selected{{ end }}">
             <span class="tree-spacer"></span>
-            <img src="/images/win95-icons/w95_4.ico" alt="">
+            <img src="{{ if $isCurrentSection }}/images/win95-icons/w95_5.ico{{ else }}/images/win95-icons/w95_4.ico{{ end }}" data-tree-folder-icon data-closed-icon="/images/win95-icons/w95_4.ico" data-open-icon="/images/win95-icons/w95_5.ico" alt="">
             <a class="tree-link" href="{{ .RelPermalink }}" data-open-kind="folder" data-open-window-id="{{ $windowId }}" data-open-url="{{ .RelPermalink }}" data-name="{{ .Title }}"{{ if $isCurrentSection }} aria-current="page"{{ end }}>{{ .Title }}</a>
           </span>
         </li>

@@ -150,4 +150,30 @@ if (!entryPage || requiredEntryPatterns.some((pattern) => !pattern.test(entryHtm
   process.exit(1);
 }
 
+const windowFragments = outputFiles.filter((file) => path.basename(file) === "window.html");
+const incompatibleWindowFragments = windowFragments.filter((file) => {
+  const source = fs.readFileSync(file, "utf8");
+  return source.includes("data-window-id=") && !source.includes('data-window-contract-version="2"');
+});
+
+if (incompatibleWindowFragments.length > 0) {
+  console.error("Generated window fragments are missing the current window contract version:");
+  incompatibleWindowFragments.forEach((file) => console.error(`  ${path.relative(buildRoot, file)}`));
+  process.exit(1);
+}
+
+const explorerFragments = windowFragments.filter((file) => fs.readFileSync(file, "utf8").includes("data-explorer-tree"));
+const inconsistentExplorerFragments = explorerFragments.filter((file) => {
+  const source = fs.readFileSync(file, "utf8");
+  return source.includes("tree-floppy-a-children")
+    || !/data-tree-node-id="floppy-a"[\s\S]*?<img src="\/images\/win95-icons\/w95_8\.ico"/.test(source)
+    || !/data-tree-node-id="site-drive"[\s\S]*?<img src="\/images\/win95-icons\/w95_9\.ico"/.test(source);
+});
+
+if (inconsistentExplorerFragments.length > 0) {
+  console.error("Generated Explorer fragments disagree with the canonical drive tree:");
+  inconsistentExplorerFragments.forEach((file) => console.error(`  ${path.relative(buildRoot, file)}`));
+  process.exit(1);
+}
+
 console.log(`Checked ${sourceFiles.length} generated documents and stylesheets.`);

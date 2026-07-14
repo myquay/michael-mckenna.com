@@ -135,6 +135,33 @@
     padding-right: 5px;
   }
 
+  .date-time-dialog {
+    max-height: calc(100dvh - var(--taskbar-height) - 8px);
+    overflow: auto;
+    top: 4px;
+    transform: translateX(-50%);
+  }
+
+  .date-time-dialog.is-positioned {
+    transform: none;
+  }
+
+  .date-time-panel {
+    gap: 9px;
+    min-height: 0;
+    padding: 12px 9px 10px;
+  }
+
+  .date-time-group {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .date-time-clock {
+    height: min(34vw, 210px);
+    width: min(34vw, 210px);
+  }
+
   .start-menu {
     grid-template-columns: 28px minmax(0, 1fr);
     max-height: calc(100dvh - var(--taskbar-height) - 3px);
@@ -471,6 +498,35 @@
 
   .tray {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tray-time {
+    min-width: 52px;
+  }
+
+  .date-time-content {
+    padding: 9px 6px 7px;
+  }
+
+  .date-time-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .date-time-calendar {
+    min-height: 210px;
+  }
+
+  .date-time-clock {
+    height: 190px;
+    width: 190px;
+  }
+
+  .date-time-buttons {
+    gap: 6px;
+  }
+
+  .date-time-buttons .setup-button {
+    min-width: 0;
   }
 
   .start-button {

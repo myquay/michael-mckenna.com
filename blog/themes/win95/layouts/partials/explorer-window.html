@@ -10,7 +10,7 @@
 {{ else if eq $page.Section "photos" }}
   {{ $contents = (where (where site.RegularPages "Section" "activity") "Params.activity_type" "photo").ByDate.Reverse }}
 {{ end }}
-<section class="app-window explorer-window{{ with .class }} {{ . }}{{ end }}" data-window-id="{{ $windowId }}" data-window-url="{{ $page.RelPermalink }}" data-window-title="{{ $folderName }}" data-window-icon="{{ $folderIcon }}" data-window-default-x="118" data-window-default-y="52" data-window-default-width="760" data-window-default-height="520" data-window-taskbar="true"{{ if .hidden }} hidden{{ end }} role="region" aria-labelledby="{{ $titleId }}">
+<section class="app-window explorer-window{{ with .class }} {{ . }}{{ end }}" data-window-id="{{ $windowId }}" data-window-url="{{ $page.RelPermalink }}" data-window-title="{{ $folderName }}" data-window-icon="{{ $folderIcon }}" data-window-contract-version="{{ partial "window-contract-version.html" $page }}" data-window-default-x="118" data-window-default-y="52" data-window-default-width="760" data-window-default-height="520" data-window-taskbar="true"{{ if .hidden }} hidden{{ end }} role="region" aria-labelledby="{{ $titleId }}">
   {{ partial "window-titlebar.html" (dict "icon" $folderIcon "titleId" $titleId "title" (printf "Exploring - %s" $folderPath)) }}
   {{ partial "window-menu.html" (dict "label" "Explorer menu" "viewMenuId" $windowId) }}
 
