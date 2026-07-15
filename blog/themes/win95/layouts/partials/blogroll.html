@@ -1,0 +1,13 @@
+<div class="blogroll-list">
+  {{ with hugo.Data.blogroll }}
+    {{ range sort . "name" }}
+      <article class="blogroll-entry h-cite">
+        <h3 class="p-name"><a class="u-url" href="{{ .siteUrl }}">{{ .name }}</a></h3>
+        {{ with .comment }}<p class="p-summary">{{ . }}</p>{{ end }}
+        {{ with .feedUrl }}<a href="{{ . }}" rel="alternate" type="application/rss+xml">RSS feed</a>{{ end }}
+      </article>
+    {{ end }}
+  {{ else }}
+    <p>No blogs have been added yet.</p>
+  {{ end }}
+</div>

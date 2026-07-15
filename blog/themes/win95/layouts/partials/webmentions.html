@@ -1,0 +1,36 @@
+{{- $target := .Permalink -}}
+{{- $mentions := slice -}}
+{{- with hugo.Data.webmentions.incoming -}}
+  {{- range $targetGroup := . -}}
+    {{- range $mention := $targetGroup -}}
+      {{- $targetPage := index (split $mention.target "#") 0 -}}
+      {{- if eq $targetPage $target -}}{{- $mentions = $mentions | append $mention -}}{{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $mentions = sort $mentions "approvedUtc" "asc" -}}
+{{- if gt (len $mentions) 0 -}}
+<section class="webmentions" aria-labelledby="webmentions-{{ .File.UniqueID }}">
+  <h2 id="webmentions-{{ .File.UniqueID }}">Responses from around the web</h2>
+  {{- $likes := where $mentions "type" "like" -}}
+  {{- if gt (len $likes) 0 }}
+  <div class="webmention-likes">
+    <h3>Liked by</h3>
+    <ul>
+      {{ range $likes }}<li class="h-cite">{{ with .author }}<span class="p-author h-card">{{ with .url }}<a class="u-url p-name" href="{{ . }}" rel="ugc nofollow">{{ end }}{{ .name }}{{ with .url }}</a>{{ end }}</span>{{ else }}<a class="u-url" href="{{ .source }}" rel="ugc nofollow">Someone</a>{{ end }}</li>{{ end }}
+    </ul>
+  </div>
+  {{- end }}
+  {{- range where $mentions "type" "ne" "like" }}
+  <article class="webmention-card h-cite webmention-{{ .type }}">
+    <header>
+      {{ with .author }}<span class="p-author h-card">{{ with .url }}<a class="u-url p-name" href="{{ . }}" rel="ugc nofollow">{{ end }}{{ .name }}{{ with .url }}</a>{{ end }}</span>{{ else }}<span class="p-author">A remote author</span>{{ end }}
+      {{ if eq .type "reply" }} replied{{ else }} mentioned this{{ end }}
+    </header>
+    {{ with .displayContent }}<blockquote class="p-content">{{ . }}</blockquote>{{ end }}
+    <a class="u-url webmention-source" href="{{ .source }}" rel="ugc nofollow">View original</a>
+    {{ with .sourcePublishedUtc }}<time class="dt-published" datetime="{{ . }}">{{ time.Format "02 Jan 2006" . }}</time>{{ end }}
+  </article>
+  {{- end }}
+</section>
+{{- end -}}

@@ -470,3 +470,34 @@
   left: calc(100% - 2px);
   top: -3px;
 }
+.activity-context {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid var(--win95-navy, #000080);
+  background: #fff;
+}
+
+.webmentions {
+  margin: 0 12px 12px;
+  padding: 12px;
+  border: 2px inset #fff;
+  background: #f7f7f7;
+}
+
+.webmentions h2,
+.webmentions h3 { margin-top: 0; }
+.webmention-likes ul { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; padding-left: 1.25rem; }
+.webmention-card { margin-top: 10px; padding-top: 10px; border-top: 1px solid #808080; }
+.webmention-card blockquote { margin: 8px 0; white-space: pre-wrap; }
+.webmention-source { margin-right: 0.75rem; }
+
+.activity-stream { display: grid; gap: 10px; padding: 8px; overflow: auto; }
+.activity-stream > .p-name { margin: 0; font-size: 1rem; }
+.activity-entry { padding: 10px; border: 1px solid #808080; background: #fff; box-shadow: 1px 1px #dfdfdf; }
+.activity-entry h3 { margin: 0 0 4px; font-size: 1rem; }
+.activity-entry .dt-published { color: #555; font-size: 0.75rem; }
+.activity-entry .e-content { margin-top: 8px; }
+.activity-relationship { margin: 8px 0 0; font-size: 0.85rem; }
+.blogroll-list { display: grid; gap: 10px; padding: 8px; }
+.blogroll-entry { padding: 10px; border: 1px solid #808080; background: #fff; }
+.blogroll-entry h3 { margin: 0; }

@@ -25,6 +25,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install site tooling
+        run: npm ci
+
       - name: Install Hugo
         run: |
           curl --fail --location --silent --show-error \
@@ -36,11 +45,22 @@ jobs:
       - name: Verify site
         run: ./scripts/verify-site.sh "${{ github.workspace }}/dist"
 
+      - name: Generate private Webmention manifest
+        run: node scripts/generate-webmention-manifest.mjs "${{ github.workspace }}/dist" "${{ github.workspace }}/webmention-manifest.json" "${{ github.sha }}"
+
       - name: Upload production artifact
         uses: actions/upload-artifact@v4
         with:
           name: website
           path: dist
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload private Webmention manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: webmention-manifest
+          path: webmention-manifest.json
           if-no-files-found: error
           retention-days: 7
 
@@ -50,11 +70,25 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
+      - name: Checkout deployment tooling
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
       - name: Download production artifact
         uses: actions/download-artifact@v4
         with:
           name: website
           path: dist
+
+      - name: Download private Webmention manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: webmention-manifest
+          path: deployment-metadata
 
       - name: Log into Azure
         uses: azure/login@v2
@@ -83,3 +117,9 @@ jobs:
             --header "Content-Type: application/json" \
             --data '{"purge_everything":true}')
           jq --exit-status '.success == true' <<< "$response" >/dev/null
+
+      - name: Notify LittlePublisher of the deployed site
+        env:
+          LITTLEPUBLISHER_DEPLOYMENT_ENDPOINT: ${{ vars.LITTLEPUBLISHER_DEPLOYMENT_ENDPOINT }}
+          LITTLEPUBLISHER_DEPLOYMENT_SECRET: ${{ secrets.LITTLEPUBLISHER_DEPLOYMENT_SECRET }}
+        run: node scripts/submit-webmention-manifest.mjs deployment-metadata/webmention-manifest.json

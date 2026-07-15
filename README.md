@@ -74,3 +74,18 @@ The build currently reports known Goldmark warnings for raw HTML in several hist
 Pushes to `main` run repository verification, build the production artifact, and deploy that exact artifact to Azure Blob Storage before purging the Cloudflare cache. The workflow can also be started manually.
 
 Legacy routes are owned by Hugo `aliases` in content front matter. This keeps redirects beside their canonical content and makes the generated alias pages independent of any particular hosting provider.
+
+### Webmention deployment notification
+
+The verified `dist` artifact is also scanned into a private Webmention manifest. That manifest is uploaded as a separate workflow artifact, never copied into the public site, and submitted to LittlePublisher only after Azure deployment and the Cloudflare purge succeed.
+
+The production GitHub environment requires:
+
+- Variable `LITTLEPUBLISHER_DEPLOYMENT_ENDPOINT` set to `https://lilpub.michael-mckenna.com/api/integrations/site-deployments`.
+- Secret `LITTLEPUBLISHER_DEPLOYMENT_SECRET` containing the same 32-or-more-character random value configured in LittlePublisher.
+
+Install the pinned site tooling with `npm ci`. To inspect a local manifest without sending it:
+
+```sh
+node scripts/generate-webmention-manifest.mjs /path/to/dist /private/tmp/webmention-manifest.json local
+```

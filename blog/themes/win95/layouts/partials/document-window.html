@@ -11,7 +11,7 @@
   {{ partial "window-titlebar.html" (dict "icon" $file.icon "titleId" .titleId "title" $file.name "modal" $isModal "controlClass" "document-window-control") }}
   {{ partial "window-menu.html" (dict "label" "Document menu") }}
 
-  <article class="document-content h-entry">
+  <article class="document-content h-entry"{{ with $page.File }} data-repository-content-path="blog/content/{{ .Path }}"{{ end }}>
     <header class="document-header">
       <h1 class="p-name">{{ $page.Title }}</h1>
       {{ with $indieWeb.name }}
@@ -26,6 +26,12 @@
       {{ if gt $page.Lastmod $page.Date }}<time class="visually-hidden dt-updated" datetime="{{ $page.Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ $page.Lastmod.Format "02 Jan 2006" }}</time>{{ end }}
     </header>
     <div class="document-body e-content">
+      {{ with $page.Params.like_of }}
+        <p class="activity-context">Liked <a class="u-like-of" href="{{ . }}">{{ . }}</a></p>
+      {{ end }}
+      {{ with $page.Params.in_reply_to }}
+        <p class="activity-context">Replying to <a class="u-in-reply-to" href="{{ . }}">{{ $page.Params.reply_to_title | default . }}</a></p>
+      {{ end }}
       {{ with $page.Params.photo }}
         <figure class="document-photo">
           <img src="{{ . }}" alt="{{ $page.Params.alt | default $page.Title }}">
@@ -35,6 +41,8 @@
       {{ $page.Content }}
     </div>
   </article>
+
+  {{ partial "webmentions.html" $page }}
 
   {{ partial "window-statusbar.html" (dict "primary" $file.name "secondary" $file.type) }}
 </section>

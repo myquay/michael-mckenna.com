@@ -1,0 +1,37 @@
+{{- $event := . -}}
+{{- if eq $event.kind "authored" -}}
+  {{- $page := $event.page -}}
+<article class="activity-entry h-entry" data-activity-id="{{ $event.id }}">
+  <span class="p-category" hidden>authored</span>
+  {{ with site.Params.IndieWeb.name }}<span class="u-author h-card visually-hidden"><a class="u-url p-name" href="{{ site.Params.IndieWeb.url | default site.BaseURL }}">{{ . }}</a></span>{{ end }}
+  <h3 class="p-name"><a class="u-url" href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></h3>
+  <time class="dt-published" datetime="{{ $page.Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ $page.Date.Format "02 Jan 2006 15:04" }}</time>
+  <div class="e-content">{{ $page.Summary }}</div>
+  {{ range $event.relationships }}
+    <p class="activity-relationship">
+      {{ if eq .type "like" }}Liked{{ else if eq .type "reply" }}Replied to{{ else }}Mentioned{{ end }}
+      <a class="{{ if eq .type "like" }}u-like-of{{ else if eq .type "reply" }}u-in-reply-to{{ end }}" href="{{ .target }}">{{ .target }}</a>
+      <span class="p-category" hidden>outgoing</span><span class="p-category" hidden>{{ .type }}</span>
+    </p>
+  {{ end }}
+</article>
+{{- else -}}
+  {{- $record := $event.record -}}
+  {{- $incoming := eq $event.kind "incoming" -}}
+<article class="activity-entry h-entry activity-{{ $event.kind }}" data-activity-id="{{ $event.id }}">
+  <span class="p-category" hidden>{{ $event.kind }}</span><span class="p-category" hidden>{{ $record.type }}</span>
+  {{ if $incoming }}
+    {{ with $record.author }}<span class="p-author h-card">{{ with .url }}<a class="u-url p-name" href="{{ . }}" rel="ugc nofollow">{{ end }}{{ .name }}{{ with .url }}</a>{{ end }}</span>{{ else }}<span class="p-author">A remote author</span>{{ end }}
+  {{ else }}
+    {{ with site.Params.IndieWeb.name }}<span class="u-author h-card visually-hidden"><a class="u-url p-name" href="{{ site.Params.IndieWeb.url | default site.BaseURL }}">{{ . }}</a></span>{{ end }}
+  {{ end }}
+  <h3 class="p-name">
+    <a class="u-url" href="{{ if $incoming }}{{ $record.source }}{{ else }}{{ $record.source }}{{ end }}"{{ if $incoming }} rel="ugc nofollow"{{ end }}>
+      {{ if eq $record.type "like" }}{{ if $incoming }}Liked this page{{ else }}Liked {{ $record.target }}{{ end }}{{ else if eq $record.type "reply" }}{{ if $incoming }}Replied to this page{{ else }}Replied to {{ $record.target }}{{ end }}{{ else }}Mentioned {{ $record.target }}{{ end }}
+    </a>
+  </h3>
+  <time class="dt-published" datetime="{{ $event.timestamp.Format "2006-01-02T15:04:05Z07:00" }}">{{ $event.timestamp.Format "02 Jan 2006 15:04" }}</time>
+  {{ with $record.displayContent }}<div class="e-content">{{ . }}</div>{{ end }}
+  {{ if eq $record.type "like" }}<a class="u-like-of" href="{{ $record.target }}">Liked item</a>{{ else if eq $record.type "reply" }}<a class="u-in-reply-to" href="{{ $record.target }}">Replied-to item</a>{{ else }}<a href="{{ $record.target }}">Mentioned item</a>{{ end }}
+</article>
+{{- end -}}

@@ -19,6 +19,11 @@
 
     <section class="explorer-contents" aria-label="Contents of {{ $folderName }}">
       <h2>Contents of '{{ $folderPath }}'</h2>
+      {{ if eq $page.Section "activity" }}
+        {{ partial "activity-stream.html" $page }}
+      {{ else if eq $page.Section "blogroll" }}
+        {{ partial "blogroll.html" $page }}
+      {{ else }}
       <div class="file-list" data-explorer-list data-view="details" data-sort="date">
         {{ partial "file-list-header.html" . }}
         {{ range $contents }}
@@ -34,6 +39,7 @@
           </a>
         {{ end }}
       </div>
+      {{ end }}
     </section>
   </div>
 

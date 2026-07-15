@@ -138,6 +138,8 @@ const entryPage = outputFiles.find((file) => {
 });
 const entryHtml = entryPage ? fs.readFileSync(entryPage, "utf8") : "";
 const requiredEntryPatterns = [
+  /rel="canonical" href="https:\/\/michael-mckenna\.com\//,
+  /rel="webmention" href="https:\/\/lilpub\.michael-mckenna\.com\/webmention"/,
   /class="document-content h-entry"/,
   /class="p-name"/,
   /class="document-author h-card u-author"/,
@@ -147,6 +149,27 @@ const requiredEntryPatterns = [
 
 if (!entryPage || requiredEntryPatterns.some((pattern) => !pattern.test(entryHtml))) {
   console.error("A generated article or note is missing required h-entry metadata.");
+  process.exit(1);
+}
+
+const entryWindowPath = entryPage ? path.join(path.dirname(entryPage), "window.html") : "";
+if (!entryWindowPath || !fs.existsSync(entryWindowPath)) {
+  console.error("A generated article or note is missing its window fragment.");
+  process.exit(1);
+}
+
+const activityPagePath = path.join(buildRoot, "activity", "index.html");
+const activityWindowPath = path.join(buildRoot, "activity", "window.html");
+const activityFeedPath = path.join(buildRoot, "activity", "rss.xml");
+for (const file of [activityPagePath, activityWindowPath]) {
+  const html = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "";
+  if (!/class="activity-stream h-feed"/.test(html) || !/class="activity-entry h-entry/.test(html) || !/class="p-name"/.test(html) || !/class="dt-published"/.test(html)) {
+    console.error(`Generated Activity output is missing h-feed/h-entry metadata: ${path.relative(buildRoot, file)}`);
+    process.exit(1);
+  }
+}
+if (!fs.existsSync(activityFeedPath) || !/<item>/.test(fs.readFileSync(activityFeedPath, "utf8"))) {
+  console.error("The generated Activity RSS feed is missing or empty.");
   process.exit(1);
 }
 

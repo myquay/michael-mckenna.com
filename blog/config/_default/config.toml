@@ -43,6 +43,7 @@ disableKinds = ["term", "taxonomy"]
     authorizationEndpoint = "https://talos.michael-mckenna.com/auth"
     tokenEndpoint = "https://talos.michael-mckenna.com/token"
     metadataEndpoint = "https://talos.michael-mckenna.com/.well-known/oauth-authorization-server"
+    webmentionEndpoint = "https://lilpub.michael-mckenna.com/webmention"
 
 [[Params.IndieWeb.identities]]
     name = "GitHub"

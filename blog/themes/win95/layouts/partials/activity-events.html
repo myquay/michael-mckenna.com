@@ -1,0 +1,27 @@
+{{- $events := slice -}}
+{{- $authoredUrls := slice -}}
+{{- $outgoing := slice -}}
+{{- with hugo.Data.webmentions.outgoing -}}
+  {{- range $sourceGroup := . -}}{{- range $record := $sourceGroup -}}{{- $outgoing = $outgoing | append $record -}}{{- end -}}{{- end -}}
+{{- end -}}
+{{- $authored := where site.RegularPages "Section" "in" (slice "post" "note" "activity" "project") -}}
+{{- range $page := $authored -}}
+  {{- $authoredUrls = $authoredUrls | append $page.Permalink -}}
+  {{- $relationships := where $outgoing "source" $page.Permalink -}}
+  {{- $events = $events | append (dict "kind" "authored" "timestamp" $page.Date "page" $page "relationships" $relationships "id" $page.Permalink) -}}
+{{- end -}}
+{{- with hugo.Data.webmentions.incoming -}}
+  {{- range $targetGroup := . -}}
+    {{- range $mention := $targetGroup -}}
+      {{- with $mention.approvedUtc -}}
+        {{- $events = $events | append (dict "kind" "incoming" "timestamp" (time.AsTime .) "record" $mention "id" $mention.id) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- range $record := $outgoing -}}
+  {{- if not (in $authoredUrls $record.source) -}}
+    {{- with $record.sentUtc -}}{{- $events = $events | append (dict "kind" "outgoing" "timestamp" (time.AsTime .) "record" $record "id" $record.id) -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return (sort $events "timestamp" "desc") -}}

@@ -1,0 +1,12 @@
+{
+  "name": "michael-mckenna-com-site-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test scripts/tests/*.test.mjs",
+    "webmentions:manifest": "node scripts/generate-webmention-manifest.mjs"
+  },
+  "devDependencies": {
+    "parse5": "8.0.0"
+  }
+}

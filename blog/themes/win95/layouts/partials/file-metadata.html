@@ -13,6 +13,12 @@
   {{- $icon = "/images/win95-icons/w95_1.ico" -}}
 {{- else if eq $page.Params.activity_type "thought" -}}
   {{- $fileType = "Thought" -}}
+{{- else if eq $page.Params.activity_type "like" -}}
+  {{- $fileType = "Like" -}}
+  {{- $icon = "/images/win95-icons/w95_22.ico" -}}
+{{- else if eq $page.Params.activity_type "reply" -}}
+  {{- $fileType = "Reply" -}}
+  {{- $icon = "/images/win95-icons/w95_23.ico" -}}
 {{- end -}}
 {{- with $page.Params.file -}}
   {{- with .name }}{{ $name = . }}{{ end -}}

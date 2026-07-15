@@ -1,0 +1,5 @@
+{{- $events := partial "activity-events.html" . -}}
+<div class="activity-stream h-feed">
+  <h2 class="p-name">Michael McKenna - Activity</h2>
+  {{ range $events }}{{ partial "activity-entry.html" . }}{{ end }}
+</div>

@@ -1,0 +1,15 @@
+{{- $events := partial "activity-events.html" . -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ .Title }} on {{ site.Title }}</title><link>{{ .Permalink }}</link>
+    <description>{{ .Content | plainify }}</description><language>{{ site.Language.Locale | default site.Language.Lang }}</language>
+    <atom:link href="{{ (.OutputFormats.Get "RSS").Permalink }}" rel="self" type="application/rss+xml" />
+    {{ range $events }}
+      {{ $url := "" }}{{ $title := "" }}{{ $description := "" }}
+      {{ if eq .kind "authored" }}{{ $url = .page.Permalink }}{{ $title = .page.Title }}{{ $description = .page.Summary | plainify }}{{ range .relationships }}{{ $description = printf "%s %s %s." $description (cond (eq .type "like") "Liked" (cond (eq .type "reply") "Replied to" "Mentioned")) .target }}{{ end }}
+      {{ else }}{{ $url = .record.source }}{{ $title = printf "%s %s" (title .record.type) .record.target }}{{ $description = .record.displayContent | default $title }}{{ end }}
+      <item><title>{{ $title }}</title><link>{{ $url }}</link><pubDate>{{ .timestamp.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate><guid>{{ .id }}</guid><description>{{ $description | transform.XMLEscape | safeHTML }}</description></item>
+    {{ end }}
+  </channel>
+</rss>
