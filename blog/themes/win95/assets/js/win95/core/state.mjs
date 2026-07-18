@@ -1,7 +1,7 @@
 import { resolveExplorerWindowId } from "./routing.mjs";
-import { createExplorerSession, isExplorerWindowId } from "./explorer.mjs";
+import { allocateExplorerInstanceId, createExplorerSession, isExplorerWindowId } from "./explorer.mjs";
 
-export const migrateOsState = (state, { routeIndex = {}, currentVersion = 4, baseUrl } = {}) => {
+export const migrateOsState = (state, { routeIndex = {}, currentVersion = 5, baseUrl } = {}) => {
   if (Number(state.version) >= currentVersion) {
     return state;
   }
@@ -36,16 +36,38 @@ export const migrateOsState = (state, { routeIndex = {}, currentVersion = 4, bas
 
   state.taskbarOrder = Array.from(new Set(state.taskbarOrder));
 
-  Object.entries(state.windows).forEach(([id, windowState]) => {
-    if (!isExplorerWindowId(id)) {
-      return;
+  const explorerIds = Object.keys(state.windows).filter(isExplorerWindowId);
+  const orderedExplorerIds = [
+    ...state.taskbarOrder.filter((id) => explorerIds.includes(id)),
+    ...explorerIds.filter((id) => !state.taskbarOrder.includes(id))
+  ];
+  const occupiedIds = new Set(Object.keys(state.windows).filter((id) => !explorerIds.includes(id)));
+  const remappedIds = {};
+
+  orderedExplorerIds.forEach((id) => {
+    const windowState = state.windows[id];
+    const instanceId = allocateExplorerInstanceId(occupiedIds);
+    const contentWindowId = windowState.contentWindowId
+      || resolveExplorerWindowId(windowState.url, routeIndex, baseUrl)
+      || id;
+    const explorer = createExplorerSession(state.explorers[id], windowState.url || "/");
+
+    if (state.explorerTree?.expanded && Object.keys(explorer.tree.expanded).length === 0) {
+      explorer.tree.expanded = { ...state.explorerTree.expanded };
     }
 
-    const contentWindowId = resolveExplorerWindowId(windowState.url, routeIndex, baseUrl) || id;
-    state.windows[id] = { ...windowState, id, contentWindowId };
-    state.explorers[id] = createExplorerSession(state.explorers[id], windowState.url || "/");
+    occupiedIds.add(instanceId);
+    remappedIds[id] = instanceId;
+    state.windows[instanceId] = { ...windowState, id: instanceId, contentWindowId };
+    state.explorers[instanceId] = explorer;
+    delete state.windows[id];
+    delete state.explorers[id];
   });
 
+  state.taskbarOrder = state.taskbarOrder.map((id) => remappedIds[id] || id);
+  state.activeWindowId = remappedIds[state.activeWindowId] || state.activeWindowId;
+
+  delete state.explorerTree;
   state.version = currentVersion;
   return state;
 };
@@ -55,3 +77,26 @@ export const isVisibleNonModalWindow = (item, modalWindowKind = "modal") => Bool
   && item.state !== "minimized"
   && item.windowKind !== modalWindowKind
 );
+
+export const resolveMaximizedRouteOwner = (
+  windows,
+  preferredId,
+  activeId,
+  modalWindowKind = "modal"
+) => {
+  const lookup = windows && typeof windows === "object" ? windows : {};
+  const isEligible = (item) => isVisibleNonModalWindow(item, modalWindowKind)
+    && item.state === "maximized";
+
+  if (isEligible(lookup[preferredId])) {
+    return lookup[preferredId];
+  }
+
+  if (isEligible(lookup[activeId])) {
+    return lookup[activeId];
+  }
+
+  return Object.values(lookup)
+    .filter(isEligible)
+    .sort((a, b) => (b.z || 0) - (a.z || 0))[0] || null;
+};

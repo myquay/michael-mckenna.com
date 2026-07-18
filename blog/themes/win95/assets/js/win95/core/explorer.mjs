@@ -22,11 +22,29 @@ export const createExplorerSession = (session, location = "/") => {
     view: "details",
     sort: "date",
     icons: {},
+    tree: { expanded: {} },
     ...current,
+    tree: {
+      ...(current.tree && typeof current.tree === "object" ? current.tree : {}),
+      expanded: current.tree?.expanded && typeof current.tree.expanded === "object"
+        ? current.tree.expanded
+        : {}
+    },
     location: currentLocation,
     history,
     historyIndex
   };
+};
+
+export const allocateExplorerInstanceId = (existingIds = [], prefix = "explorer-window") => {
+  const ids = new Set(existingIds);
+  let sequence = 1;
+
+  while (ids.has(`${prefix}-${sequence}`)) {
+    sequence += 1;
+  }
+
+  return `${prefix}-${sequence}`;
 };
 
 export const navigateExplorerSession = (session, location) => {

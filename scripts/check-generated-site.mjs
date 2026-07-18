@@ -152,6 +152,12 @@ if (!entryPage || requiredEntryPatterns.some((pattern) => !pattern.test(entryHtm
   process.exit(1);
 }
 
+const entryDescription = entryHtml.match(/<meta name="description" content="([^"]+)"/)?.[1] || "";
+if (!entryDescription || entryDescription === "All my Keystrokes That&#39;s Fit to Print") {
+  console.error("A generated article or note is missing a page-specific meta description.");
+  process.exit(1);
+}
+
 const entryWindowPath = entryPage ? path.join(path.dirname(entryPage), "window.html") : "";
 if (!entryWindowPath || !fs.existsSync(entryWindowPath)) {
   console.error("A generated article or note is missing its window fragment.");

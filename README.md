@@ -40,6 +40,10 @@ Every route has two related Hugo outputs:
 
 The contract between Hugo and the Win95 JavaScript bundle is carried by `data-window-*` attributes rendered by the theme. Content-specific names, icons, application identifiers, and window kinds should be defined through content front matter and `file-metadata.html` wherever possible. Desktop shortcuts point to that rendered metadata instead of duplicating an application catalogue in JavaScript.
 
+Explorer window identity is independent from folder identity. Each top-level Explorer launch receives an `explorer-window-N` instance id and its own navigation, tree, view, geometry, and taskbar state. Navigating to another folder hydrates that folder into the same instance; launching Explorer again creates another independent top-level window and taskbar button, matching the original Windows 95 model.
+
+The active maximized content window owns the browser URL. Maximizing a window and navigating inside a maximized Explorer push shareable route history, while normal floating windows can navigate without taking URL ownership. This is the intentional web-specific extension that preserves canonical deep linking and complete server-rendered pages.
+
 The home `WINDOW` output is assembled by `desktop-context.html`. It supplies desktop shortcuts, shell-owned Explorer windows, RSS Setup, and About for on-demand hydration; the full-page layouts remain responsible for rendering the single taskbar.
 
 Window layout, taskbar ordering, Explorer view preferences, and desktop shortcut positions are persisted in local storage under `michael95.osState`. Changes to that state shape should include a migration in `assets/js/win95/core/state.mjs` and a corresponding unit test.

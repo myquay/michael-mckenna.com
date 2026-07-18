@@ -1,7 +1,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
-<meta name="description" content="{{ site.Params.Win95.subtitle | default site.Title }}">
+{{ $description := site.Params.Win95.subtitle | default site.Title }}
+{{ with .Description }}
+  {{ $description = . }}
+{{ else }}
+  {{ if and .IsPage .Summary }}{{ $description = .Summary | plainify | htmlUnescape | truncate 160 }}{{ end }}
+{{ end }}
+<meta name="description" content="{{ $description }}">
 <link rel="canonical" href="{{ .Permalink }}">
 <link rel="alternate" type="application/rss+xml" title="{{ site.Title }} RSS" href="{{ "rss.xml" | absURL }}">
 {{ if and .IsPage (in (slice "post" "note" "activity" "project") .Section) }}

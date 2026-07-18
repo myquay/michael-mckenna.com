@@ -3,6 +3,7 @@ import test from "node:test";
 
 import { constrainWindowBounds } from "../../blog/themes/win95/assets/js/win95/core/geometry.mjs";
 import {
+  allocateExplorerInstanceId,
   createExplorerSession,
   createExplorerTreeState,
   isWindowContractCompatible,
@@ -12,7 +13,8 @@ import {
 import { normalizePath, readExplorerRouteIndex, resolveExplorerWindowId } from "../../blog/themes/win95/assets/js/win95/core/routing.mjs";
 import {
   isVisibleNonModalWindow,
-  migrateOsState
+  migrateOsState,
+  resolveMaximizedRouteOwner
 } from "../../blog/themes/win95/assets/js/win95/core/state.mjs";
 import {
   buildMonthCalendar,
@@ -66,29 +68,66 @@ test("migrates the legacy shared explorer window without losing state", () => {
 
   migrateOsState(state, { routeIndex: { "/notes/": "explorer-notes" } });
 
-  assert.equal(state.version, 4);
+  assert.equal(state.version, 5);
   assert.equal(state.windows["explorer-blog"], undefined);
-  assert.deepEqual(state.windows["explorer-notes"], {
-    id: "explorer-notes",
+  assert.equal(state.windows["explorer-notes"], undefined);
+  assert.deepEqual(state.windows["explorer-window-1"], {
+    id: "explorer-window-1",
     url: "/notes/",
     state: "normal",
     contentWindowId: "explorer-notes"
   });
-  assert.deepEqual(state.explorers["explorer-notes"], {
+  assert.deepEqual(state.explorers["explorer-window-1"], {
     view: "icons",
     sort: "date",
     icons: {},
+    tree: { expanded: {} },
     location: "/notes/",
     history: ["/notes/"],
     historyIndex: 0
   });
-  assert.deepEqual(state.taskbarOrder, ["explorer-notes"]);
-  assert.equal(state.activeWindowId, "explorer-notes");
+  assert.deepEqual(state.taskbarOrder, ["explorer-window-1"]);
+  assert.equal(state.activeWindowId, "explorer-window-1");
 });
 
 test("leaves current state versions unchanged", () => {
-  const state = { version: 4, windows: {}, explorers: {}, taskbarOrder: [] };
+  const state = { version: 5, windows: {}, explorers: {}, taskbarOrder: [] };
   assert.equal(migrateOsState(state), state);
+});
+
+test("migrates each open folder window to an independent explorer instance", () => {
+  const state = {
+    version: 4,
+    windows: {
+      "explorer-post": { id: "explorer-post", url: "/blog/", state: "normal" },
+      "explorer-photos": { id: "explorer-photos", url: "/photos/", state: "maximized" },
+      "document-example": { id: "document-example", url: "/example/", state: "normal" }
+    },
+    explorers: {
+      "explorer-post": { view: "details" },
+      "explorer-photos": { view: "icons" }
+    },
+    explorerTree: { expanded: { "site-drive": true } },
+    taskbarOrder: ["explorer-photos", "document-example", "explorer-post"],
+    activeWindowId: "explorer-photos"
+  };
+
+  migrateOsState(state, {
+    routeIndex: { "/blog/": "explorer-post", "/photos/": "explorer-photos" }
+  });
+
+  assert.deepEqual(Object.keys(state.windows).sort(), [
+    "document-example",
+    "explorer-window-1",
+    "explorer-window-2"
+  ]);
+  assert.equal(state.windows["explorer-window-1"].url, "/photos/");
+  assert.equal(state.windows["explorer-window-2"].url, "/blog/");
+  assert.deepEqual(state.taskbarOrder, ["explorer-window-1", "document-example", "explorer-window-2"]);
+  assert.equal(state.activeWindowId, "explorer-window-1");
+  assert.deepEqual(state.explorers["explorer-window-1"].tree.expanded, { "site-drive": true });
+  assert.deepEqual(state.explorers["explorer-window-2"].tree.expanded, { "site-drive": true });
+  assert.equal(state.explorerTree, undefined);
 });
 
 test("normalizes the shared explorer tree state shape", () => {
@@ -110,6 +149,15 @@ test("records folder history in one explorer session", () => {
   assert.equal(navigated.location, "/photos/");
   assert.deepEqual(navigated.history, ["/posts/", "/photos/"]);
   assert.equal(navigated.historyIndex, 1);
+  assert.deepEqual(navigated.tree, { expanded: {} });
+});
+
+test("allocates explorer window identities independently from folder routes", () => {
+  assert.equal(allocateExplorerInstanceId([]), "explorer-window-1");
+  assert.equal(
+    allocateExplorerInstanceId(["explorer-window-1", "explorer-window-2", "explorer-photos"]),
+    "explorer-window-3"
+  );
 });
 
 test("folder navigation preserves the explorer window instance", () => {
@@ -152,6 +200,20 @@ test("does not treat a missing window as a visible route owner", () => {
   assert.equal(isVisibleNonModalWindow({ state: "minimized", windowKind: "normal" }), false);
   assert.equal(isVisibleNonModalWindow({ state: "normal", windowKind: "modal" }), false);
   assert.equal(isVisibleNonModalWindow({ state: "maximized", windowKind: "normal" }), true);
+});
+
+test("keeps URL ownership with an eligible maximized window", () => {
+  const windows = {
+    normal: { id: "normal", state: "normal", z: 30 },
+    first: { id: "first", state: "maximized", z: 10 },
+    second: { id: "second", state: "maximized", z: 20 },
+    minimized: { id: "minimized", state: "minimized", z: 40 }
+  };
+
+  assert.equal(resolveMaximizedRouteOwner(windows, "first", "normal")?.id, "first");
+  assert.equal(resolveMaximizedRouteOwner(windows, null, "first")?.id, "first");
+  assert.equal(resolveMaximizedRouteOwner(windows, null, "normal")?.id, "second");
+  assert.equal(resolveMaximizedRouteOwner({ normal: windows.normal }, null, "normal"), null);
 });
 
 test("constrains window size and position to the viewport", () => {

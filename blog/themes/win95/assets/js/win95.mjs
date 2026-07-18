@@ -1,5 +1,6 @@
 import { clamp, constrainWindowBounds } from "./win95/core/geometry.mjs";
 import {
+  allocateExplorerInstanceId,
   createExplorerSession,
   createExplorerTreeState,
   isExplorerWindowId,
@@ -10,7 +11,8 @@ import {
 import { normalizePath, readExplorerRouteIndex, resolveExplorerWindowId } from "./win95/core/routing.mjs";
 import {
   isVisibleNonModalWindow,
-  migrateOsState as migrateStoredOsState
+  migrateOsState as migrateStoredOsState,
+  resolveMaximizedRouteOwner
 } from "./win95/core/state.mjs";
 import {
   buildMonthCalendar,
@@ -42,15 +44,15 @@ import {
   const appWindows = Array.from(document.querySelectorAll("[data-window-id]"));
   const modalWindows = Array.from(document.querySelectorAll("[data-modal-window]"));
   const taskbarApps = document.getElementById("taskbar-apps");
-  const createExplorerContext = (list) => {
-    const windowEl = list.closest("[data-window-id]");
+  const createExplorerContext = (list, root) => {
+    const windowEl = root || list?.closest("[data-window-id]");
     const menu = windowEl?.querySelector("[data-view-menu]");
 
     return {
       list,
       windowEl,
       tree: windowEl?.querySelector("[data-explorer-tree]"),
-      fileItems: Array.from(list.querySelectorAll("[data-file-item]")),
+      fileItems: Array.from(list?.querySelectorAll("[data-file-item]") || []),
       viewMenuButton: windowEl?.querySelector("[data-view-menu-button]"),
       viewMenu: menu,
       viewOptionButtons: Array.from(menu?.querySelectorAll("[data-view-option]") || []),
@@ -58,7 +60,9 @@ import {
       lineUpIconsButton: menu?.querySelector("[data-line-up-icons]")
     };
   };
-  const explorerContexts = Array.from(document.querySelectorAll("[data-explorer-list]")).map(createExplorerContext);
+  const explorerContexts = appWindows
+    .filter((windowEl) => windowEl.classList.contains("explorer-window"))
+    .map((windowEl) => createExplorerContext(windowEl.querySelector("[data-explorer-list]"), windowEl));
   const osStorageKey = "michael95.osState";
   const legacyShortcutStorageKey = "michael95.win95Theme.shortcutPositions";
   const compactModeQuery = window.matchMedia("(max-width: 700px), (max-height: 500px) and (max-width: 900px)");
@@ -81,11 +85,10 @@ import {
   // fragments, avoiding a second hand-maintained catalogue in JavaScript.
   const applications = {};
   let osState = {
-    version: 4,
+    version: 5,
     shortcuts: {},
     windows: {},
     explorers: {},
-    explorerTree: { expanded: {}, version: explorerTreeVersion },
     modals: {},
     taskbarOrder: [],
     activeWindowId: null
@@ -99,6 +102,9 @@ import {
     ? document.body?.dataset.pageWindowId || null
     : null;
   let overlayRouteOwnerId = null;
+  let routeOwnerWindowId = window.history.state?.presentation === "maximized"
+    ? window.history.state?.windowId || null
+    : null;
   const latestWindowActivations = new Map();
   const latestExplorerNavigations = new Map();
   let wizardStep = 0;
@@ -127,7 +133,7 @@ import {
     try {
       osState = { ...osState, ...(JSON.parse(window.localStorage.getItem(osStorageKey) || "{}") || {}) };
     } catch {
-      osState = { version: 4, shortcuts: {}, windows: {}, explorers: {}, explorerTree: { expanded: {}, version: explorerTreeVersion }, modals: {}, taskbarOrder: [], activeWindowId: null };
+      osState = { version: 5, shortcuts: {}, windows: {}, explorers: {}, modals: {}, taskbarOrder: [], activeWindowId: null };
     }
 
     if (!osState.shortcuts) {
@@ -140,10 +146,6 @@ import {
 
     if (!osState.explorers) {
       osState.explorers = {};
-    }
-
-    if (!osState.explorerTree) {
-      osState.explorerTree = { expanded: {}, version: explorerTreeVersion };
     }
 
     if (!osState.modals) {
@@ -176,7 +178,7 @@ import {
       .filter(([, item]) => !isModalApplication(item)));
     const nextState = {
       ...osState,
-      version: 4,
+      version: 5,
       windows: persistedWindows,
       activeWindowId: isModalApplication(osState.windows[osState.activeWindowId]) ? null : osState.activeWindowId
     };
@@ -204,31 +206,10 @@ import {
 
   const explorerId = (context) => context?.windowEl?.dataset.windowId || "explorer-blog";
 
-  const ensureExplorerTreeState = () => {
-    if (!osState.explorerTree || typeof osState.explorerTree !== "object") {
-      osState.explorerTree = createExplorerTreeState(null, explorerTreeVersion);
-    }
-
-    if (osState.explorerTree.version !== explorerTreeVersion) {
-      const migratedExpanded = {};
-
-      Object.values(osState.explorers || {}).forEach((explorer) => {
-        Object.entries(explorer?.tree?.expanded || {}).forEach(([nodeId, expanded]) => {
-          if (typeof expanded === "boolean") {
-            migratedExpanded[nodeId] = expanded;
-          }
-        });
-      });
-
-      osState.explorerTree = createExplorerTreeState({ expanded: migratedExpanded }, explorerTreeVersion);
-    }
-
-    if (!osState.explorerTree.expanded) {
-      osState.explorerTree.expanded = {};
-    }
-
-    osState.explorerTree = createExplorerTreeState(osState.explorerTree, explorerTreeVersion);
-    return osState.explorerTree;
+  const ensureExplorerTreeState = (context) => {
+    const explorer = ensureExplorerState(context);
+    explorer.tree = createExplorerTreeState(explorer.tree, explorerTreeVersion);
+    return explorer.tree;
   };
 
   const ensureExplorerState = (context) => {
@@ -460,25 +441,20 @@ import {
     .sort((a, b) => (b.z || 0) - (a.z || 0));
 
   const resolveRouteOwner = () => {
-    const active = osState.windows[osState.activeWindowId];
-
-    if (isVisibleWindow(active)) {
-      return active;
-    }
-
-    const overlayOwner = osState.windows[overlayRouteOwnerId];
-
-    if (isVisibleWindow(overlayOwner)) {
-      return overlayOwner;
-    }
-
-    return visibleNonModalWindows()[0] || null;
+    const owner = resolveMaximizedRouteOwner(
+      osState.windows,
+      routeOwnerWindowId,
+      osState.activeWindowId,
+      modalWindowKind
+    );
+    routeOwnerWindowId = owner?.id || null;
+    return owner;
   };
 
   const routeSnapshot = () => {
     const directModal = osState.windows[directModalRouteId];
     const directModalIsActive = Boolean(directModal && osState.activeWindowId === directModalRouteId);
-    const owner = isCompactMode() && !osState.activeWindowId ? null : resolveRouteOwner();
+    const owner = resolveRouteOwner();
     const target = directModalIsActive
       ? normalizePath(directModal.url)
       : owner?.state === "maximized" ? normalizePath(owner.url) : desktopUrl;
@@ -535,6 +511,9 @@ import {
     };
 
     rememberTaskbarOrder(app.id);
+    if (!isModalApplication(app)) {
+      routeOwnerWindowId = app.id;
+    }
     focusWindowState(app.id, { save: false });
     saveOsState();
     applyWindowState();
@@ -562,6 +541,10 @@ import {
 
     item.z = nextWindowZ();
     osState.activeWindowId = appId;
+
+    if (!isModalApplication(item) && item.state === "maximized") {
+      routeOwnerWindowId = appId;
+    }
 
     if (save) {
       saveOsState();
@@ -619,7 +602,12 @@ import {
       directModalRouteId = null;
     }
 
+    if (routeOwnerWindowId === appId) {
+      routeOwnerWindowId = null;
+    }
+
     delete osState.windows[appId];
+    delete osState.explorers[appId];
 
     if (removedActiveWindow) {
       osState.activeWindowId = !isCompactMode()
@@ -648,6 +636,10 @@ import {
     item.previousState = item.state === "minimized" ? item.previousState || "normal" : item.state;
     item.state = "minimized";
 
+    if (routeOwnerWindowId === appId) {
+      routeOwnerWindowId = null;
+    }
+
     if (osState.activeWindowId === appId) {
       osState.activeWindowId = isCompactMode()
         ? null
@@ -670,6 +662,9 @@ import {
       const restoreBounds = item.restoreBounds || defaultWindowBounds(appId);
       Object.assign(item, clampWindowBounds(appId, restoreBounds));
       item.state = "normal";
+      if (routeOwnerWindowId === appId) {
+        routeOwnerWindowId = null;
+      }
     } else {
       item.restoreBounds = clampWindowBounds(appId, {
         x: item.x,
@@ -678,6 +673,7 @@ import {
         height: item.height
       });
       item.state = "maximized";
+      routeOwnerWindowId = appId;
     }
 
     focusWindowState(appId, { save: false });
@@ -704,6 +700,7 @@ import {
 
       directModalRouteId = null;
       overlayRouteOwnerId = null;
+      routeOwnerWindowId = null;
       osState.activeWindowId = owner?.id || null;
 
       if (owner) {
@@ -731,16 +728,15 @@ import {
         osState.windows[window.history.state?.windowId],
         osState.windows[osState.activeWindowId]
       ].find((item) => item && normalizePath(item.url) === pageUrl);
-
-      if (routeInstance && routeInstance.id !== app.id) {
-        const routeWindow = appWindows.find((windowEl) => windowEl.dataset.windowId === app.id);
-        rekeyWindowDom(routeWindow, routeInstance.id, app.id);
-        const instanceApp = { ...app, id: routeInstance.id, contentWindowId: app.id };
-        applications[routeInstance.id] = instanceApp;
-        presentRouteWindow(instanceApp);
-        syncUrlToWindowStack({ mode: "replace" });
-        return;
-      }
+      const instanceId = routeInstance?.id
+        || allocateExplorerInstanceId([...Object.keys(osState.windows), ...Object.keys(applications)]);
+      const routeWindow = appWindows.find((windowEl) => windowEl.dataset.windowId === app.id);
+      rekeyWindowDom(routeWindow, instanceId, app.id);
+      const instanceApp = { ...app, id: instanceId, contentWindowId: app.id };
+      applications[instanceId] = instanceApp;
+      presentRouteWindow(instanceApp);
+      syncUrlToWindowStack({ mode: "replace" });
+      return;
     }
 
     if (isModalApplication(app)) {
@@ -875,7 +871,9 @@ import {
     return appWindow;
   };
 
-  const syncExplorerTreeLocation = (tree, location, contentWindowId) => {
+  const syncExplorerTreeLocation = (context, location, contentWindowId) => {
+    const tree = context?.tree;
+
     if (!tree) {
       return;
     }
@@ -910,6 +908,33 @@ import {
       "is-selected-parent",
       Boolean(selectedRow && selectedRow !== siteDriveRow && siteDrive?.contains(selectedRow))
     );
+
+    let ancestor = selectedRow?.closest("li")?.parentElement?.closest("[data-tree-node-id]") || null;
+    let stateChanged = false;
+    const treeState = ensureExplorerTreeState(context);
+
+    while (ancestor) {
+      const toggle = ancestor.querySelector(":scope > .tree-row [data-tree-toggle]");
+      const childList = ancestor.querySelector(":scope > ul");
+
+      if (toggle && childList) {
+        toggle.textContent = "-";
+        toggle.setAttribute("aria-expanded", "true");
+        childList.hidden = false;
+        ancestor.classList.remove("is-collapsed");
+
+        if (treeState.expanded[ancestor.dataset.treeNodeId] !== true) {
+          treeState.expanded[ancestor.dataset.treeNodeId] = true;
+          stateChanged = true;
+        }
+      }
+
+      ancestor = ancestor.parentElement?.closest("[data-tree-node-id]") || null;
+    }
+
+    if (stateChanged) {
+      saveOsState();
+    }
   };
 
   const scopeExplorerTreeIds = (tree, instanceId) => {
@@ -971,8 +996,8 @@ import {
     }
 
     existingContents.replaceWith(importedContents);
-    Object.assign(context, createExplorerContext(importedContents.querySelector("[data-explorer-list]")));
-    syncExplorerTreeLocation(context.tree, item.url, item.contentWindowId || item.id);
+    Object.assign(context, createExplorerContext(importedContents.querySelector("[data-explorer-list]"), existing));
+    syncExplorerTreeLocation(context, item.url, item.contentWindowId || item.id);
     bindExplorerView(context);
     return existing;
   };
@@ -984,7 +1009,9 @@ import {
 
     const existing = appWindows.find((windowEl) => windowEl.dataset.windowId === item.id);
 
-    if (existing && normalizePath(existing.dataset.windowUrl) === normalizePath(item.url)) {
+    if (existing
+      && normalizePath(existing.dataset.windowUrl) === normalizePath(item.url)
+      && (existing.dataset.windowContentId || existing.dataset.windowId) === (item.contentWindowId || item.id)) {
       return existing;
     }
 
@@ -997,7 +1024,7 @@ import {
       throw new Error(`Window content ${contentWindowId} was not found at ${item.url}`);
     }
 
-    if (existing && isExplorerWindowId(item.id) && sourceWindow.querySelector("[data-explorer-list]")) {
+    if (existing && isExplorerWindowId(item.id) && sourceWindow.querySelector(".explorer-contents")) {
       const hydratedExplorer = hydrateExplorerWindowDom(item, sourceWindow, existing);
 
       if (hydratedExplorer) {
@@ -1108,6 +1135,10 @@ import {
       osState.windows[appId] = { ...proposed, z: nextWindowZ() };
       osState.activeWindowId = appId;
 
+      if (!isModalApplication(proposed) && proposed.state === "maximized") {
+        routeOwnerWindowId = appId;
+      }
+
       if (isModalApplication(proposed)) {
         overlayRouteOwnerId = priorOwnerId;
         directModalRouteId = directModal ? appId : null;
@@ -1137,7 +1168,6 @@ import {
     }
 
     if (current.state !== "minimized" && osState.activeWindowId === appId) {
-      minimizeWindowState(appId);
       return;
     }
 
@@ -1183,6 +1213,7 @@ import {
 
       directModalRouteId = null;
       overlayRouteOwnerId = null;
+      routeOwnerWindowId = null;
       const historyWindow = osState.windows[historyState?.windowId];
       const persistedActive = osState.windows[osState.activeWindowId];
       const normalWindow = visibleNonModalWindows().find((item) => item.state === "normal");
@@ -1221,33 +1252,47 @@ import {
     }
 
     const app = readWindowMetadata(sourceWindow);
-    applications[routeWindowId] = { ...applications[routeWindowId], ...app, url: routeUrl };
-    const existing = osState.windows[routeWindowId];
+    const isExplorerRoute = Boolean(sourceWindow.querySelector("[data-explorer-list]"));
+    const historyInstance = osState.windows[historyState?.windowId];
+    const instanceId = isExplorerRoute && historyState?.windowId && (!historyInstance || isExplorerWindowId(historyState.windowId))
+      ? historyState.windowId
+      : isExplorerRoute
+        ? allocateExplorerInstanceId([...Object.keys(osState.windows), ...Object.keys(applications)])
+        : routeWindowId;
+    const instanceApp = {
+      ...app,
+      id: instanceId,
+      contentWindowId: routeWindowId,
+      url: routeUrl
+    };
+    applications[instanceId] = { ...applications[instanceId], ...instanceApp };
+    const existing = osState.windows[instanceId];
     const restoreBounds = existing?.state === "normal"
-      ? clampWindowBounds(routeWindowId, existing)
-      : existing?.restoreBounds || defaultWindowBounds(routeWindowId);
+      ? clampWindowBounds(instanceId, existing)
+      : existing?.restoreBounds || defaultWindowBounds(instanceId);
 
-    osState.windows[routeWindowId] = {
+    osState.windows[instanceId] = {
       ...existing,
-      ...applications[routeWindowId],
-      state: isModalApplication(applications[routeWindowId]) ? "normal" : "maximized",
+      ...applications[instanceId],
+      state: isModalApplication(applications[instanceId]) ? "normal" : "maximized",
       previousState: "normal",
       restoreBounds,
       z: nextWindowZ()
     };
 
-    if (isModalApplication(applications[routeWindowId])) {
+    if (isModalApplication(applications[instanceId])) {
       overlayRouteOwnerId = resolveRouteOwner()?.id || null;
-      directModalRouteId = routeWindowId;
+      directModalRouteId = instanceId;
     } else {
       overlayRouteOwnerId = null;
       directModalRouteId = null;
+      routeOwnerWindowId = instanceId;
     }
 
-    osState.activeWindowId = routeWindowId;
-    rememberTaskbarOrder(routeWindowId);
+    osState.activeWindowId = instanceId;
+    rememberTaskbarOrder(instanceId);
     saveOsState();
-    await hydrateWindowDom(osState.windows[routeWindowId]);
+    await hydrateWindowDom(osState.windows[instanceId]);
     applyWindowState();
   };
 
@@ -1461,7 +1506,7 @@ import {
     node.classList.toggle("is-collapsed", !expanded);
 
     if (save) {
-      ensureExplorerTreeState().expanded[node.dataset.treeNodeId] = expanded;
+      ensureExplorerTreeState(context).expanded[node.dataset.treeNodeId] = expanded;
       saveOsState();
     }
   };
@@ -1634,7 +1679,7 @@ import {
     }
 
     scopeExplorerTreeIds(context.tree, explorerId(context));
-    const state = ensureExplorerTreeState();
+    const state = ensureExplorerTreeState(context);
     const toggles = Array.from(context.tree.querySelectorAll("[data-tree-toggle]"));
 
     toggles.forEach((toggle) => {
@@ -1682,6 +1727,11 @@ import {
       });
     });
 
+    syncExplorerTreeLocation(
+      context,
+      context.windowEl?.dataset.windowUrl || desktopUrl,
+      context.windowEl?.dataset.windowContentId || context.windowEl?.dataset.windowId
+    );
     context.tree.dataset.treeBound = "true";
   };
 
@@ -2603,15 +2653,29 @@ import {
   };
 
   const openApplicationShortcut = async (shortcut) => {
-    const windowId = shortcut?.dataset.shortcutWindowId;
+    const targetWindowId = shortcut?.dataset.shortcutWindowId;
     const url = shortcut?.dataset.shortcutUrl || desktopUrl;
 
-    if (!windowId) {
+    if (!targetWindowId) {
       return;
     }
 
     try {
       await registerShortcutApplication(shortcut);
+      const targetApp = applications[targetWindowId];
+      const windowId = isExplorerWindowId(targetWindowId)
+        ? allocateExplorerInstanceId([...Object.keys(osState.windows), ...Object.keys(applications)])
+        : targetWindowId;
+
+      if (windowId !== targetWindowId && targetApp) {
+        applications[windowId] = {
+          ...targetApp,
+          id: windowId,
+          contentWindowId: targetWindowId,
+          url: normalizePath(url)
+        };
+      }
+
       const current = osState.windows[windowId];
       const restorePrevious = shortcut.dataset.shortcutRestore === "previous";
       const requestedState = current?.state === "minimized"
@@ -2842,12 +2906,12 @@ import {
       osState.windows[app.id] = { ...osState.windows[app.id], ...app };
     }
 
-    appWindow.querySelectorAll("[data-explorer-list]").forEach((list) => {
-      const context = createExplorerContext(list);
+    if (appWindow.classList.contains("explorer-window")) {
+      const context = createExplorerContext(appWindow.querySelector("[data-explorer-list]"), appWindow);
       explorerContexts.push(context);
       bindExplorerTree(context);
       bindExplorerView(context);
-    });
+    }
 
     bindWindowControls();
 
@@ -3127,7 +3191,7 @@ import {
     applyModalState();
 
     explorerContexts.forEach((context) => {
-      if (context.list.dataset.view === "icons") {
+      if (context.list?.dataset.view === "icons") {
         lineUpExplorerIcons(context, { save: false });
         applySavedExplorerIconPositions(context);
       }
