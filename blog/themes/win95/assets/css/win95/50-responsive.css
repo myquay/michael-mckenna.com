@@ -350,7 +350,7 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .explorer-panes::before,
+  .explorer-pane-resizer,
   .explorer-tree {
     display: none;
   }
@@ -414,16 +414,16 @@
 
   .file-list[data-view="details"] .file-header,
   .file-list[data-view="details"] .file-item {
-    grid-template-columns: 24px minmax(0, 1fr) 92px;
+    grid-template-columns: 24px minmax(0, 1fr) 0 92px;
     min-width: 0;
   }
 
-  .file-list[data-view="details"] .file-header {
-    grid-template-columns: minmax(0, 1fr) 92px;
+  .file-list[data-view="details"] .file-type,
+  .file-list[data-view="details"] .file-header-type {
+    display: none;
   }
 
-  .file-list[data-view="details"] .file-type,
-  .file-list[data-view="details"] .file-header span:nth-child(2) {
+  .file-column-resizer {
     display: none;
   }
 

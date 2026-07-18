@@ -3,17 +3,24 @@
   box-shadow: inset 0 1px var(--surface-light);
   display: grid;
   flex: 1;
-  grid-template-columns: minmax(210px, 38%) 4px minmax(0, 1fr);
+  grid-template-columns: var(--tree-pane-width, 240px) 5px minmax(0, 1fr);
   min-height: 0;
   padding-top: 3px;
 }
 
-.explorer-panes::before {
+.explorer-pane-resizer {
   background: var(--surface);
   box-shadow: inset 1px 0 var(--surface-light), inset -1px 0 var(--surface-shadow);
-  content: "";
+  cursor: col-resize;
   grid-column: 2;
   grid-row: 1;
+  min-width: 5px;
+  touch-action: none;
+}
+
+.explorer-pane-resizer:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: -2px;
 }
 
 .explorer-tree,
@@ -194,6 +201,9 @@
 }
 
 .file-list {
+  --file-date-width: 132px;
+  --file-icon-width: 31px;
+  --file-type-width: 120px;
   align-content: start;
   background: #fff;
   box-shadow: var(--bevel-sunken);
@@ -209,20 +219,37 @@
   background: var(--surface);
   display: none;
   font-size: 15px;
-  grid-template-columns: minmax(180px, 1fr) 120px 132px;
+  grid-template-columns: var(--file-icon-width) minmax(149px, 1fr) var(--file-type-width) var(--file-date-width);
   min-width: 430px;
   position: sticky;
   top: 0;
   z-index: 2;
 }
 
-.file-header span {
+.file-header > span {
   box-shadow: var(--bevel-raised);
   min-height: 23px;
   overflow: hidden;
   padding: 4px 7px;
+  position: relative;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.file-header > .file-header-name {
+  grid-column: 1 / 3;
+  padding-left: calc(var(--file-icon-width) + 7px);
+}
+
+.file-column-resizer {
+  bottom: 2px;
+  cursor: col-resize;
+  position: absolute;
+  right: -3px;
+  top: 2px;
+  touch-action: none;
+  width: 7px;
+  z-index: 3;
 }
 
 .file-item {
@@ -264,20 +291,27 @@
 }
 
 .file-list[data-view="details"] .file-item {
-  gap: 7px;
-  grid-template-columns: 24px minmax(149px, 1fr) 120px 132px;
+  grid-template-columns: var(--file-icon-width) minmax(149px, 1fr) var(--file-type-width) var(--file-date-width);
   min-height: 26px;
   min-width: 430px;
-  padding: 2px 6px 2px 4px;
+  padding: 2px 0;
 }
 
 .file-list[data-view="details"] .file-icon-wrap {
   display: block;
+  padding-left: 4px;
 }
 
 .file-list[data-view="details"] .file-icon-wrap img {
   height: 20px;
   width: 20px;
+}
+
+.file-list[data-view="details"] .file-name,
+.file-list[data-view="details"] .file-type,
+.file-list[data-view="details"] .file-date {
+  padding-left: 7px;
+  padding-right: 7px;
 }
 
 .file-list[data-view="list"] {

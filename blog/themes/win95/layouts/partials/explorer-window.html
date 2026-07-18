@@ -17,6 +17,8 @@
   <div class="explorer-panes">
     {{ partial "explorer-tree-pane.html" $page }}
 
+    <div class="explorer-pane-resizer" data-explorer-pane-resizer role="separator" aria-label="Resize folder pane" aria-orientation="vertical" tabindex="0"></div>
+
     <section class="explorer-contents" aria-label="Contents of {{ $folderName }}">
       <h2>Contents of '{{ $folderPath }}'</h2>
       {{ if eq $page.Section "activity" }}

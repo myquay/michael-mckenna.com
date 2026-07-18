@@ -51,8 +51,11 @@ import {
     return {
       list,
       windowEl,
+      panes: windowEl?.querySelector(".explorer-panes"),
+      paneResizer: windowEl?.querySelector("[data-explorer-pane-resizer]"),
       tree: windowEl?.querySelector("[data-explorer-tree]"),
       fileItems: Array.from(list?.querySelectorAll("[data-file-item]") || []),
+      columnResizers: Array.from(list?.querySelectorAll("[data-file-column-resizer]") || []),
       viewMenuButton: windowEl?.querySelector("[data-view-menu-button]"),
       viewMenu: menu,
       viewOptionButtons: Array.from(menu?.querySelectorAll("[data-view-option]") || []),
@@ -1741,6 +1744,141 @@ import {
     }
 
     const state = ensureExplorerState(context);
+    const layout = state.layout && typeof state.layout === "object" ? state.layout : {};
+    state.layout = layout;
+
+    if (Number.isFinite(layout.paneWidth)) {
+      context.panes?.style.setProperty("--tree-pane-width", `${layout.paneWidth}px`);
+    }
+
+    if (Number.isFinite(layout.typeWidth)) {
+      context.list.style.setProperty("--file-type-width", `${layout.typeWidth}px`);
+    }
+
+    if (Number.isFinite(layout.dateWidth)) {
+      context.list.style.setProperty("--file-date-width", `${layout.dateWidth}px`);
+    }
+
+    if (context.paneResizer && context.paneResizer.dataset.explorerResizeBound !== "true") {
+      const resizePane = (width) => {
+        const maximum = Math.max(150, (context.panes?.clientWidth || 0) - 300);
+        const nextWidth = Math.round(clamp(width, 150, maximum));
+        const currentState = ensureExplorerState(context);
+        currentState.layout = currentState.layout && typeof currentState.layout === "object"
+          ? currentState.layout
+          : {};
+        context.panes?.style.setProperty("--tree-pane-width", `${nextWidth}px`);
+        currentState.layout.paneWidth = nextWidth;
+      };
+      let paneDrag = null;
+
+      context.paneResizer.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0 || isCompactMode()) {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        context.paneResizer.setPointerCapture(event.pointerId);
+        paneDrag = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startWidth: context.tree?.getBoundingClientRect().width || 240
+        };
+      });
+
+      context.paneResizer.addEventListener("pointermove", (event) => {
+        if (paneDrag?.pointerId === event.pointerId) {
+          resizePane(paneDrag.startWidth + event.clientX - paneDrag.startX);
+        }
+      });
+
+      const finishPaneResize = (event) => {
+        if (paneDrag?.pointerId !== event.pointerId) {
+          return;
+        }
+
+        paneDrag = null;
+        saveOsState();
+      };
+
+      context.paneResizer.addEventListener("pointerup", finishPaneResize);
+      context.paneResizer.addEventListener("pointercancel", finishPaneResize);
+      context.paneResizer.addEventListener("keydown", (event) => {
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
+          return;
+        }
+
+        event.preventDefault();
+        resizePane((context.tree?.getBoundingClientRect().width || 240) + (event.key === "ArrowLeft" ? -10 : 10));
+        saveOsState();
+      });
+      context.paneResizer.dataset.explorerResizeBound = "true";
+    }
+
+    context.columnResizers.forEach((handle) => {
+      if (handle.dataset.explorerResizeBound === "true") {
+        return;
+      }
+
+      let columnDrag = null;
+      handle.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0 || isCompactMode()) {
+          return;
+        }
+
+        const header = handle.closest(".file-header");
+        const typeWidth = header?.querySelector(".file-header-type")?.getBoundingClientRect().width || 120;
+        const dateWidth = header?.querySelector(".file-header-date")?.getBoundingClientRect().width || 132;
+        const nameWidth = header?.querySelector(".file-header-name")?.getBoundingClientRect().width || 149;
+
+        event.preventDefault();
+        event.stopPropagation();
+        handle.setPointerCapture(event.pointerId);
+        columnDrag = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          nameWidth,
+          typeWidth,
+          dateWidth
+        };
+      });
+
+      handle.addEventListener("pointermove", (event) => {
+        if (columnDrag?.pointerId !== event.pointerId) {
+          return;
+        }
+
+        const delta = event.clientX - columnDrag.startX;
+        if (handle.dataset.fileColumnResizer === "name") {
+          const maximumTypeWidth = Math.max(72, columnDrag.nameWidth + columnDrag.typeWidth - 149);
+          layout.typeWidth = Math.round(clamp(columnDrag.typeWidth - delta, 72, maximumTypeWidth));
+        } else {
+          const nextTypeWidth = clamp(columnDrag.typeWidth + delta, 72, columnDrag.typeWidth + columnDrag.dateWidth - 92);
+          layout.typeWidth = Math.round(nextTypeWidth);
+          layout.dateWidth = Math.round(columnDrag.typeWidth + columnDrag.dateWidth - nextTypeWidth);
+        }
+
+        context.list.style.setProperty("--file-type-width", `${layout.typeWidth}px`);
+        if (Number.isFinite(layout.dateWidth)) {
+          context.list.style.setProperty("--file-date-width", `${layout.dateWidth}px`);
+        }
+      });
+
+      const finishColumnResize = (event) => {
+        if (columnDrag?.pointerId !== event.pointerId) {
+          return;
+        }
+
+        columnDrag = null;
+        saveOsState();
+      };
+
+      handle.addEventListener("pointerup", finishColumnResize);
+      handle.addEventListener("pointercancel", finishColumnResize);
+      handle.dataset.explorerResizeBound = "true";
+    });
+
     sortExplorerItems(context, state.sort || "date");
     setExplorerView(context, isCompactMode() ? "list" : state.view || context.list.dataset.view || "details", { persist: false });
 
