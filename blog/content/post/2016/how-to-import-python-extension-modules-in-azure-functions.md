@@ -39,7 +39,7 @@ We'll be creating an Azure function to host the [GetAndPrintEid](https://github.
 
 ##### Step 1. Be able to responed to HTTP requests
 
-First we create a base Azure Python function that can respond to HTTP requests - lucky for us [Anthony Eden](https://mediarealm.com.au/) has already created a [sample project that does just that](https://github.com/anthonyeden/Azure-Functions-Python-HTTP-Example) so we'll use that as a base.
+First we create a base Azure Python function that can respond to HTTP requests - lucky for us Anthony Eden has already created a [sample project that does just that](https://github.com/anthonyeden/Azure-Functions-Python-HTTP-Example) so we'll use that as a base.
 
 At this point the project will look a little like this
 
