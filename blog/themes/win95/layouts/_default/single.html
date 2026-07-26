@@ -1,5 +1,11 @@
 {{ define "main" }}
-  {{ if eq .RelPermalink "/about/" }}
+  {{ if eq .RelPermalink "/micropub/" }}
+    <main class="desktop-shell has-maximized-window" id="desktop" aria-label="Michael McKenna Windows 95 desktop">
+      {{ partial "micropub-window.html" . }}
+    </main>
+
+    {{ partial "taskbar.html" . }}
+  {{ else if eq .RelPermalink "/about/" }}
     <main class="desktop-shell" id="desktop" aria-label="Michael McKenna Windows 95 desktop">
       {{ partial "about-window.html" . }}
     </main>

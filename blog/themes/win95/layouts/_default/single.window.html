@@ -1,4 +1,6 @@
-{{ if eq .RelPermalink "/about/" }}
+{{ if eq .RelPermalink "/micropub/" }}
+  {{ partial "micropub-window.html" . }}
+{{ else if eq .RelPermalink "/about/" }}
   {{ partial "about-window.html" . }}
 {{ else }}
   {{ partial "document-window.html" (dict "page" . "titleId" (printf "document-%s-title" .File.UniqueID)) }}

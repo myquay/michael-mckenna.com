@@ -22,6 +22,9 @@
 {{ with site.Params.IndieWeb.tokenEndpoint }}
 <link rel="token_endpoint" href="{{ . }}">
 {{ end }}
+{{ with site.Params.IndieWeb.micropubEndpoint }}
+<link rel="micropub" href="{{ . }}">
+{{ end }}
 {{ with site.Params.Win95.favicon }}
 <link rel="icon" href="{{ . | absURL }}">
 {{ end }}
@@ -29,6 +32,7 @@
   (resources.Get "css/win95/00-base.css")
   (resources.Get "css/win95/10-desktop.css")
   (resources.Get "css/win95/20-dialogs.css")
+  (resources.Get "css/win95/25-micropub.css")
   (resources.Get "css/win95/30-windows.css")
   (resources.Get "css/win95/40-explorer.css")
   (resources.Get "css/win95/50-responsive.css")

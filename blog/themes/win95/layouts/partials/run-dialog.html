@@ -1,0 +1,22 @@
+<section class="run-dialog" id="run-dialog" data-modal-window="run" role="dialog" aria-modal="true" aria-labelledby="run-dialog-title" aria-describedby="run-dialog-description">
+  <div class="setup-titlebar" data-modal-titlebar>
+    <span id="run-dialog-title">Run</span>
+    <button class="setup-close" type="button" data-run-close aria-label="Close">x</button>
+  </div>
+  <form class="run-dialog-body" id="run-dialog-form">
+    <div class="run-dialog-copy">
+      <img src="/images/win95-icons/w95_25.ico" alt="">
+      <p id="run-dialog-description">Type the name of a program, folder, document, or Internet resource, and Windows will open it for you.</p>
+    </div>
+    <label class="run-command-row" for="run-command">
+      <span>Open:</span>
+      <input id="run-command" name="command" type="text" autocomplete="off" spellcheck="false">
+    </label>
+    <p class="run-dialog-error" id="run-dialog-error" role="alert" hidden></p>
+    <div class="run-dialog-buttons">
+      <button class="setup-button is-default" type="submit">OK</button>
+      <button class="setup-button" type="button" data-run-close>Cancel</button>
+      <button class="setup-button" type="button" disabled>Browse...</button>
+    </div>
+  </form>
+</section>

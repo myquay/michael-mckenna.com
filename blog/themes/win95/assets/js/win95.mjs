@@ -22,6 +22,7 @@ import {
   getMonthName,
   getNewZealandDateTime
 } from "./win95/core/time.mjs";
+import { observeMicropubClients } from "./win95/micropub.mjs";
 
   const desktop = document.getElementById("desktop");
   let shortcuts = Array.from(document.querySelectorAll(".desktop-shortcut"));
@@ -30,6 +31,11 @@ import {
   const trayTime = document.getElementById("tray-time");
   const trayTimeButton = document.getElementById("tray-time-button");
   const dateTimeDialog = document.getElementById("date-time-properties");
+  const runDialog = document.getElementById("run-dialog");
+  const runForm = document.getElementById("run-dialog-form");
+  const runCommand = document.getElementById("run-command");
+  const runError = document.getElementById("run-dialog-error");
+  const startRunButtons = Array.from(document.querySelectorAll("[data-start-action='run']"));
   let rssSetupWindow = document.getElementById("rss-setup-window");
   let rssSetupClose = document.getElementById("rss-setup-close");
   let rssSetupBack = document.getElementById("rss-setup-back");
@@ -2471,6 +2477,48 @@ import {
     focusTarget?.focus();
   };
 
+  const closeRunDialog = () => {
+    runDialog?.classList.remove("is-open", "is-active");
+    if (runError) {
+      runError.hidden = true;
+      runError.textContent = "";
+    }
+  };
+
+  const openRunDialog = () => {
+    if (!runDialog) {
+      return;
+    }
+
+    finishActiveDrag();
+    closeStartMenu();
+    closeViewMenu();
+    runDialog.classList.add("is-open");
+    applyModalState();
+    focusModal(runDialog);
+    runCommand?.select();
+  };
+
+  const executeRunCommand = async () => {
+    const command = (runCommand?.value || "").trim().toLowerCase().replace(/\.exe$/, "");
+    if (command !== "micropub") {
+      if (runError) {
+        runError.textContent = `Cannot find the file '${runCommand?.value || ""}' (or one of its components).`;
+        runError.hidden = false;
+      }
+      runCommand?.focus();
+      return;
+    }
+
+    closeRunDialog();
+    try {
+      await ensureOsContext();
+      await activateWindow("micropub", { requestedState: "normal" });
+    } catch {
+      fallbackWindowNavigation(proposedWindowState("micropub", "normal"));
+    }
+  };
+
   const moveActiveDrag = (clientX, clientY) => {
     if (!activeDrag) {
       return;
@@ -3186,6 +3234,20 @@ import {
     bindExplorerView(context);
   });
   bindAboutWindow();
+  observeMicropubClients();
+  startRunButtons.forEach((button) => button.addEventListener("click", openRunDialog));
+  runDialog?.querySelectorAll("[data-run-close]").forEach((button) =>
+    button.addEventListener("click", closeRunDialog));
+  runForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    executeRunCommand();
+  });
+  runDialog?.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeRunDialog();
+    }
+  });
   deviceErrorDialog?.querySelectorAll("[data-floppy-dialog-close]").forEach((button) => {
     button.addEventListener("click", closeDeviceErrorDialog);
   });

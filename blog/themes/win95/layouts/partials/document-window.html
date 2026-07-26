@@ -32,6 +32,12 @@
       {{ with $page.Params.in_reply_to }}
         <p class="activity-context">Replying to <a class="u-in-reply-to" href="{{ . }}">{{ $page.Params.reply_to_title | default . }}</a></p>
       {{ end }}
+      {{ with $page.Params.repost_of }}
+        <p class="activity-context">Reposted <a class="u-repost-of" href="{{ . }}">{{ . }}</a></p>
+      {{ end }}
+      {{ with $page.Params.bookmark_of }}
+        <p class="activity-context">Bookmarked <a class="u-bookmark-of" href="{{ . }}">{{ . }}</a></p>
+      {{ end }}
       {{ with $page.Params.photo }}
         <figure class="document-photo">
           <img src="{{ . }}" alt="{{ $page.Params.alt | default $page.Title }}">

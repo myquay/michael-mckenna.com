@@ -24,6 +24,10 @@ import {
   getMonthName,
   getNewZealandDateTime
 } from "../../blog/themes/win95/assets/js/win95/core/time.mjs";
+import {
+  relationshipFor,
+  toLocalDate
+} from "../../blog/themes/win95/assets/js/win95/micropub.mjs";
 
 test("normalizes route paths consistently", () => {
   assert.equal(normalizePath(""), "/");
@@ -265,4 +269,12 @@ test("calendar helpers build a Sunday-first month and clock angles", () => {
     minute: 183,
     second: 180
   });
+});
+
+test("Micropub helpers map social entry relationships and callback dates", () => {
+  assert.equal(relationshipFor("reply"), "in-reply-to");
+  assert.equal(relationshipFor("like"), "like-of");
+  assert.equal(relationshipFor("article"), undefined);
+  assert.match(toLocalDate("2026-05-22T14:00:00+12:00"), /^2026-05-22T/);
+  assert.equal(toLocalDate("not-a-date"), "");
 });

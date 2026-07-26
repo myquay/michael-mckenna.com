@@ -1,0 +1,145 @@
+{{ $page := site.GetPage "/micropub" }}
+<section class="app-window micropub-window{{ if eq .RelPermalink "/micropub/" }} is-maximized{{ end }}"
+  data-window-id="micropub"
+  data-window-kind="normal"
+  data-window-url="/micropub/"
+  data-window-title="Micropub"
+  data-window-icon="/images/win95-icons/w95_16.ico"
+  data-window-contract-version="{{ partial "window-contract-version.html" $page }}"
+  data-window-default-x="86"
+  data-window-default-y="34"
+  data-window-default-width="900"
+  data-window-default-height="620"
+  data-window-min-width="560"
+  data-window-min-height="420"
+  data-window-taskbar="true"
+  {{ if ne .RelPermalink "/micropub/" }}hidden{{ end }}
+  role="application"
+  aria-labelledby="micropub-window-title"
+  data-micropub-app
+  data-me="{{ site.Params.IndieWeb.url }}"
+  data-auth-metadata="{{ site.Params.IndieWeb.metadataEndpoint }}"
+  data-authorization-endpoint="{{ site.Params.IndieWeb.authorizationEndpoint }}"
+  data-token-endpoint="{{ site.Params.IndieWeb.tokenEndpoint }}"
+  data-micropub-endpoint="{{ site.Params.IndieWeb.micropubEndpoint }}">
+  <div class="h-app" hidden>
+    <span class="p-name">Micropub for Windows 95</span>
+    <a class="u-url" href="{{ "/micropub/" | absURL }}">Micropub for Windows 95</a>
+    <img class="u-logo" src="{{ "/images/win95-icons/w95_16.ico" | absURL }}" alt="">
+  </div>
+  {{ partial "window-titlebar.html" (dict "icon" "/images/win95-icons/w95_16.ico" "titleId" "micropub-window-title" "title" "Micropub" "controlClass" "micropub-window-control") }}
+
+  <nav class="micropub-menu" aria-label="Micropub menu">
+    <button type="button" data-mp-new><u>F</u>ile</button>
+    <button type="button" data-mp-refresh><u>V</u>iew</button>
+    <button type="button" data-mp-about><u>H</u>elp</button>
+  </nav>
+
+  <div class="micropub-auth" data-mp-auth>
+    <img src="/images/win95-icons/w95_16.ico" alt="">
+    <div>
+      <h1>Micropub for Windows 95</h1>
+      <p>Sign in with your website to create, edit, and publish content.</p>
+      <button class="setup-button is-default" type="button" data-mp-sign-in>Sign In...</button>
+    </div>
+  </div>
+
+  <div class="micropub-workspace" data-mp-workspace hidden>
+    <aside class="micropub-sidebar">
+      <div class="micropub-sidebar-heading">
+        <strong>My Content</strong>
+        <button class="setup-button" type="button" data-mp-new>New...</button>
+      </div>
+      <div class="micropub-filters">
+        <label>Show
+          <select data-mp-filter>
+            <option value="">All content</option>
+            <option value="draft">Drafts</option>
+            <option value="published">Published</option>
+            <option value="deleted">Deleted</option>
+          </select>
+        </label>
+      </div>
+      <div class="micropub-post-list" data-mp-list role="listbox" aria-label="Content"></div>
+    </aside>
+
+    <main class="micropub-editor">
+      <div class="micropub-toolbar">
+        <button class="setup-button" type="button" data-mp-save-draft>Save Draft</button>
+        <button class="setup-button is-default" type="button" data-mp-publish>Publish</button>
+        <button class="setup-button" type="button" data-mp-delete disabled>Delete</button>
+        <span class="micropub-account" data-mp-account></span>
+        <button class="setup-button" type="button" data-mp-sign-out>Sign Out</button>
+      </div>
+
+      <form class="micropub-form" data-mp-form>
+        <div class="micropub-form-grid">
+          <label>Type
+            <select name="post-type" data-mp-type>
+              <option value="note">Note</option>
+              <option value="article">Article</option>
+              <option value="photo">Photo</option>
+              <option value="activity">Activity</option>
+              <option value="reply">Reply</option>
+              <option value="like">Like</option>
+              <option value="repost">Repost</option>
+              <option value="bookmark">Bookmark</option>
+              <option value="blogroll">Blogroll entry</option>
+              <option value="event">Event</option>
+              <option value="audio">Audio</option>
+              <option value="video">Video</option>
+            </select>
+          </label>
+          <label data-mp-field="name">Title / name
+            <input name="name" type="text">
+          </label>
+          <label data-mp-field="summary">Summary
+            <input name="summary" type="text">
+          </label>
+          <label data-mp-field="target" hidden>Target URL
+            <input name="target" type="url" placeholder="https://example.com/article">
+          </label>
+          <label data-mp-field="site-url" hidden>Site URL
+            <input name="site-url" type="url">
+          </label>
+          <label data-mp-field="feed" hidden>Feed URL
+            <input name="feed" type="url">
+          </label>
+          <label data-mp-field="start" hidden>Starts
+            <input name="start" type="datetime-local">
+          </label>
+          <label data-mp-field="end" hidden>Ends
+            <input name="end" type="datetime-local">
+          </label>
+          <label data-mp-field="location" hidden>Location
+            <input name="location" type="text">
+          </label>
+          <label class="micropub-wide" data-mp-field="media" hidden>Media
+            <span class="micropub-media-row">
+              <input name="media" type="url" placeholder="Upload a file or enter its URL">
+              <input name="media-file" type="file" accept="image/*,audio/*,video/*">
+              <button class="setup-button" type="button" data-mp-upload>Upload</button>
+            </span>
+          </label>
+          <label class="micropub-wide" data-mp-field="alt" hidden>Alternative text
+            <input name="alt" type="text">
+          </label>
+          <label class="micropub-wide">Content
+            <textarea name="content" rows="12"></textarea>
+          </label>
+          <label class="micropub-wide">Categories <span class="micropub-hint">(comma separated)</span>
+            <input name="category" type="text">
+          </label>
+          <label>Publish date
+            <input name="published" type="datetime-local">
+          </label>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <footer class="micropub-statusbar">
+    <span data-mp-status>Ready</span>
+    <span data-mp-connection>Not signed in</span>
+  </footer>
+</section>
