@@ -3221,6 +3221,7 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
 
   loadOsState();
   registerDomWindows();
+  observeMicropubClients();
   syncPageToOsState();
   applyWindowState();
   applyModalState();
@@ -3234,7 +3235,6 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
     bindExplorerView(context);
   });
   bindAboutWindow();
-  observeMicropubClients();
   startRunButtons.forEach((button) => button.addEventListener("click", openRunDialog));
   runDialog?.querySelectorAll("[data-run-close]").forEach((button) =>
     button.addEventListener("click", closeRunDialog));

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { constrainWindowBounds } from "../../blog/themes/win95/assets/js/win95/core/geometry.mjs";
@@ -297,4 +298,17 @@ test("Micropub sign-in uses configured endpoints without blocking on discovery",
     authorization_endpoint: "https://auth.example/authorize",
     token_endpoint: "https://auth.example/token"
   });
+});
+
+test("Micropub callback binding starts before desktop route synchronization", () => {
+  const source = readFileSync(
+    new URL("../../blog/themes/win95/assets/js/win95.mjs", import.meta.url),
+    "utf8"
+  );
+  const callbackBinding = source.indexOf("observeMicropubClients();");
+  const routeSynchronization = source.indexOf("syncPageToOsState();");
+
+  assert.notEqual(callbackBinding, -1);
+  assert.notEqual(routeSynchronization, -1);
+  assert.ok(callbackBinding < routeSynchronization);
 });
