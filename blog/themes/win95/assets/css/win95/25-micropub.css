@@ -109,6 +109,11 @@
   padding: 40px;
 }
 
+.micropub-auth[hidden],
+.micropub-workspace[hidden] {
+  display: none;
+}
+
 .micropub-auth img {
   height: 64px;
   width: 64px;

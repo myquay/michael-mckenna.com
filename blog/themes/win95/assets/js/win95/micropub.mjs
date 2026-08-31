@@ -27,6 +27,40 @@ const readJson = async (response) => {
   }
 };
 
+export const discoverAuthMetadata = async (configuration, fetcher = fetch) => {
+  const {
+    metadataEndpoint,
+    authorizationEndpoint,
+    tokenEndpoint
+  } = configuration;
+
+  // The site publishes explicit endpoints, so sign-in does not need to wait on
+  // a second cross-origin discovery request before it can launch.
+  if (authorizationEndpoint && tokenEndpoint) {
+    return {
+      issuer: new URL(authorizationEndpoint).origin,
+      authorization_endpoint: authorizationEndpoint,
+      token_endpoint: tokenEndpoint
+    };
+  }
+
+  if (!metadataEndpoint) throw new Error("The IndieAuth server is not configured.");
+
+  let response;
+  try {
+    response = await fetcher(metadataEndpoint, { headers: { Accept: "application/json" } });
+  } catch {
+    throw new Error("Could not contact the IndieAuth server.");
+  }
+
+  if (!response.ok) throw new Error("Could not discover the IndieAuth server.");
+  const metadata = await readJson(response);
+  if (!metadata.authorization_endpoint || !metadata.token_endpoint) {
+    throw new Error("The IndieAuth server metadata is incomplete.");
+  }
+  return metadata;
+};
+
 const titleFor = (item) => {
   const properties = item.properties || {};
   return properties.name?.[0] || properties.content?.[0]?.slice?.(0, 58) || `Untitled ${item.postType || "entry"}`;
@@ -111,9 +145,11 @@ class MicropubClient {
   }
 
   async discoverAuth() {
-    const response = await fetch(this.root.dataset.authMetadata, { headers: { Accept: "application/json" } });
-    if (!response.ok) throw new Error("Could not discover the IndieAuth server.");
-    return readJson(response);
+    return discoverAuthMetadata({
+      metadataEndpoint: this.root.dataset.authMetadata,
+      authorizationEndpoint: this.root.dataset.authorizationEndpoint,
+      tokenEndpoint: this.root.dataset.tokenEndpoint
+    });
   }
 
   async signIn() {

@@ -25,6 +25,7 @@ import {
   getNewZealandDateTime
 } from "../../blog/themes/win95/assets/js/win95/core/time.mjs";
 import {
+  discoverAuthMetadata,
   relationshipFor,
   toLocalDate
 } from "../../blog/themes/win95/assets/js/win95/micropub.mjs";
@@ -277,4 +278,23 @@ test("Micropub helpers map social entry relationships and callback dates", () =>
   assert.equal(relationshipFor("article"), undefined);
   assert.match(toLocalDate("2026-05-22T14:00:00+12:00"), /^2026-05-22T/);
   assert.equal(toLocalDate("not-a-date"), "");
+});
+
+test("Micropub sign-in uses configured endpoints without blocking on discovery", async () => {
+  let fetches = 0;
+  const metadata = await discoverAuthMetadata({
+    metadataEndpoint: "https://auth.example/.well-known/oauth-authorization-server",
+    authorizationEndpoint: "https://auth.example/authorize",
+    tokenEndpoint: "https://auth.example/token"
+  }, async () => {
+    fetches += 1;
+    throw new Error("discovery unavailable");
+  });
+
+  assert.equal(fetches, 0);
+  assert.deepEqual(metadata, {
+    issuer: "https://auth.example",
+    authorization_endpoint: "https://auth.example/authorize",
+    token_endpoint: "https://auth.example/token"
+  });
 });
