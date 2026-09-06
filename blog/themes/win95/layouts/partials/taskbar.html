@@ -8,6 +8,9 @@
       <span class="start-item-label">Programs</span>
       <span class="start-arrow" aria-hidden="true"></span>
       <span class="submenu" role="menu" aria-label="Programs submenu">
+        {{ $browser := site.GetPage "/first-webpage" }}
+        {{ $browserFile := partial "file-metadata.html" (dict "page" $browser) }}
+        <a class="submenu-item" href="{{ $browser.RelPermalink }}" data-launch-application data-shortcut-window-id="{{ $browserFile.application }}" data-shortcut-url="{{ $browser.RelPermalink }}" data-shortcut-restore="previous"><img src="{{ $browserFile.icon }}" alt="">The Internet</a>
         {{ range site.Menus.main }}
           {{ with .Page }}
             {{ if .IsSection }}

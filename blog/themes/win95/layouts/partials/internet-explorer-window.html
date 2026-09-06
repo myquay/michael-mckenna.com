@@ -1,0 +1,50 @@
+{{ $page := .page }}
+{{ $file := partial "file-metadata.html" (dict "page" $page) }}
+<section class="app-window internet-explorer-window{{ with .class }} {{ . }}{{ end }}" data-window-id="{{ $file.application }}" data-window-kind="normal" data-window-url="{{ $page.RelPermalink }}" data-window-title="{{ $file.name }}" data-window-icon="{{ $file.icon }}" data-window-contract-version="{{ partial "window-contract-version.html" $page }}" data-window-default-x="132" data-window-default-y="48" data-window-default-width="820" data-window-default-height="580" data-window-min-width="320" data-window-min-height="260" data-window-fixed-size="false" data-window-taskbar="true" role="region" aria-labelledby="internet-explorer-title">
+  {{ partial "window-titlebar.html" (dict "icon" $file.icon "titleId" "internet-explorer-title" "title" $file.name) }}
+  <div class="ie-menubar" aria-hidden="true"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>G</u>o</span><span>F<u>a</u>vorites</span><span><u>H</u>elp</span></div>
+  <div class="ie-toolbar" aria-hidden="true">
+    <span><b>←</b>Back</span><span><b>→</b>Forward</span><span><b>×</b>Stop</span><span><b>↻</b>Refresh</span><span><b>⌂</b>Home</span>
+    <img src="{{ $file.icon }}" width="32" height="32" alt="">
+  </div>
+  <label class="ie-address">Address <input aria-label="Page address" readonly value="{{ $page.Permalink }}"></label>
+  <div class="first-webpage">
+    <picture>
+      <source media="(prefers-reduced-motion: reduce)" srcset="/images/first-webpage/under-construction.png">
+      <img class="construction-banner" src="/images/first-webpage/under-construction.gif" width="360" height="56" alt="Under Construction">
+    </picture>
+    <h1>Michaels First Webpage</h1>
+    <p>I don't really know what I'm doing but here are some sites I like</p>
+    <table border="1" aria-label="Sites I like">
+      <thead><tr><th scope="col">Site</th><th scope="col">Description</th><th scope="col">Link</th></tr></thead>
+      <tbody>
+        {{ with hugo.Data.blogroll }}
+          {{ range sort . "name" }}
+            <tr><td>{{ .name }}</td><td>{{ .comment }}</td><td><a href="{{ .siteUrl }}">{{ .siteUrl }}</a></td></tr>
+          {{ end }}
+        {{ else }}
+          <tr><td colspan="3">No sites added yet.</td></tr>
+        {{ end }}
+      </tbody>
+    </table>
+    <p>And here are some articles I like</p>
+    <table border="1" aria-label="Articles I like">
+      <thead><tr><th scope="col">Article</th><th scope="col">Description</th><th scope="col">Link</th></tr></thead>
+      <tbody>
+        {{ $articles := where site.RegularPages "Params.activity_type" "in" (slice "like" "bookmark") }}
+        {{ $hasArticles := false }}
+        {{ range $articles.ByDate.Reverse }}
+          {{ $target := .Params.like_of | default .Params.bookmark_of }}
+          {{ with $target }}
+            {{ $hasArticles = true }}
+          {{ end }}
+          {{ if $target }}
+            <tr><td>{{ .Title }}</td><td>{{ .Description | default .Plain }}</td><td><a href="{{ $target }}">{{ $target }}</a></td></tr>
+          {{ end }}
+        {{ end }}
+        {{ if not $hasArticles }}<tr><td colspan="3">No articles added yet.</td></tr>{{ end }}
+      </tbody>
+    </table>
+  </div>
+  {{ partial "window-statusbar.html" (dict "primary" "Done" "secondary" "Internet") }}
+</section>

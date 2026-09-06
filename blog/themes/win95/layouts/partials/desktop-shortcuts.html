@@ -33,3 +33,10 @@
   <img class="shortcut-icon" src="{{ $aiPolicyFile.icon }}" alt="">
   <span class="shortcut-label">{{ $aiPolicyFile.name }}</span>
 </button>
+
+{{ $browser := site.GetPage "/first-webpage" }}
+{{ $browserFile := partial "file-metadata.html" (dict "page" $browser) }}
+<button class="desktop-shortcut" type="button" data-shortcut-id="internet-explorer" data-shortcut-window-id="{{ $browserFile.application }}" data-shortcut-url="{{ $browser.RelPermalink }}" data-shortcut-restore="previous" data-default-x="118" data-default-y="14" style="--x:118px;--y:14px" aria-label="The Internet">
+  <img class="shortcut-icon" src="{{ $browserFile.icon }}" alt="">
+  <span class="shortcut-label">The Internet</span>
+</button>

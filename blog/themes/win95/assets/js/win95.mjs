@@ -3236,6 +3236,14 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
     bindExplorerView(context);
   });
   bindAboutWindow();
+  document.querySelectorAll("[data-launch-application]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      closeStartMenu();
+      openApplicationShortcut(link);
+    });
+  });
   startRunButtons.forEach((button) => button.addEventListener("click", openRunDialog));
   runDialog?.querySelectorAll("[data-run-close]").forEach((button) =>
     button.addEventListener("click", closeRunDialog));

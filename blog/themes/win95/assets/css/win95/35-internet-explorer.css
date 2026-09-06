@@ -1,0 +1,44 @@
+.ie-menubar {
+  display: flex;
+  gap: 16px;
+  padding: 5px 7px;
+}
+.ie-toolbar {
+  align-items: center;
+  border-top: 1px solid #fff;
+  box-shadow: 0 -1px #808080;
+  display: flex;
+  gap: 20px;
+  padding: 4px 10px;
+}
+.ie-toolbar span { display: grid; gap: 2px; text-align: center; }
+.ie-toolbar b { color: #555; font: bold 24px/26px Arial, sans-serif; }
+.ie-toolbar img { margin-left: auto; }
+.ie-address { align-items: center; display: flex; gap: 8px; padding: 4px 5px 6px; }
+.ie-address input { background: white; border: 0; box-shadow: var(--bevel-sunken); font: 12px Arial, sans-serif; min-width: 0; padding: 4px; width: 100%; }
+.first-webpage {
+  background: #000 url('/images/first-webpage/stars.png') repeat;
+  box-shadow: var(--bevel-sunken);
+  color: #fff;
+  flex: 1;
+  font-size: 16px;
+  font-family: 'Times New Roman', Times, serif;
+  line-height: normal;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px 12px 32px;
+}
+.first-webpage, .first-webpage * { user-select: text; }
+.first-webpage h1 { color: #f00; font-size: 2em; margin: .67em 0; }
+.first-webpage p { margin: 1em 0; }
+.first-webpage table { border-collapse: separate; border-spacing: 2px; max-width: 100%; }
+.first-webpage th, .first-webpage td { padding: 1px; overflow-wrap: anywhere; }
+.first-webpage a:link { color: #0000ee; }
+.first-webpage a:visited { color: #551a8b; }
+.first-webpage a:active { color: #ff0000; }
+.first-webpage a { text-decoration: underline; }
+.construction-banner { height: auto; max-width: 100%; }
+@media (max-width: 400px) {
+  .ie-toolbar { gap: 12px; }
+  .ie-toolbar img { width: 24px; height: 24px; }
+}
