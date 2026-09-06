@@ -182,7 +182,7 @@ if (!fs.existsSync(activityFeedPath) || !/<item>/.test(fs.readFileSync(activityF
 const windowFragments = outputFiles.filter((file) => path.basename(file) === "window.html");
 const incompatibleWindowFragments = windowFragments.filter((file) => {
   const source = fs.readFileSync(file, "utf8");
-  return source.includes("data-window-id=") && !source.includes('data-window-contract-version="2"');
+  return source.includes("data-window-id=") && !source.includes('data-window-contract-version="3"');
 });
 
 if (incompatibleWindowFragments.length > 0) {

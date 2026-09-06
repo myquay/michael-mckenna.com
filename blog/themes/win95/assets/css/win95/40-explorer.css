@@ -43,13 +43,13 @@
 .explorer-contents h2 {
   background: var(--surface);
   box-shadow: var(--bevel-sunken);
-  font-size: 15px;
+  font-size: var(--ui-font-size);
   font-weight: 400;
   line-height: 1;
   margin: 0 0 3px;
-  min-height: 28px;
+  min-height: var(--ui-control-height);
   overflow: hidden;
-  padding: 6px 8px;
+  padding: 4px 6px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -101,11 +101,11 @@
 .tree-row {
   align-items: center;
   display: inline-grid;
-  font-size: 15px;
-  gap: 4px;
-  grid-template-columns: 24px auto;
+  font-size: var(--ui-font-size);
+  gap: var(--ui-space);
+  grid-template-columns: var(--ui-icon-small) auto;
   line-height: 1.2;
-  min-height: 23px;
+  min-height: var(--ui-row-height);
   padding: 0 2px 0 0;
   position: relative;
   white-space: nowrap;
@@ -113,19 +113,19 @@
 }
 
 .tree-row img {
-  height: 20px;
-  width: 20px;
+  height: var(--ui-icon-small);
+  width: var(--ui-icon-small);
 }
 
 .tree-row--desktop {
-  grid-template-columns: 28px auto;
-  min-height: 30px;
+  grid-template-columns: var(--ui-icon-small) auto;
+  min-height: var(--ui-row-height);
 }
 
 .tree-row--desktop img {
-  height: 28px;
+  height: var(--ui-icon-small);
   image-rendering: pixelated;
-  width: 28px;
+  width: var(--ui-icon-small);
 }
 
 .tree-row--root {
@@ -191,8 +191,6 @@
 .tree-row.is-selected .tree-button {
   background: var(--highlight);
   color: var(--highlight-text);
-  outline: 1px dotted #fff;
-  outline-offset: -1px;
 }
 
 .tree-row.is-selected .tree-link,
@@ -218,7 +216,7 @@
 .file-header {
   background: var(--surface);
   display: none;
-  font-size: 15px;
+  font-size: var(--ui-font-size);
   grid-template-columns: var(--file-icon-width) minmax(149px, 1fr) var(--file-type-width) var(--file-date-width);
   min-width: 430px;
   position: sticky;
@@ -228,7 +226,7 @@
 
 .file-header > span {
   box-shadow: var(--bevel-raised);
-  min-height: 23px;
+  min-height: var(--ui-row-height);
   overflow: hidden;
   padding: 4px 7px;
   position: relative;
@@ -256,21 +254,39 @@
   align-items: center;
   color: #000;
   display: grid;
-  font-size: 15px;
+  font-size: var(--ui-font-size);
   text-decoration: none;
 }
 
-.file-item:hover,
-.file-item:focus-visible {
+.file-item.is-selected .file-name {
   background: var(--highlight);
   color: var(--highlight-text);
-  outline: 1px dotted #ffff00;
-  outline-offset: -2px;
+}
+
+.app-window.is-inactive .file-item.is-selected .file-name,
+.app-window.is-inactive .tree-row.is-selected :is(.tree-link, .tree-label, .tree-button) {
+  background: var(--surface);
+  color: #000;
+}
+
+.file-item:focus-visible {
+  outline: none;
+}
+
+.file-item:focus-visible .file-name {
+  outline: 1px dotted currentColor;
+  outline-offset: -1px;
+}
+
+.file-item .file-name {
+  justify-self: start;
+  max-width: 100%;
+  padding: 1px 2px;
 }
 
 .file-item img {
-  height: 22px;
-  width: 22px;
+  height: var(--ui-icon-small);
+  width: var(--ui-icon-small);
 }
 
 .file-item span,
@@ -292,7 +308,7 @@
 
 .file-list[data-view="details"] .file-item {
   grid-template-columns: var(--file-icon-width) minmax(149px, 1fr) var(--file-type-width) var(--file-date-width);
-  min-height: 26px;
+  min-height: var(--ui-row-height);
   min-width: 430px;
   padding: 2px 0;
 }
@@ -303,8 +319,8 @@
 }
 
 .file-list[data-view="details"] .file-icon-wrap img {
-  height: 20px;
-  width: 20px;
+  height: var(--ui-icon-small);
+  width: var(--ui-icon-small);
 }
 
 .file-list[data-view="details"] .file-name,
@@ -322,8 +338,8 @@
 
 .file-list[data-view="list"] .file-item {
   gap: 7px;
-  grid-template-columns: 24px minmax(0, 1fr);
-  min-height: 27px;
+  grid-template-columns: var(--ui-icon-small) minmax(0, 1fr);
+  min-height: var(--ui-row-height);
   padding: 2px 4px;
 }
 
@@ -364,7 +380,7 @@
 .file-list[data-view="icons"] .file-item {
   display: grid;
   gap: 5px;
-  grid-template-rows: 34px minmax(28px, auto);
+  grid-template-rows: var(--ui-icon-large) minmax(28px, auto);
   justify-items: center;
   left: var(--x, 8px);
   min-height: 76px;
@@ -382,11 +398,12 @@
 }
 
 .file-list[data-view="icons"] .file-icon-wrap img {
-  height: 34px;
-  width: 34px;
+  height: var(--ui-icon-large);
+  width: var(--ui-icon-large);
 }
 
 .file-list[data-view="icons"] .file-name {
+  justify-self: center;
   line-height: 1.12;
   max-height: 38px;
   max-width: 100px;
@@ -402,14 +419,14 @@
   display: grid;
   gap: 3px;
   grid-template-columns: minmax(130px, 1fr) minmax(120px, 1fr);
-  min-height: 25px;
+  min-height: var(--ui-control-height);
   padding-top: 3px;
 }
 
 .explorer-statusbar span {
   box-shadow: var(--bevel-sunken);
   display: block;
-  font-size: 15px;
+  font-size: var(--ui-font-size);
   overflow: hidden;
   padding: 4px 7px;
   text-overflow: ellipsis;

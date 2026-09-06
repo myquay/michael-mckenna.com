@@ -47,6 +47,8 @@ Effort estimates are relative: S = localized styling/templates; M = a shared com
 
 ### Phase 1 — Consistent appearance and selection (highest return)
 
+Implemented 6 September 2026. See [the baseline and validation record](windows-95-phase1-baseline.md) for chosen metrics, font provenance, compatibility decisions, and browser coverage. Phases 2–4 remain planned.
+
 1. **P1 / M: Set the visual baseline.** Record a reference desktop, Explorer, Start menu, and dialog at standard DPI. Define shared shell typography, row heights, icon sizes, spacing, and borders in `00-base.css`; apply through `10-desktop.css`, `20-dialogs.css`, `30-windows.css`, and `40-explorer.css`. Include font licensing and fallback checks.
 2. **P1 / M: Fix selection styling and semantics.** Update `win95.mjs` and file/desktop CSS together. Click selects; double-click opens; moving the pointer does not select another item. Keep keyboard focus visible and selection distinguishable when the window loses focus. Start with single selection; defer multi-selection until useful batch actions exist.
 3. **P1 / S: Correct conspicuous artwork and chrome.** Use native icon sizes, pixel window-control symbols, gray Start rail, and a stippled active taskbar button. Remove decorative text shadow from desktop labels if the reference baseline confirms it is inappropriate.

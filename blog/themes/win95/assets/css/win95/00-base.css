@@ -1,3 +1,12 @@
+/* W95FA by MadeByArne, SIL OFL 1.1; see /fonts/w95fa/OFL.txt. */
+@font-face {
+  font-family: "W95FA";
+  src: url("/fonts/w95fa/w95f.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   --color-desktop: #008080;
   --color-desktop-dark: #005555;
@@ -24,11 +33,26 @@
   --highlight-text: var(--color-highlight-text);
   --taskbar-safe-area: env(safe-area-inset-bottom, 0px);
   --taskbar-height: calc(30px + var(--taskbar-safe-area));
-  --font-ui: "MS Sans Serif", "Microsoft Sans Serif", Arial, sans-serif;
-  --font-title: "System", "MS Sans Serif", "Microsoft Sans Serif", Arial, sans-serif;
+  --font-ui: "W95FA", "MS Sans Serif", "Microsoft Sans Serif", Arial, sans-serif;
+  --font-title: var(--font-ui);
   --font-document: Georgia, "Times New Roman", serif;
   --font-monospace: "Courier New", Courier, monospace;
   --font-system: var(--font-ui);
+  --ui-font-size: 12px;
+  --ui-row-height: 20px;
+  --ui-title-height: 20px;
+  --ui-control-height: 23px;
+  --ui-icon-small: 16px;
+  --ui-icon-large: 32px;
+  --ui-space: 4px;
+  --ui-frame: 3px;
+  --ui-control-width: 16px;
+  --ui-control-button-height: 14px;
+  --stipple: conic-gradient(#fff 25%, #c0c0c0 0 50%, #fff 0 75%, #c0c0c0 0);
+  --glyph-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1 1h2v1H1zm6 0h2v1H7zM2 2h2v1H2zm4 0h2v1H6zM3 3h4v1H3zm1 1h2v1H4zM3 5h4v1H3zM2 6h2v1H2zm4 0h2v1H6zM1 7h2v1H1zm6 0h2v1H7z'/%3E%3C/svg%3E");
+  --glyph-minimize: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1 7h7v2H1z'/%3E%3C/svg%3E");
+  --glyph-maximize: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M0 0h10v9H0zm1 2v6h8V2z' fill-rule='evenodd'/%3E%3C/svg%3E");
+  --glyph-restore: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2 0h8v7H8V6h1V2H3v1H2zM0 3h8v7H0zm1 2v4h6V5z' fill-rule='evenodd'/%3E%3C/svg%3E");
   --bevel-raised:
     inset -1px -1px var(--surface-dark),
     inset 1px 1px var(--surface-light),
@@ -56,7 +80,7 @@ body {
   color: #000;
   cursor: default;
   font-family: var(--font-system);
-  font-size: 11px;
+  font-size: var(--ui-font-size);
   margin: 0;
   overflow: hidden;
 }
@@ -68,6 +92,161 @@ button {
 
 img {
   display: block;
+}
+
+/* Only shell artwork should use nearest-neighbor scaling. */
+:is(.shortcut-icon, .window-title img, .taskbar img, .start-menu img,
+    .tree-row img, .file-icon-wrap img, .run-dialog-copy img, .ie-toolbar img) {
   image-rendering: pixelated;
 }
 
+button, input, select, textarea {
+  border-radius: 0;
+}
+
+input, select, textarea {
+  font: inherit;
+  user-select: text;
+}
+
+/* Keep native input semantics and select popups; style only their frame. */
+:where(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), select, textarea) {
+  background-color: var(--color-window);
+  border: 0;
+  box-shadow: var(--bevel-sunken);
+  color: #000;
+  min-height: var(--ui-control-height);
+  padding: 3px 5px;
+}
+
+:where(input, select, textarea):disabled {
+  background-color: var(--surface);
+  color: var(--surface-shadow);
+  opacity: 1;
+}
+
+input[type="checkbox"], input[type="radio"] {
+  appearance: none;
+  background: var(--color-window);
+  border: 0;
+  box-shadow: var(--bevel-sunken);
+  display: inline-grid;
+  flex-shrink: 0;
+  height: 13px;
+  margin: 0;
+  place-content: center;
+  vertical-align: middle;
+  width: 13px;
+}
+
+input[type="radio"] { border-radius: 50%; }
+
+input[type="checkbox"]:checked::after {
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  content: "";
+  height: 8px;
+  margin-top: -2px;
+  transform: rotate(45deg);
+  width: 4px;
+}
+
+input[type="radio"]:checked::after {
+  background: currentColor;
+  border-radius: 50%;
+  content: "";
+  height: 5px;
+  width: 5px;
+}
+
+:where(button, input, select, textarea):focus-visible {
+  outline: 1px dotted currentColor;
+  outline-offset: -4px;
+}
+
+input[type="checkbox"]:focus-visible, input[type="radio"]:focus-visible {
+  outline-offset: 2px;
+}
+
+/* Pixel geometry stays the same with any font, including fallback fonts. */
+.window-control, .setup-close {
+  align-items: center;
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
+  --control-glyph: var(--glyph-close);
+}
+
+.window-control::before, .setup-close::before {
+  background: currentColor;
+  content: "";
+  height: 10px;
+  mask: var(--control-glyph) center / 10px 10px no-repeat;
+  pointer-events: none;
+  width: 10px;
+}
+
+[data-window-action="minimize"] { --control-glyph: var(--glyph-minimize); }
+[data-window-action="maximize"] { --control-glyph: var(--glyph-maximize); }
+[data-window-action="maximize"].is-restore { --control-glyph: var(--glyph-restore); }
+
+.setup-close:active {
+  box-shadow: var(--bevel-sunken);
+  padding: 1px 0 0 1px;
+}
+
+/* Firefox keeps its native geometry; WebKit/Blink can also draw classic tracks. */
+@media (hover: hover) and (pointer: fine) {
+  * { scrollbar-color: var(--surface) var(--surface-mid); }
+
+  @supports selector(::-webkit-scrollbar) {
+    * { scrollbar-color: auto; }
+    ::-webkit-scrollbar { width: 16px; height: 16px; }
+    ::-webkit-scrollbar-track {
+      background: var(--stipple) 0 0 / 2px 2px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--surface);
+      border-radius: 0;
+      box-shadow: var(--bevel-raised);
+      min-height: 16px;
+      min-width: 16px;
+    }
+    ::-webkit-scrollbar-corner { background: var(--surface); }
+    ::-webkit-scrollbar-button { display: none; }
+    ::-webkit-scrollbar-button:start:decrement,
+    ::-webkit-scrollbar-button:end:increment {
+      background-color: var(--surface);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 8px 8px;
+      box-shadow: var(--bevel-raised);
+      display: block;
+      height: 16px;
+      width: 16px;
+    }
+    ::-webkit-scrollbar-button:vertical:decrement {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M0 6h8L4 2z'/%3E%3C/svg%3E");
+    }
+    ::-webkit-scrollbar-button:vertical:increment {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M0 2h8L4 6z'/%3E%3C/svg%3E");
+    }
+    ::-webkit-scrollbar-button:horizontal:decrement {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M6 0v8L2 4z'/%3E%3C/svg%3E");
+    }
+    ::-webkit-scrollbar-button:horizontal:increment {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M2 0v8l4-4z'/%3E%3C/svg%3E");
+    }
+    ::-webkit-scrollbar-button:active { box-shadow: var(--bevel-sunken); }
+  }
+}
+
+@media (forced-colors: active) {
+  * { scrollbar-color: auto; }
+  input[type="checkbox"], input[type="radio"] { appearance: auto; }
+  input[type="checkbox"]::after, input[type="radio"]::after { display: none; }
+  .window-control::before, .setup-close::before {
+    background: ButtonText;
+    forced-color-adjust: none;
+  }
+}

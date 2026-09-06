@@ -9,27 +9,27 @@
   <span class="shortcut-label">My Computer</span>
 </button>
 
-<button class="desktop-shortcut" type="button" data-shortcut-id="posts" data-shortcut-window-id="{{ partial "explorer-window-id.html" $posts }}" data-shortcut-url="{{ $posts.RelPermalink }}" data-shortcut-restore="previous" data-default-x="18" data-default-y="116" style="--x:18px;--y:116px" aria-label="Posts">
+<button class="desktop-shortcut" type="button" data-shortcut-id="posts" data-shortcut-window-id="{{ partial "explorer-window-id.html" $posts }}" data-shortcut-url="{{ $posts.RelPermalink }}" data-shortcut-restore="previous" data-default-x="18" data-default-y="90" style="--x:18px;--y:90px" aria-label="Posts">
   <img class="shortcut-icon" src="/images/win95-icons/w95_4.ico" alt="">
   <span class="shortcut-label">Posts</span>
 </button>
 
-<button class="desktop-shortcut" type="button" data-shortcut-id="photos" data-shortcut-window-id="{{ partial "explorer-window-id.html" $photos }}" data-shortcut-url="{{ $photos.RelPermalink }}" data-shortcut-restore="previous" data-default-x="18" data-default-y="218" style="--x:18px;--y:218px" aria-label="Photos">
+<button class="desktop-shortcut" type="button" data-shortcut-id="photos" data-shortcut-window-id="{{ partial "explorer-window-id.html" $photos }}" data-shortcut-url="{{ $photos.RelPermalink }}" data-shortcut-restore="previous" data-default-x="18" data-default-y="166" style="--x:18px;--y:166px" aria-label="Photos">
   <img class="shortcut-icon" src="/images/win95-icons/w95_4.ico" alt="">
   <span class="shortcut-label">Photos</span>
 </button>
 
-<button class="desktop-shortcut" type="button" data-shortcut-id="rss-feed" data-default-x="18" data-default-y="320" style="--x:18px;--y:320px" aria-label="RSS Feed">
+<button class="desktop-shortcut" type="button" data-shortcut-id="rss-feed" data-default-x="18" data-default-y="242" style="--x:18px;--y:242px" aria-label="RSS Feed">
   <img class="shortcut-icon" src="/images/rss-icons-95/rss-modern-orange.png" alt="">
   <span class="shortcut-label">RSS Feed</span>
 </button>
 
-<button class="desktop-shortcut" type="button" data-shortcut-id="about-me" data-default-x="18" data-default-y="422" style="--x:18px;--y:422px" aria-label="Open {{ $aboutFile.name }}">
+<button class="desktop-shortcut" type="button" data-shortcut-id="about-me" data-default-x="18" data-default-y="318" style="--x:18px;--y:318px" aria-label="Open {{ $aboutFile.name }}">
   <img class="shortcut-icon" src="{{ $aboutFile.icon }}" alt="">
   <span class="shortcut-label">{{ $aboutFile.name }}</span>
 </button>
 
-<button class="desktop-shortcut" type="button" data-shortcut-id="ai-policy" data-shortcut-window-id="{{ $aiPolicyFile.application }}" data-shortcut-url="{{ $aiPolicy.RelPermalink }}" data-shortcut-restore="previous" data-default-x="18" data-default-y="524" style="--x:18px;--y:524px" aria-label="Open {{ $aiPolicyFile.name }}">
+<button class="desktop-shortcut" type="button" data-shortcut-id="ai-policy" data-shortcut-window-id="{{ $aiPolicyFile.application }}" data-shortcut-url="{{ $aiPolicy.RelPermalink }}" data-shortcut-restore="previous" data-default-x="18" data-default-y="394" style="--x:18px;--y:394px" aria-label="Open {{ $aiPolicyFile.name }}">
   <img class="shortcut-icon" src="{{ $aiPolicyFile.icon }}" alt="">
   <span class="shortcut-label">{{ $aiPolicyFile.name }}</span>
 </button>

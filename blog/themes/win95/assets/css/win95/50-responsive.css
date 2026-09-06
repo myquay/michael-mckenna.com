@@ -1,4 +1,11 @@
 @media (max-width: 700px), (max-height: 500px) and (max-width: 900px) {
+  :root {
+    --font-ui: "MS Sans Serif", "Microsoft Sans Serif", Arial, sans-serif;
+    --ui-font-size: 13px;
+    --ui-control-width: 24px;
+    --ui-control-button-height: 24px;
+  }
+
   body {
     min-width: 0;
   }

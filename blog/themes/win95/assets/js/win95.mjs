@@ -1,3 +1,4 @@
+import { bindSelectableItem, selectExclusive } from "./win95/core/selection.mjs";
 import { clamp, constrainWindowBounds } from "./win95/core/geometry.mjs";
 import {
   allocateExplorerInstanceId,
@@ -1926,10 +1927,11 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
 
       item.dataset.explorerItemBound = "true";
       item.addEventListener("pointerdown", (event) => {
-        if (event.button !== 0 || isCompactMode() || context.list.dataset.view !== "icons") {
-          return;
-        }
+        if (event.button !== 0) return;
+        selectExclusive(context.fileItems, item);
+        if (isCompactMode() || context.list.dataset.view !== "icons") return;
 
+        item.focus({ preventScroll: true });
         event.preventDefault();
         closeViewMenu(context);
         item.setPointerCapture(event.pointerId);
@@ -1961,69 +1963,18 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
         finishActiveFileDrag();
       });
 
-      const selectItem = () => {
-        context.fileItems.forEach((candidate) => candidate.classList.toggle("is-selected", candidate === item));
-      };
-
-      const openItem = (event) => {
-        if (navigateExplorerToFolder(event, item, context) || openExplorerItemInWindow(event, item, context)) {
-          event.stopImmediatePropagation();
-        }
-      };
-
-      item.addEventListener("click", (event) => {
-        if (item.dataset.wasDragged === "true") {
-          event.preventDefault();
-          event.stopImmediatePropagation();
-          item.dataset.wasDragged = "false";
-          return;
-        }
-
-        event.preventDefault();
-        selectItem();
-
-        if (isCompactMode()) {
+      bindSelectableItem(item, {
+        select: () => selectExclusive(context.fileItems, item),
+        isCompact: isCompactMode,
+        open: (event) => {
           if (item.dataset.driveAlert) {
             event.stopPropagation();
             openDeviceErrorDialog(item.dataset.driveAlert);
-            return;
+          } else if (navigateExplorerToFolder(event, item, context) || openExplorerItemInWindow(event, item, context)) {
+            event.stopImmediatePropagation();
           }
-
-          openItem(event);
         }
       });
-
-      if (!item.dataset.driveAlert) {
-        item.addEventListener("dblclick", openItem);
-        item.addEventListener("keydown", (event) => {
-          if (event.key === "Enter") {
-            openItem(event);
-            return;
-          }
-
-          if (event.key === " ") {
-            event.preventDefault();
-            selectItem();
-          }
-        });
-      }
-
-      if (item.dataset.driveAlert) {
-        item.addEventListener("dblclick", (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          openDeviceErrorDialog(item.dataset.driveAlert);
-        });
-
-        item.addEventListener("keydown", (event) => {
-          if (event.key !== "Enter") {
-            return;
-          }
-
-          event.preventDefault();
-          openDeviceErrorDialog(item.dataset.driveAlert);
-        });
-      }
     });
   };
 
@@ -2079,7 +2030,7 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
 
         if (action === "maximize") {
           const isMaximized = item.state === "maximized";
-          control.textContent = isMaximized ? "❐" : "□";
+          control.classList.toggle("is-restore", isMaximized);
           control.setAttribute("aria-label", isMaximized ? "Restore" : "Maximize");
           control.title = isMaximized ? "Restore" : "Maximize";
         }
@@ -2106,7 +2057,7 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
   };
 
   const selectShortcut = (shortcut) => {
-    shortcuts.forEach((item) => item.classList.toggle("is-selected", item === shortcut));
+    selectExclusive(shortcuts, shortcut);
   };
 
   const closeStartMenu = () => {
@@ -2546,6 +2497,7 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
     const next = setShortcutPosition(shortcut, shortcut.offsetLeft, shortcut.offsetTop);
 
     if (activeDrag.moved) {
+      shortcut.dataset.wasDragged = "true";
       osState.shortcuts[id] = next;
       saveShortcutPositions();
     }
@@ -2953,24 +2905,10 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
         finishActiveDrag();
       });
 
-      shortcut.addEventListener("dblclick", () => {
-        if (!isCompactMode()) {
-          openShortcut(id);
-        }
-      });
-
-      shortcut.addEventListener("click", () => {
-        if (isCompactMode()) {
-          openShortcut(id);
-        }
-      });
-
-      shortcut.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          selectShortcut(shortcut);
-          openShortcut(id);
-        }
+      bindSelectableItem(shortcut, {
+        select: () => selectShortcut(shortcut),
+        isCompact: isCompactMode,
+        open: () => openShortcut(id)
       });
     });
   };
@@ -2987,13 +2925,15 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
 
       addWindowResizeHandles(appWindow, appId);
 
-      appWindow.addEventListener("pointerdown", () => {
+      const activateWindow = () => {
         const item = osState.windows[appId];
 
         if (item && item.state !== "minimized" && osState.activeWindowId !== appId) {
           focusWindowState(appId);
         }
-      });
+      };
+      appWindow.addEventListener("pointerdown", activateWindow);
+      appWindow.addEventListener("focusin", activateWindow);
 
       titlebar?.addEventListener("pointerdown", (event) => {
         const item = osState.windows[appId];
@@ -3321,8 +3261,12 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
       }
     });
 
-    if (!event.target.closest(".desktop-shortcut")) {
-      shortcuts.forEach((item) => item.classList.remove("is-selected"));
+    if (event.target === desktop) {
+      selectExclusive(shortcuts, null);
+    }
+    const list = event.target.closest("[data-explorer-list]");
+    if (list && !event.target.closest("[data-file-item], .file-header")) {
+      selectExclusive(Array.from(list.querySelectorAll("[data-file-item]")), null);
     }
   });
 
