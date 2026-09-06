@@ -29,10 +29,24 @@
   </div>
   {{ partial "window-titlebar.html" (dict "icon" "/images/win95-icons/w95_16.ico" "titleId" "micropub-window-title" "title" "Micropub" "controlClass" "micropub-window-control") }}
 
-  <nav class="micropub-menu" aria-label="Micropub menu">
-    <button type="button" data-mp-new><u>F</u>ile</button>
-    <button type="button" data-mp-refresh><u>V</u>iew</button>
-    <button type="button" data-mp-about><u>H</u>elp</button>
+  <nav class="micropub-menu" aria-label="Application menu">
+    <details><summary accesskey="f"><u>F</u>ile</summary><div class="mp-menu-popup">
+      <button type="button" data-mp-new>New… <kbd>Ctrl+N</kbd></button>
+      <button type="button" data-mp-save-draft>Save Draft <kbd>Ctrl+S</kbd></button>
+      <button type="button" data-mp-publish>Publish…</button>
+      <hr><button type="button" data-mp-sign-out>Sign Out</button>
+    </div></details>
+    <details><summary accesskey="e"><u>E</u>dit</summary><div class="mp-menu-popup">
+      <button type="button" data-mp-revert>Revert Changes…</button>
+      <button type="button" data-mp-delete disabled>Delete…</button>
+    </div></details>
+    <details><summary accesskey="v"><u>V</u>iew</summary><div class="mp-menu-popup">
+      <button type="button" data-mp-refresh>Refresh <kbd>F5</kbd></button>
+      <button type="button" data-mp-preview-command>Preview</button>
+    </div></details>
+    <details><summary accesskey="h"><u>H</u>elp</summary><div class="mp-menu-popup">
+      <button type="button" data-mp-about>About Micropub…</button>
+    </div></details>
   </nav>
 
   <div class="micropub-auth" data-mp-auth>
@@ -50,17 +64,8 @@
         <strong>My Content</strong>
         <button class="setup-button" type="button" data-mp-new>New...</button>
       </div>
-      <div class="micropub-filters">
-        <label>Show
-          <select data-mp-filter>
-            <option value="">All content</option>
-            <option value="draft">Drafts</option>
-            <option value="published">Published</option>
-            <option value="deleted">Deleted</option>
-          </select>
-        </label>
-      </div>
-      <div class="micropub-post-list" data-mp-list role="listbox" aria-label="Content"></div>
+      <nav class="mp-folders" aria-label="Content folders" data-mp-folders></nav>
+      <p class="micropub-hint mp-library-note">Pages and projects require LittlePublisher support.</p>
     </aside>
 
     <main class="micropub-editor">
@@ -72,9 +77,26 @@
         <button class="setup-button" type="button" data-mp-sign-out>Sign Out</button>
       </div>
 
+      <section class="mp-library" aria-label="Content library">
+        <div class="mp-library-controls">
+          <label>Find <input type="search" data-mp-search placeholder="Search loaded content" aria-label="Search loaded content"></label>
+          <label>Show <select data-mp-filter><option value="">All active</option><option value="draft">Drafts / changes</option><option value="published">Published</option><option value="deleted">Deleted</option></select></label>
+          <label>Sort <select data-mp-sort><option value="updated">Modified</option><option value="name">Name</option><option value="type">Type</option></select></label>
+        </div>
+        <div class="mp-list-head" aria-hidden="true"><span>Name</span><span>Type</span><span>Status</span><span>Modified</span></div>
+        <div class="micropub-post-list" data-mp-list aria-label="Content"></div>
+        <div class="mp-library-footer"><span data-mp-count></span><span data-mp-limit></span></div>
+      </section>
+      <div class="mp-editor-heading"><strong data-mp-document-title>New note</strong><span data-mp-dirty></span></div>
+      <div class="mp-tabs" role="tablist" aria-label="Editor">
+        <button type="button" role="tab" id="mp-content-tab" aria-controls="mp-content-panel" aria-selected="true" data-mp-tab="content">Content</button>
+        <button type="button" role="tab" id="mp-properties-tab" aria-controls="mp-properties-panel" aria-selected="false" tabindex="-1" data-mp-tab="properties">Properties</button>
+        <button type="button" role="tab" id="mp-preview-tab" aria-controls="mp-preview-panel" aria-selected="false" tabindex="-1" data-mp-tab="preview">Preview</button>
+      </div>
+      <p class="mp-error" data-mp-error role="alert" hidden></p>
       <form class="micropub-form" data-mp-form>
-        <div class="micropub-form-grid">
-          <label>Type
+        <div class="micropub-form-grid" id="mp-content-panel" role="tabpanel" aria-labelledby="mp-content-tab" data-mp-panel="content">
+          <label class="mp-type-label">Type
             <select name="post-type" data-mp-type>
               <option value="note">Note</option>
               <option value="article">Article</option>
@@ -85,9 +107,7 @@
               <option value="repost">Repost</option>
               <option value="bookmark">Bookmark</option>
               <option value="blogroll">Blogroll entry</option>
-              <option value="event">Event</option>
-              <option value="audio">Audio</option>
-              <option value="video">Video</option>
+
             </select>
           </label>
           <label data-mp-field="name">Title / name
@@ -116,17 +136,20 @@
           </label>
           <label class="micropub-wide" data-mp-field="media" hidden>Media
             <span class="micropub-media-row">
-              <input name="media" type="url" placeholder="Upload a file or enter its URL">
-              <input name="media-file" type="file" accept="image/*,audio/*,video/*">
+              <input name="media" type="text" placeholder="Upload a file or enter its URL">
+              <input name="media-file" type="file" accept="image/*">
               <button class="setup-button" type="button" data-mp-upload>Upload</button>
             </span>
           </label>
           <label class="micropub-wide" data-mp-field="alt" hidden>Alternative text
             <input name="alt" type="text">
           </label>
-          <label class="micropub-wide">Content
+          <figure class="mp-media-preview micropub-wide" data-mp-media-preview hidden></figure>
+          <label class="micropub-wide"><span data-mp-content-label>Content (Markdown)</span>
             <textarea name="content" rows="12"></textarea>
           </label>
+        </div>
+        <div class="micropub-form-grid" id="mp-properties-panel" role="tabpanel" aria-labelledby="mp-properties-tab" data-mp-panel="properties" hidden>
           <label class="micropub-wide">Categories <span class="micropub-hint">(comma separated)</span>
             <input name="category" type="text">
           </label>
@@ -134,12 +157,21 @@
             <input name="published" type="datetime-local">
           </label>
         </div>
+        <div id="mp-preview-panel" role="tabpanel" aria-labelledby="mp-preview-tab" data-mp-panel="preview" hidden>
+          <p class="micropub-hint">Draft preview. Markdown source is shown below; final formatting is applied by the blog.</p>
+          <article class="mp-preview" data-mp-preview></article>
+        </div>
       </form>
     </main>
   </div>
 
+  <dialog class="mp-dialog" data-mp-dialog aria-labelledby="mp-dialog-title">
+    <div class="mp-dialog-title" id="mp-dialog-title" data-mp-dialog-title></div>
+    <div class="mp-dialog-body" data-mp-dialog-body></div>
+    <div class="mp-dialog-buttons" data-mp-dialog-buttons></div>
+  </dialog>
   <footer class="micropub-statusbar">
-    <span data-mp-status>Ready</span>
+    <span data-mp-status role="status" aria-live="polite">Ready</span>
     <span data-mp-connection>Not signed in</span>
   </footer>
 </section>

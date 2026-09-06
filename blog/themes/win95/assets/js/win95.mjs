@@ -3053,6 +3053,7 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
 
           if (action === "close") {
             event.preventDefault();
+            if (!appWindow.dispatchEvent(new CustomEvent("window-before-close", { cancelable: true }))) return;
             removeWindowState(appId);
             return;
           }
