@@ -5,10 +5,13 @@
 {{ $desktopSections := slice }}
 {{ with site.GetPage "/post" }}{{ $desktopSections = $desktopSections | append . }}{{ end }}
 {{ with site.GetPage "/photos" }}{{ $desktopSections = $desktopSections | append . }}{{ end }}
+{{ with site.GetPage "/books" }}{{ $desktopSections = $desktopSections | append . }}{{ end }}
 {{ $driveSections := where site.Sections "Section" "ne" "pages" }}
 {{ $driveSections = where $driveSections "Section" "ne" "post" }}
 {{ $driveSections = where $driveSections "Section" "ne" "photos" }}
+{{ $driveSections = where $driveSections "Section" "ne" "books" }}
 {{ $isDesktopChild := or $isHome (or (eq $currentSection "post") (eq $currentSection "photos")) }}
+{{ if eq $currentSection "books" }}{{ $isDesktopChild = true }}{{ end }}
 {{ if eq $currentSection "" }}{{ $isDesktopChild = true }}{{ end }}
 {{ $isDriveContent := not $isDesktopChild }}
 <ul class="tree-list" data-explorer-tree>

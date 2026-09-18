@@ -20,6 +20,9 @@
   {{- $fileType = "Reply" -}}
   {{- $icon = "/images/win95-icons/w95_23.ico" -}}
 {{- end -}}
+{{- if eq $page.Type "book-review" -}}
+  {{- $fileType = "Book review" -}}
+{{- end -}}
 {{- with $page.Params.file -}}
   {{- with .name }}{{ $name = . }}{{ end -}}
   {{- with .extension }}{{ $extension = strings.TrimPrefix "." . }}{{ end -}}

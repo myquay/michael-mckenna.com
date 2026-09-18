@@ -1,0 +1,8 @@
+{{ $book := partial "book-data.html" . }}
+<p class="book-preview-label">Book review</p>
+<h3>{{ $book.title }}</h3>
+<p class="book-author">by {{ $book.author }}</p>
+<p class="book-review-rating">{{ partial "book-rating.html" (dict "rating" $book.rating) }}</p>
+<div class="book-preview-text">{{ .Summary }}</div>
+<p class="book-preview-meta">{{ site.Params.IndieWeb.name }} · {{ .Date.Format "2 Jan 2006" }}</p>
+<a class="book-open-review" href="{{ .RelPermalink }}" data-name="{{ .Title }}" data-open-icon="/images/win95-icons/w95_2.ico" data-open-kind="document" data-open-window-id="document-{{ .File.UniqueID }}" data-open-url="{{ .RelPermalink }}">Open review ↗</a>

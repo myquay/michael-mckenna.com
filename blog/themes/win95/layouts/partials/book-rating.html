@@ -1,0 +1,3 @@
+<data class="book-stars{{ if .microformats }} p-rating{{ end }}" value="{{ .rating }}" aria-label="{{ .rating }} out of 5 stars">{{ range seq 5 }}{{ if le . $.rating }}★{{ else }}☆{{ end }}{{ end }}</data>
+<span class="book-rating-label">{{ .rating }} out of <data{{ if .microformats }} class="p-best"{{ end }} value="5">5</data></span>
+{{ if .microformats }}<data class="p-worst" value="1" hidden>1</data>{{ end }}

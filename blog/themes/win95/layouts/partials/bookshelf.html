@@ -1,0 +1,26 @@
+{{ $books := where .RegularPages.ByDate.Reverse "Type" "book-review" }}
+<div class="books-toolbar" aria-label="Book display">
+  <button type="button" data-book-view="icons" aria-pressed="true">Covers</button>
+  <button type="button" data-book-view="details" aria-pressed="false">Details</button>
+  <span data-book-selection-status aria-live="polite">{{ len $books }} book{{ if ne (len $books) 1 }}s{{ end }}</span>
+</div>
+<div class="books-workspace">
+  <div class="file-list book-list" data-explorer-list data-book-list data-view="icons" data-sort="date">
+    {{ range $books }}
+      {{ $book := partial "book-data.html" . }}
+      <a class="file-item book-file" href="{{ .RelPermalink }}" data-open-icon="/images/win95-icons/w95_2.ico" data-open-kind="document" data-open-window-kind="normal" data-open-window-id="document-{{ .File.UniqueID }}" data-open-url="{{ .RelPermalink }}" data-file-item data-file-id="{{ .File.UniqueID }}" data-name="{{ $book.title }}" data-type="{{ $book.author }}" data-date="{{ .Date.Format "2006-01-02" }}" draggable="false">
+        <span class="file-icon-wrap book-cover"><img src="{{ $book.cover }}" alt="{{ $book.alt }}" width="96" height="140" loading="lazy"></span>
+        <span class="file-name">{{ $book.title }}</span>
+        <span class="book-list-author">{{ $book.author }}</span>
+        <span class="book-list-rating">{{ partial "book-rating.html" (dict "rating" $book.rating) }}</span>
+        <time class="file-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 Jan 2006" }}</time>
+      </a>
+    {{ else }}
+      <div class="books-empty"><h3>No book reviews yet</h3><p>This shelf will fill up as I read and review books.</p></div>
+    {{ end }}
+  </div>
+  {{ if $books }}
+    <aside class="book-preview" aria-label="Selected book review" data-book-preview>{{ with index $books 0 }}{{ partial "book-preview.html" . }}{{ end }}</aside>
+    {{ range $books }}<template data-book-preview-for="{{ .File.UniqueID }}">{{ partial "book-preview.html" . }}</template>{{ end }}
+  {{ end }}
+</div>

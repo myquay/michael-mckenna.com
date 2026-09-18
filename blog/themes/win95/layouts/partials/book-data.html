@@ -1,0 +1,19 @@
+{{- $book := .Params.book | default dict -}}
+{{- $rating := .Params.rating -}}
+{{- if not (and $book.title $book.author $book.cover (strings.TrimSpace .Plain)) -}}
+  {{- errorf "Book review %s requires book.title, book.author, book.cover and review text" .Path -}}
+{{- end -}}
+{{- if not (in (slice "int" "int64" "uint64" "float64") (printf "%T" $rating)) -}}
+  {{- errorf "Book review %s requires a numeric rating from 1 to 5 (got %T)" .Path $rating -}}
+{{- else if or (lt (float $rating) 1.0) (gt (float $rating) 5.0) (ne (float $rating) (math.Floor (float $rating))) -}}
+  {{- errorf "Book review %s requires a whole-star rating from 1 to 5" .Path -}}
+{{- end -}}
+{{- $cover := $book.cover | default "" -}}
+{{- with .Resources.GetMatch $cover -}}
+  {{- $cover = .RelPermalink -}}
+{{- else -}}
+  {{- if and $cover (not (or (hasPrefix $cover "https://") (hasPrefix $cover "/"))) -}}
+    {{- errorf "Book review %s: cover %q must be a page resource, root-relative path or HTTPS URL" $.Path $cover -}}
+  {{- end -}}
+{{- end -}}
+{{- return (dict "title" ($book.title | default "Untitled book") "author" ($book.author | default "") "cover" $cover "alt" ($book.cover_alt | default (printf "Cover of %s by %s" $book.title $book.author)) "url" ($book.url | default "") "isbn" ($book.isbn | default "") "rating" (int ($rating | default 0))) -}}

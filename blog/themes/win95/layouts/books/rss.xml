@@ -1,0 +1,17 @@
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ .Title }} on {{ site.Title }}</title>
+    <link>{{ .Permalink }}</link>
+    <description>{{ .Description }}</description>
+    <atom:link href="{{ (.OutputFormats.Get "RSS").Permalink }}" rel="self" type="application/rss+xml" />
+    {{ range where .RegularPages.ByDate.Reverse "Type" "book-review" }}
+      <item>
+        <title>{{ .Title }}</title><link>{{ .Permalink }}</link><guid>{{ .Permalink }}</guid>
+        <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate>
+        {{ $body := printf "%s%s" (partial "book-review-header.html" .) .Content }}
+        <description>{{ $body | transform.XMLEscape | safeHTML }}</description>
+      </item>
+    {{ end }}
+  </channel>
+</rss>

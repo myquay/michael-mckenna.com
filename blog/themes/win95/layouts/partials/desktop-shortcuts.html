@@ -40,3 +40,10 @@
   <img class="shortcut-icon" src="{{ $browserFile.icon }}" alt="">
   <span class="shortcut-label">The Internet</span>
 </button>
+
+{{ with site.GetPage "/books" }}
+<button class="desktop-shortcut" type="button" data-shortcut-id="books" data-shortcut-window-id="{{ partial "explorer-window-id.html" . }}" data-shortcut-url="{{ .RelPermalink }}" data-shortcut-restore="previous" data-default-x="118" data-default-y="90" style="--x:118px;--y:90px" aria-label="Books">
+  <img class="shortcut-icon" src="/images/win95-icons/w95_4.ico" alt="">
+  <span class="shortcut-label">Books</span>
+</button>
+{{ end }}

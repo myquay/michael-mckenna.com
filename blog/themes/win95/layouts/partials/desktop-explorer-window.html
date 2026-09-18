@@ -11,6 +11,7 @@
 {{ $driveSections := where site.Sections "Section" "ne" "pages" }}
 {{ $driveSections = where $driveSections "Section" "ne" "post" }}
 {{ $driveSections = where $driveSections "Section" "ne" "photos" }}
+{{ $driveSections = where $driveSections "Section" "ne" "books" }}
 {{ $objectCount := cond $isComputer "3 object(s)" (printf "%d object(s)" (len $driveSections)) }}
 {{ $status := cond $isComputer "My Computer" "Win95 (C:)" }}
 <section class="app-window explorer-window desktop-explorer-window" data-window-id="{{ $windowId }}" data-window-url="/" data-window-title="{{ $windowTitle }}" data-window-icon="{{ $windowIcon }}" data-window-contract-version="{{ partial "window-contract-version.html" $page }}" data-window-default-x="{{ $defaultX }}" data-window-default-y="{{ $defaultY }}" data-window-default-width="{{ $defaultWidth }}" data-window-default-height="430" data-window-taskbar="true" hidden role="region" aria-labelledby="{{ $windowId }}-title">

@@ -10,7 +10,10 @@
 <meta name="description" content="{{ $description }}">
 <link rel="canonical" href="{{ .Permalink }}">
 <link rel="alternate" type="application/rss+xml" title="{{ site.Title }} RSS" href="{{ "rss.xml" | absURL }}">
-{{ if and .IsPage (in (slice "post" "note" "activity" "project") .Section) }}
+{{ if eq .Section "books" }}
+<link rel="alternate" type="application/rss+xml" title="Book reviews" href="{{ "books/rss.xml" | absURL }}">
+{{ end }}
+{{ if and .IsPage (in (slice "post" "note" "activity" "project" "books") .Section) }}
   {{ with site.Params.IndieWeb.webmentionEndpoint }}<link rel="webmention" href="{{ . }}">{{ end }}
 {{ end }}
 {{ with site.Params.IndieWeb.metadataEndpoint }}
@@ -37,6 +40,7 @@
   (resources.Get "css/win95/35-internet-explorer.css")
   (resources.Get "css/win95/40-explorer.css")
   (resources.Get "css/win95/50-responsive.css")
+  (resources.Get "css/win95/55-books.css")
 }}
 {{ $css := $cssParts | resources.Concat "css/win95.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">

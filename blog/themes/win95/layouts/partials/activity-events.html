@@ -4,7 +4,7 @@
 {{- with hugo.Data.webmentions.outgoing -}}
   {{- range $sourceGroup := . -}}{{- range $record := $sourceGroup -}}{{- $outgoing = $outgoing | append $record -}}{{- end -}}{{- end -}}
 {{- end -}}
-{{- $authored := where site.RegularPages "Section" "in" (slice "post" "note" "activity" "project") -}}
+{{- $authored := where site.RegularPages "Section" "in" (slice "post" "note" "activity" "project" "books") -}}
 {{- range $page := $authored -}}
   {{- $authoredUrls = $authoredUrls | append $page.Permalink -}}
   {{- $relationships := where $outgoing "source" $page.Permalink -}}

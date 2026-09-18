@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="350" viewBox="0 0 240 350">
+  <rect width="240" height="350" fill="#203e3a"/>
+  <rect width="10" height="350" fill="#142a27"/>
+  <text x="30" y="65" fill="#f2e9c7" font-family="Georgia,serif" font-size="26">Book cover</text>
+  <text x="30" y="305" fill="#f2e9c7" font-family="sans-serif" font-size="14">Replace before publishing</text>
+</svg>

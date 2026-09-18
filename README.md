@@ -50,6 +50,8 @@ Window layout, taskbar ordering, Explorer view preferences, and desktop shortcut
 
 ## Assets
 
+The [third-party asset inventory](docs/third-party-assets.md) records bundled fonts and artwork, known sources and licenses, unresolved provenance, and a file-by-file list of shipped media.
+
 Only files required by the published site belong under `blog/static/`. Reusable source assets, contact sheets, and generation scripts belong under `design/`. The complete Windows 95 icon catalogue is retained under `design/win95-icons/`; selected runtime icons are copied into `blog/static/images/win95-icons/`.
 
 The theme's JavaScript has an ES-module entry at `assets/js/win95.mjs`, with independently testable routing, state, and geometry modules under `assets/js/win95/core/`. Hugo bundles, minifies, and fingerprints the module graph into one production script. CSS remains split by responsibility under `assets/css/win95/` and is concatenated into one fingerprinted stylesheet.
@@ -93,3 +95,7 @@ Install the pinned site tooling with `npm ci`. To inspect a local manifest witho
 ```sh
 node scripts/generate-webmention-manifest.mjs /path/to/dist /private/tmp/webmention-manifest.json local
 ```
+
+## Book reviews
+
+The Books folder supports cover thumbnails, a Details view, a reading pane, and IndieWeb `h-review` document pages. See [authoring book reviews](docs/book-reviews.md) for the draft template, cover images, ratings, and feeds.

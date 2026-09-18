@@ -1,0 +1,13 @@
+{{ $book := partial "book-data.html" . }}
+<div class="book-review-summary">
+<div class="book-review-book p-item h-item h-cite">
+  <img class="book-review-cover u-photo" src="{{ $book.cover | absURL }}" alt="{{ $book.alt }}" width="160" height="234">
+  <div>
+    <h2 class="book-title">{{ if $book.url }}<a class="p-name u-url" href="{{ $book.url }}">{{ $book.title }}</a>{{ else }}<span class="p-name">{{ $book.title }}</span>{{ end }}</h2>
+    <p class="book-author">by <span class="p-author">{{ $book.author }}</span></p>
+    {{ with $book.isbn }}<p class="book-isbn">ISBN: <span>{{ . }}</span></p>{{ end }}
+  </div>
+</div>
+<p class="book-review-rating">{{ partial "book-rating.html" (dict "rating" $book.rating "microformats" true) }}</p>
+{{ with .Params.date_read }}<p class="book-date-read">Finished reading {{ (time.AsTime .).Format "2 January 2006" }}</p>{{ end }}
+</div>

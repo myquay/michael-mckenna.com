@@ -1,3 +1,4 @@
+import { bindBookViews, showBookPreview, syncBookViews } from "./win95/books.mjs";
 import { bindSelectableItem, selectExclusive } from "./win95/core/selection.mjs";
 import { clamp, constrainWindowBounds } from "./win95/core/geometry.mjs";
 import {
@@ -1386,7 +1387,7 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
   };
 
   function lineUpExplorerIcons(context, { save = false } = {}) {
-    if (!context?.list || context.fileItems.length === 0) {
+    if (!context?.list || context.list.hasAttribute("data-book-list") || context.fileItems.length === 0) {
       return;
     }
 
@@ -1419,7 +1420,7 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
   }
 
   const applySavedExplorerIconPositions = (context) => {
-    if (!context?.list) {
+    if (!context?.list || context.list.hasAttribute("data-book-list")) {
       return;
     }
 
@@ -1483,13 +1484,14 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
       state.view = view;
     }
     context.list.dataset.view = view;
+    syncBookViews(context, view);
 
     context.viewOptionButtons.forEach((button) => {
       button.setAttribute("aria-checked", String(button.dataset.viewOption === view));
     });
 
     if (context.lineUpIconsButton) {
-      context.lineUpIconsButton.disabled = view !== "icons";
+      context.lineUpIconsButton.disabled = view !== "icons" || context.list.hasAttribute("data-book-list");
     }
 
     if (view === "icons") {
@@ -1547,7 +1549,7 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
         id: targetWindowId,
         title: trigger.dataset.name || trigger.textContent.trim() || targetWindowId,
         url: normalizePath(destination.pathname),
-        icon: trigger.querySelector("img")?.getAttribute("src") || "/images/win95-icons/w95_16.ico",
+        icon: trigger.dataset.openIcon || trigger.querySelector("img")?.getAttribute("src") || "/images/win95-icons/w95_16.ico",
         kind: "document",
         windowKind,
         defaultX: 124,
@@ -1887,7 +1889,10 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
     });
 
     sortExplorerItems(context, state.sort || "date");
-    setExplorerView(context, isCompactMode() ? "list" : state.view || context.list.dataset.view || "details", { persist: false });
+    setExplorerView(context, isCompactMode() && !context.list.hasAttribute("data-book-list") ? "list" : state.view || context.list.dataset.view || "details", { persist: false });
+
+    bindBookViews(context, (view) => setExplorerView(context, view, { save: true }),
+      (event, link) => openExplorerItemInWindow(event, link, context));
 
     if (context.windowEl?.dataset.explorerMenuBound !== "true") {
       context.viewMenuButton?.addEventListener("click", (event) => {
@@ -1929,7 +1934,7 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
       item.addEventListener("pointerdown", (event) => {
         if (event.button !== 0) return;
         selectExclusive(context.fileItems, item);
-        if (isCompactMode() || context.list.dataset.view !== "icons") return;
+        if (isCompactMode() || context.list.hasAttribute("data-book-list") || context.list.dataset.view !== "icons") return;
 
         item.focus({ preventScroll: true });
         event.preventDefault();
@@ -1964,7 +1969,10 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
       });
 
       bindSelectableItem(item, {
-        select: () => selectExclusive(context.fileItems, item),
+        select: () => {
+          selectExclusive(context.fileItems, item);
+          showBookPreview(context, item);
+        },
         isCompact: isCompactMode,
         open: (event) => {
           if (item.dataset.driveAlert) {
@@ -1976,6 +1984,11 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
         }
       });
     });
+    if (context.list.hasAttribute("data-book-list") && !context.list.querySelector(".is-selected")) {
+      const first = context.list.querySelector("[data-file-item]");
+      selectExclusive(context.fileItems, first);
+      showBookPreview(context, first);
+    }
   };
 
   function applyWindowState() {
@@ -3354,7 +3367,7 @@ import { observeMicropubClients } from "./win95/micropub.mjs";
   compactModeQuery.addEventListener("change", () => {
     explorerContexts.forEach((context) => {
       const state = ensureExplorerState(context);
-      setExplorerView(context, isCompactMode() ? "list" : state.view || "details", { persist: false });
+      setExplorerView(context, isCompactMode() && !context.list?.hasAttribute("data-book-list") ? "list" : state.view || "details", { persist: false });
     });
     applyWindowState();
     applyModalState();

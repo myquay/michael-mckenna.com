@@ -31,6 +31,7 @@
           <label class="feed-choice"><input type="checkbox" data-feed-choice data-feed-label="Posts" data-feed-url="{{ $postsFeed.Permalink }}" checked> Posts</label>
           <label class="feed-choice"><input type="checkbox" data-feed-choice data-feed-label="Activity" data-feed-url="{{ $activityFeed.Permalink }}" checked> Activity</label>
           <label class="feed-choice"><input type="checkbox" data-feed-choice data-feed-label="Photos" data-feed-url="{{ $photosFeed.Permalink }}"> Photos</label>
+          {{ with site.GetPage "/books" }}<label class="feed-choice"><input type="checkbox" data-feed-choice data-feed-label="Books" data-feed-url="{{ (.OutputFormats.Get "RSS").Permalink }}"> Books</label>{{ end }}
           <label class="feed-choice"><input type="checkbox" data-feed-choice data-feed-label="Everything" data-feed-url="{{ $everythingFeed.Permalink }}"> Everything</label>
         </div>
       </section>
