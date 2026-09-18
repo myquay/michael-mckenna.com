@@ -41,6 +41,7 @@
   (resources.Get "css/win95/40-explorer.css")
   (resources.Get "css/win95/50-responsive.css")
   (resources.Get "css/win95/55-books.css")
+  (resources.Get "css/win95/60-conversations.css")
 }}
 {{ $css := $cssParts | resources.Concat "css/win95.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">

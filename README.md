@@ -99,3 +99,7 @@ node scripts/generate-webmention-manifest.mjs /path/to/dist /private/tmp/webment
 ## Book reviews
 
 The Books folder supports cover thumbnails, a Details view, a reading pane, and IndieWeb `h-review` document pages. See [authoring book reviews](docs/book-reviews.md) for the draft template, cover images, ratings, and feeds.
+
+## Conversation transcripts
+
+Posts can embed AI exchanges using `conversation` and `message` shortcodes, with Markdown in each turn and styling that matches the document theme. See [authoring conversations](docs/conversations.md) for examples and options.

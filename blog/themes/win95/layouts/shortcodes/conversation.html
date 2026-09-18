@@ -1,0 +1,25 @@
+{{- /* Evaluate children first; each message registers itself and emits no HTML. */ -}}
+{{- $remaining := strings.TrimSpace .Inner -}}
+{{- $messages := .Scratch.GetSortedMapValues "messages" -}}
+{{- if .Parent -}}
+  {{- errorf "conversation must not be nested inside another shortcode: %s" .Position -}}
+{{- else if $remaining -}}
+  {{- errorf "conversation may only contain message shortcodes; move prose into a message: %s" .Position -}}
+{{- else if not $messages -}}
+  {{- errorf "conversation requires at least one message: %s" .Position -}}
+{{- else -}}
+<figure class="conversation">
+  <figcaption class="conversation-caption"><strong>{{ strings.TrimSpace (.Get "title" | default "Conversation") | default "Conversation" }}</strong></figcaption>
+  <ol class="conversation-messages" role="list">
+    {{- range $index, $message := $messages }}
+    <li class="conversation-message">
+      <div class="conversation-speaker"><strong>{{ .name }}</strong> <span>{{ if ne .name .role }}{{ .role }} · {{ end }}{{ with .model }}{{ . }} · {{ end }}{{ printf "%02d" (add $index 1) }}</span></div>
+      <div class="conversation-body">{{ .body }}</div>
+    </li>
+    {{- end }}
+  </ol>
+  {{- with .Get "note" }}
+  <div class="conversation-footnote">{{ . }}</div>
+  {{- end }}
+</figure>
+{{- end -}}

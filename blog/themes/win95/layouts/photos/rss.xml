@@ -14,7 +14,8 @@
       <link>{{ .Permalink }}</link>
       <pubDate>{{ .PublishDate.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate>
       <guid>{{ .Permalink }}</guid>
-      <description>{{ .Summary | transform.XMLEscape | safeHTML }}</description>
+      {{ $body := .Summary }}{{ if .HasShortcode "conversation" }}{{ $body = .Content }}{{ end }}
+      <description>{{ $body | transform.XMLEscape | safeHTML }}</description>
     </item>
     {{ end }}
   </channel>

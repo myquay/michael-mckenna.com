@@ -1,0 +1,16 @@
+{{- $role := .Get "role" -}}
+{{- $body := strings.TrimSpace .Inner -}}
+{{- if not (in (slice "human" "ai" "system") $role) -}}
+  {{- errorf "message requires role=human, ai, or system: %s" .Position -}}
+{{- else if not $body -}}
+  {{- errorf "message requires Markdown content: %s" .Position -}}
+{{- else if not .Parent -}}
+  {{- errorf "message must be directly inside a conversation: %s" .Position -}}
+{{- else if ne .Parent.Name "conversation" -}}
+  {{- errorf "message must be directly inside a conversation: %s" .Position -}}
+{{- else -}}
+  {{- $label := index (dict "human" "Human" "ai" "AI" "system" "System") $role -}}
+  {{- $name := strings.TrimSpace (.Get "name" | default $label) -}}
+  {{- $message := dict "role" $label "name" ($name | default $label) "model" (.Get "model") "body" (.Page.RenderString (dict "display" "block") $body) -}}
+  {{- .Parent.Scratch.SetInMap "messages" (printf "%09d" .Ordinal) $message -}}
+{{- end -}}

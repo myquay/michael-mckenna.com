@@ -1,0 +1,22 @@
+{{- $pages := .RegularPages -}}
+{{- if .IsHome }}{{ $pages = site.RegularPages }}{{ end -}}
+{{- $limit := site.Config.Services.RSS.Limit -}}
+{{- if ge $limit 0 }}{{ $pages = $pages | first $limit }}{{ end -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} on {{ site.Title }}{{ end }}</title>
+    <link>{{ .Permalink }}</link>
+    <description>Recent content{{ if not .IsHome }} in {{ .Title }}{{ end }} on {{ site.Title }}</description>
+    <language>{{ site.Language.Locale | default site.Language.Lang }}</language>
+    {{ with .OutputFormats.Get "RSS" }}<atom:link href="{{ .Permalink }}" rel="self" type="application/rss+xml" />{{ end }}
+    {{ range $pages }}
+    <item>
+      <title>{{ .Title }}</title><link>{{ .Permalink }}</link><guid>{{ .Permalink }}</guid>
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate>
+      {{ $body := .Summary }}{{ if .HasShortcode "conversation" }}{{ $body = .Content }}{{ end }}
+      <description>{{ $body | transform.XMLEscape | safeHTML }}</description>
+    </item>
+    {{ end }}
+  </channel>
+</rss>
