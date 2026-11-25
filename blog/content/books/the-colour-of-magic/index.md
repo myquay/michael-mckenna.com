@@ -15,7 +15,7 @@ date_read: "2026-11-24"
 
 I've been meaning to delve into the wildly colourful world of Terry Pratchett's Discworld for sometime, and this time was that time.
 
-I had been warned, the first book is not the best entry point to the series. I had been advised, you can read them in any order. I had been cautioned, start with a better one. I started at 1 of 41 because I want to experience the arch as they were written. Terry Pratchett Discworld 1/1 will have a different mental model to Terry Pratchett Discworld 32/32 and I would like to experience the intrinsic, intangible development of Discworld as they were written.
+I had been warned, the first book is not the best entry point to the series. I had been advised, you can read them in any order. I had been cautioned, start with a better one. I started at 1 of 41 because I want to experience the arc as they were written. Terry Pratchett Discworld 1/1 will have a different mental model to Terry Pratchett Discworld 32/32 and I would like to experience the intrinsic, intangible development of Discworld as they were written.
 
 First impressions. I loved the writing style, his prose is a joy to read. The book is short, breezy, and fun. The world is decidedly interesting, the characters eccentric, and the jokes good. 
 
