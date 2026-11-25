@@ -18,7 +18,10 @@ test('book review content, window fragments, feeds, drafts and validation', asyn
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'book-review-test-'));
   t.after(() => fs.rmSync(temp, { recursive: true, force: true }));
   const content = path.join(temp, 'content');
-  fs.cpSync(path.join(repo, 'blog/content'), content, { recursive: true });
+  for (const section of ['books', 'activity']) {
+    const index = path.join(section, '_index.md');
+    fs.cpSync(path.join(repo, 'blog/content', index), path.join(content, index));
+  }
   const bundle = path.join(content, 'books/fixture');
   fs.mkdirSync(bundle, { recursive: true });
   fs.copyFileSync(path.join(repo, 'blog/archetypes/book-review/cover.svg'), path.join(bundle, 'cover.svg'));
